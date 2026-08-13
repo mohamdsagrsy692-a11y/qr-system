@@ -9,6 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.6.0/lib/qr-code-styling.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
 
@@ -30,19 +31,25 @@ border-radius:20px;
 box-shadow:0 0 10px #ccc;
 }
 
+
 input,textarea,select{
+
 width:90%;
 padding:12px;
 margin:8px;
 border-radius:10px;
 border:1px solid #ccc;
+
 }
+
 
 textarea{
 height:80px;
 }
 
+
 button{
+
 background:#111;
 color:white;
 padding:15px;
@@ -51,37 +58,55 @@ border:0;
 border-radius:10px;
 margin-top:10px;
 cursor:pointer;
+
 }
 
+
 #qrcode{
+
 margin:20px auto;
+
 }
+
 
 </style>
 
+
 </head>
+
 
 <body>
 
 
+
 <div id="login" class="card">
+
 
 <h2>دخول الإدارة</h2>
 
+
 <input id="password" type="password" placeholder="كلمة المرور">
 
+
 <button onclick="login()">
+
 دخول
+
 </button>
 
+
 </div>
+
+
 
 
 
 <div id="panel" class="card" style="display:none">
 
 
+
 <h2>إدارة العملاء</h2>
+
 
 
 <select id="customerList" onchange="selectCustomer()">
@@ -93,53 +118,83 @@ margin:20px auto;
 </select>
 
 
-<input id="searchId" placeholder="رقم العميل مثال 001">
+
+<input id="searchId" placeholder="رقم العميل">
+
 
 
 <button onclick="loadCustomer()">
+
 تحميل بيانات العميل
+
 </button>
+
+
+
 
 
 <input id="id" readonly>
 
+
+
 <input id="name" placeholder="اسم النشاط">
+
 
 
 <textarea id="description" placeholder="وصف النشاط"></textarea>
 
 
+
 <input id="logo" placeholder="رابط اللوجو">
+
 
 
 <input id="whatsapp" placeholder="واتساب">
 
 
+
 <input id="facebook" placeholder="فيسبوك">
+
 
 
 <input id="instagram" placeholder="انستجرام">
 
 
+
 <input id="website" placeholder="الموقع">
+
 
 
 <input id="payment" placeholder="الدفع">
 
 
+
+
+
 <button onclick="saveCustomer()">
+
 حفظ العميل
+
 </button>
+
 
 
 <button onclick="deleteCustomer()">
+
 حذف العميل
+
 </button>
+
+
 
 
 <button onclick="createQR()">
+
 إنشاء QR
+
 </button>
+
+
 
 
 <div id="qrcode"></div>
@@ -148,14 +203,21 @@ margin:20px auto;
 <p id="qrLink"></p>
 
 
+
+
 <button onclick="downloadQR()">
+
 تحميل QR PNG
+
 </button>
+
+
 
 
 </div>
 
  <script>
+
 
 const firebaseConfig = {
 
@@ -188,18 +250,24 @@ let qrCode;
 
 function login(){
 
+
 let pass=document.getElementById("password").value;
 
 
 if(pass==="CODE010951"){
 
+
 document.getElementById("login").style.display="none";
+
 
 document.getElementById("panel").style.display="block";
 
+
 generateNumber();
 
+
 loadCustomers();
+
 
 }
 
@@ -209,26 +277,78 @@ alert("كلمة المرور غير صحيحة");
 
 }
 
+
 }
 
 
 
 
+// إنشاء كود العميل تلقائياً
 
 function generateNumber(){
 
-let n=localStorage.getItem("qrNumber") || 1;
+
+db.ref("customers").once("value")
+
+.then(function(snapshot){
 
 
-document.getElementById("id").value=
-String(n).padStart(3,"0");
+let max = 0;
+
+
+
+snapshot.forEach(function(child){
+
+
+
+let code = child.key;
+
+
+
+if(code.startsWith("CODE")){
+
+
+let number = parseInt(
+code.replace("CODE","")
+);
+
+
+
+if(number > max){
+
+max = number;
 
 }
+
+
+}
+
+
+});
+
+
+
+let next = max + 1;
+
+
+
+document.getElementById("id").value =
+
+"CODE" + String(next).padStart(3,"0");
+
+
+
+});
+
+
+}
+
 
 
 
 
 function loadCustomers(){
+
 
 db.ref("customers").once("value")
 
@@ -236,6 +356,7 @@ db.ref("customers").once("value")
 
 
 let select=document.getElementById("customerList");
+
 
 
 select.innerHTML =
@@ -246,22 +367,28 @@ select.innerHTML =
 snapshot.forEach(function(child){
 
 
+
 let id=child.key;
 
 let data=child.val();
 
 
+
 let option=document.createElement("option");
 
 
+
 option.value=id;
+
 
 
 option.textContent =
 id+" - "+(data.name || "بدون اسم");
 
 
+
 select.appendChild(option);
+
 
 
 });
@@ -271,25 +398,31 @@ select.appendChild(option);
 
 
 }
+
 
 
 
 
 function selectCustomer(){
 
-let id =
-document.getElementById("customerList").value;
+
+let id=document.getElementById("customerList").value;
 
 
 if(id!=""){
 
+
 document.getElementById("searchId").value=id;
+
 
 loadCustomer();
 
-}
 
 }
+
+
+}
+
 
 
 
@@ -297,8 +430,20 @@ loadCustomer();
 
 function loadCustomer(){
 
-let id =
-document.getElementById("searchId").value;
+
+let id=document.getElementById("searchId").value;
+
+
+
+if(id==""){
+
+alert("اكتب كود العميل");
+
+return;
+
+}
+
+
 
 
 db.ref("customers/"+id).once("value")
@@ -320,23 +465,33 @@ return;
 
 
 
+
 document.getElementById("id").value=id;
+
 
 document.getElementById("name").value=data.name || "";
 
+
 document.getElementById("description").value=data.description || "";
+
 
 document.getElementById("logo").value=data.logo || "";
 
+
 document.getElementById("whatsapp").value=data.whatsapp || "";
+
 
 document.getElementById("facebook").value=data.facebook || "";
 
+
 document.getElementById("instagram").value=data.instagram || "";
+
 
 document.getElementById("website").value=data.website || "";
 
+
 document.getElementById("payment").value=data.payment || "";
+
 
 
 });
@@ -349,40 +504,71 @@ document.getElementById("payment").value=data.payment || "";
 
 
 
+
 function saveCustomer(){
 
-let number=document.getElementById("id").value;
+
+let code=document.getElementById("id").value;
+
 
 
 let data={
 
+
 name:document.getElementById("name").value,
+
 
 description:document.getElementById("description").value,
 
+
 logo:document.getElementById("logo").value,
+
 
 whatsapp:document.getElementById("whatsapp").value,
 
+
 facebook:document.getElementById("facebook").value,
+
 
 instagram:document.getElementById("instagram").value,
 
+
 website:document.getElementById("website").value,
 
+
 payment:document.getElementById("payment").value
+
+
 
 };
 
 
 
-db.ref("customers/"+number).set(data)
+
+db.ref("customers/"+code).set(data)
+
 
 .then(function(){
 
-alert("تم الحفظ بنجاح ✅");
+
+alert("تم حفظ العميل بنجاح ✅");
+
 
 loadCustomers();
+
+
+generateNumber();
+
+
+
+})
+
+
+.catch(function(error){
+
+
+alert(error.message);
+
 
 });
 
@@ -397,26 +583,48 @@ loadCustomers();
 
 function deleteCustomer(){
 
+
 let id=document.getElementById("id").value;
 
 
-if(confirm("حذف العميل "+id+" ؟")){
+
+if(id==""){
+
+alert("اختر عميل أولاً");
+
+return;
+
+}
+
+
+
+
+if(confirm("هل تريد حذف "+id+" ؟")){
 
 
 db.ref("customers/"+id).remove()
 
+
 .then(function(){
 
-alert("تم الحذف");
+
+alert("تم الحذف ✅");
+
 
 loadCustomers();
+
+
+generateNumber();
+
 
 });
 
 
 }
 
+
 }
+
 
 
 
@@ -427,51 +635,75 @@ loadCustomers();
 function createQR(){
 
 
-let number =
-document.getElementById("id").value;
+let code=document.getElementById("id").value;
 
 
 
-let url =
-"https://mohamdsagrsy692-a11y.github.io/qr-system/qr.html?id="+number;
+let url=
+
+"https://mohamdsagrsy692-a11y.github.io/qr-system/qr.html?id="+code;
+
 
 
 
 document.getElementById("qrLink").innerHTML=url;
 
 
+
 document.getElementById("qrcode").innerHTML="";
+
 
 
 
 qrCode = new QRCodeStyling({
 
+
 width:250,
+
 
 height:250,
 
+
 data:url,
 
+
 dotsOptions:{
+
+
 color:"#000000",
+
+
 type:"rounded"
+
+
 },
 
+
 backgroundOptions:{
+
+
 color:"#ffffff"
+
+
 }
+
 
 
 });
 
 
 
+
 qrCode.append(
+
 document.getElementById("qrcode")
+
 );
 
 
+
 }
+
 
 
 
@@ -479,25 +711,36 @@ document.getElementById("qrcode")
 
 function downloadQR(){
 
+
 if(!qrCode){
+
 
 alert("أنشئ QR أولاً");
 
+
 return;
 
+
 }
+
 
 
 qrCode.download({
 
+
 name:"QR",
 
+
 extension:"png"
+
+
 
 });
 
 
+
 }
+
 
 
 </script>
