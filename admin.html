@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 
 <head>
+
 <meta charset="UTF-8">
 <title>إدارة QR</title>
 
@@ -28,12 +29,14 @@ border-radius:20px;
 box-shadow:0 0 10px #ccc;
 }
 
-input,textarea{
+input,textarea,select{
+
 width:90%;
 padding:12px;
 margin:8px;
 border-radius:10px;
 border:1px solid #ccc;
+
 }
 
 textarea{
@@ -41,6 +44,7 @@ height:80px;
 }
 
 button{
+
 background:#111;
 color:white;
 padding:15px;
@@ -49,20 +53,17 @@ border:0;
 border-radius:10px;
 margin-top:10px;
 cursor:pointer;
+
 }
 
 #qrcode{
 margin:20px auto;
 }
 
-#customerList button{
-background:#444;
-margin:5px;
-}
-
 </style>
 
 </head>
+
 
 <body>
 
@@ -87,35 +88,47 @@ margin:5px;
 <h2>إدارة العملاء</h2>
 
 
+<select id="customerList" onchange="selectCustomer()">
+
+<option value="">
+اختر العميل
+</option>
+
+</select>
+
+
 <input id="searchId" placeholder="رقم العميل مثال 001">
+
 
 <button onclick="loadCustomer()">
 تحميل بيانات العميل
 </button>
 
 
-<h3>قائمة العملاء</h3>
-
-<div id="customerList"></div>
-
-
 
 <input id="id" readonly>
 
+
 <input id="name" placeholder="اسم النشاط">
+
 
 <textarea id="description" placeholder="وصف النشاط"></textarea>
 
 
 <input id="logo" placeholder="رابط اللوجو">
 
+
 <input id="whatsapp" placeholder="واتساب">
+
 
 <input id="facebook" placeholder="فيسبوك">
 
+
 <input id="instagram" placeholder="انستجرام">
 
+
 <input id="website" placeholder="الموقع">
+
 
 <input id="payment" placeholder="الدفع">
 
@@ -131,6 +144,7 @@ margin:5px;
 
 
 <div id="qrcode"></div>
+
 
 <p id="qrLink"></p>
 
@@ -201,16 +215,14 @@ alert("كلمة المرور غير صحيحة");
 
 
 
-
 function generateNumber(){
 
 let n=localStorage.getItem("qrNumber") || 1;
 
-document.getElementById("id").value=
+document.getElementById("id").value =
 String(n).padStart(3,"0");
 
 }
-
 
 
 
@@ -223,7 +235,12 @@ db.ref("customers").once("value")
 .then(function(snapshot){
 
 
-let list="";
+let select=document.getElementById("customerList");
+
+
+select.innerHTML =
+'<option value="">اختر العميل</option>';
+
 
 
 snapshot.forEach(function(child){
@@ -234,22 +251,23 @@ let id=child.key;
 let data=child.val();
 
 
-list += `
 
-<button onclick="loadCustomerById('${id}')">
+let option=document.createElement("option");
 
-${id} - ${data.name || "بدون اسم"}
 
-</button>
+option.value=id;
 
-`;
+
+option.textContent =
+id+" - "+(data.name || "بدون اسم");
+
+
+
+select.appendChild(option);
 
 
 
 });
-
-
-document.getElementById("customerList").innerHTML=list;
 
 
 });
@@ -261,13 +279,28 @@ document.getElementById("customerList").innerHTML=list;
 
 
 
-function loadCustomerById(id){
+function selectCustomer(){
+
+
+let id =
+document.getElementById("customerList").value;
+
+
+
+if(id!=""){
+
 
 document.getElementById("searchId").value=id;
 
+
 loadCustomer();
 
+
 }
+
+
+}
+
 
 
 
@@ -276,7 +309,9 @@ loadCustomer();
 function loadCustomer(){
 
 
-let id=document.getElementById("searchId").value;
+let id =
+document.getElementById("searchId").value;
+
 
 
 if(id==""){
@@ -295,6 +330,7 @@ db.ref("customers/"+id).once("value")
 
 
 let data=snapshot.val();
+
 
 
 if(!data){
@@ -326,9 +362,6 @@ document.getElementById("website").value=data.website || "";
 document.getElementById("payment").value=data.payment || "";
 
 
-alert("تم تحميل بيانات العميل ✅");
-
-
 });
 
 
@@ -338,10 +371,13 @@ alert("تم تحميل بيانات العميل ✅");
 
 
 
+
 function saveCustomer(){
 
 
-let number=document.getElementById("id").value;
+let number =
+document.getElementById("id").value;
+
 
 
 let data={
@@ -383,7 +419,7 @@ loadCustomers();
 
 .catch(function(error){
 
-alert("خطأ: "+error.message);
+alert(error.message);
 
 });
 
@@ -399,16 +435,18 @@ alert("خطأ: "+error.message);
 function createQR(){
 
 
-let number=document.getElementById("id").value;
+let number =
+document.getElementById("id").value;
 
 
-let url=
 
+let url =
 "https://mohamdsagrsy692-a11y.github.io/qr-system/qr.html?id="+number;
 
 
 
 document.getElementById("qrLink").innerHTML=url;
+
 
 
 document.getElementById("qrcode").innerHTML="";
@@ -461,9 +499,12 @@ return;
 
 let a=document.createElement("a");
 
+
 a.href=qrImage.src;
 
+
 a.download="QR.png";
+
 
 a.click();
 
@@ -476,4 +517,4 @@ a.click();
 
 </body>
 
-</html> 
+</html>
