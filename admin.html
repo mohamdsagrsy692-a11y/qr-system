@@ -238,6 +238,50 @@ margin:20px auto;
 
 </div>
 
+</div>
+
+<div class="right-panel">
+
+<h3>معاينة QR</h3>
+
+<div id="qrcode"></div>
+
+<p id="qrLink"></p>
+
+<button onclick="downloadQR()">
+تحميل QR PNG
+</button>
+
+<hr>
+
+<h3>تصميم QR</h3>
+
+<label>لون النقاط</label>
+<input type="color" id="dotColor" value="#000000">
+
+<label>شكل النقاط</label>
+<select id="dotStyle">
+<option value="square">Square</option>
+<option value="rounded">Rounded</option>
+<option value="dots">Dots</option>
+<option value="classy">Classy</option>
+<option value="classy-rounded">Classy Rounded</option>
+</select>
+
+<label>لون الخلفية</label>
+<input type="color" id="bgColor" value="#ffffff">
+
+<label>النص أسفل QR</label>
+<input id="bottomText" placeholder="مثال: الورشة">
+
+<button onclick="createQR()">
+تحديث المعاينة
+</button>
+
+</div>
+
+</div>
+ 
  <script>
 
 
