@@ -2,11 +2,14 @@
 <html lang="ar" dir="rtl">
 
 <head>
-
 <meta charset="UTF-8">
 <title>إدارة QR</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
 
 <style>
 
@@ -57,7 +60,6 @@ margin:20px auto;
 
 </head>
 
-
 <body>
 
 
@@ -67,7 +69,7 @@ margin:20px auto;
 
 <input id="password" type="password" placeholder="كلمة المرور">
 
-<button id="loginBtn">
+<button onclick="login()">
 دخول
 </button>
 
@@ -77,42 +79,35 @@ margin:20px auto;
 
 <div id="panel" class="card" style="display:none">
 
+
 <h2>إضافة عميل جديد</h2>
 
 
 <input id="id" readonly>
 
-
 <input id="name" placeholder="اسم النشاط">
-
 
 <textarea id="description" placeholder="وصف النشاط"></textarea>
 
-
 <input id="logo" placeholder="رابط اللوجو">
-
 
 <input id="whatsapp" placeholder="واتساب">
 
-
 <input id="facebook" placeholder="فيسبوك">
-
 
 <input id="instagram" placeholder="انستجرام">
 
-
 <input id="website" placeholder="الموقع">
-
 
 <input id="payment" placeholder="الدفع">
 
 
-<button id="saveBtn">
+<button onclick="saveCustomer()">
 حفظ العميل
 </button>
 
 
-<button id="qrBtn">
+<button onclick="createQR()">
 إنشاء QR
 </button>
 
@@ -122,17 +117,13 @@ margin:20px auto;
 <p id="qrLink"></p>
 
 
-<button id="downloadBtn">
+<button onclick="downloadQR()">
 تحميل QR PNG
 </button>
 
 
 </div>
 
-
-
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
 
 <script>
@@ -163,12 +154,12 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 
+
 let qrImage;
 
 
 
-document.getElementById("loginBtn").onclick=function(){
-
+function login(){
 
 let pass=document.getElementById("password").value;
 
@@ -181,41 +172,28 @@ document.getElementById("panel").style.display="block";
 
 generateNumber();
 
-}
-
-else{
+}else{
 
 alert("كلمة المرور غير صحيحة");
 
 }
 
-};
-
-
+}
 
 
 
 function generateNumber(){
 
+let n=localStorage.getItem("qrNumber") || 1;
 
-let number =
-localStorage.getItem("qrNumber") || 1;
-
-
-let code =
-String(number).padStart(3,"0");
-
-
-document.getElementById("id").value=code;
-
+document.getElementById("id").value=
+String(n).padStart(3,"0");
 
 }
 
 
 
-
-
-document.getElementById("saveBtn").onclick=function(){
+function saveCustomer(){
 
 
 let number=document.getElementById("id").value;
@@ -223,31 +201,30 @@ let number=document.getElementById("id").value;
 
 let data={
 
-name:name.value,
+name:document.getElementById("name").value,
 
-description:description.value,
+description:document.getElementById("description").value,
 
-logo:logo.value,
+logo:document.getElementById("logo").value,
 
-whatsapp:whatsapp.value,
+whatsapp:document.getElementById("whatsapp").value,
 
-facebook:facebook.value,
+facebook:document.getElementById("facebook").value,
 
-instagram:instagram.value,
+instagram:document.getElementById("instagram").value,
 
-website:website.value,
+website:document.getElementById("website").value,
 
-payment:payment.value
+payment:document.getElementById("payment").value
 
 };
 
 
 db.ref("customers/"+number).set(data)
 
-.then(()=>{
+.then(function(){
 
-alert("تم حفظ العميل في Firebase ✅");
-
+alert("تم الحفظ بنجاح ✅");
 
 localStorage.setItem(
 "qrNumber",
@@ -256,30 +233,26 @@ Number(number)+1
 
 })
 
-.catch(e=>{
+.catch(function(error){
 
-alert(e.message);
+alert("خطأ: "+error.message);
 
 });
 
 
-};
+}
 
 
 
 
-
-
-document.getElementById("qrBtn").onclick=function(){
+function createQR(){
 
 
 let number=document.getElementById("id").value;
 
 
 let url=
-"https://mohamdsagrsy692-a11y.github.io/qr-system/qr.html?id="
-+number;
-
+"https://mohamdsagrsy692-a11y.github.io/qr-system/qr.html?id="+number;
 
 
 document.getElementById("qrLink").innerHTML=url;
@@ -288,42 +261,29 @@ document.getElementById("qrLink").innerHTML=url;
 document.getElementById("qrcode").innerHTML="";
 
 
-
 new QRCode(
-
 document.getElementById("qrcode"),
-
 {
-
 text:url,
-
 width:250,
-
-height:250,
-
-correctLevel:QRCode.CorrectLevel.H
-
+height:250
 }
-
 );
 
 
-
-setTimeout(()=>{
+setTimeout(function(){
 
 qrImage=document.querySelector("#qrcode img");
 
 },500);
 
 
-};
+}
 
 
 
 
-
-document.getElementById("downloadBtn").onclick=function(){
-
+function downloadQR(){
 
 if(!qrImage){
 
@@ -333,7 +293,6 @@ return;
 
 }
 
-
 let a=document.createElement("a");
 
 a.href=qrImage.src;
@@ -342,8 +301,7 @@ a.download="QR.png";
 
 a.click();
 
-
-};
+}
 
 
 </script>
