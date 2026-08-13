@@ -26,13 +26,12 @@ border-radius:20px;
 box-shadow:0 0 10px #ccc;
 }
 
-input, textarea{
+input,textarea{
 width:90%;
 padding:12px;
 margin:8px;
 border-radius:10px;
 border:1px solid #ccc;
-font-size:15px;
 }
 
 textarea{
@@ -46,21 +45,12 @@ padding:15px;
 width:90%;
 border:0;
 border-radius:10px;
-font-size:16px;
-cursor:pointer;
 margin-top:10px;
-}
-
-button:hover{
-opacity:.8;
+cursor:pointer;
 }
 
 #qrcode{
 margin:20px auto;
-}
-
-#download{
-display:none;
 }
 
 </style>
@@ -89,26 +79,34 @@ display:none;
 <div id="panel" class="card" style="display:none">
 
 
-<h2>إضافة QR جديد</h2>
+<h2>إنشاء QR جديد</h2>
 
 
-<input id="id" placeholder="رقم العميل مثال: 003">
+<input id="id" readonly>
+
 
 <input id="name" placeholder="اسم النشاط">
 
+
 <textarea id="description" placeholder="وصف النشاط"></textarea>
+
 
 <input id="logo" placeholder="رابط اللوجو">
 
-<input id="whatsapp" placeholder="رابط واتساب">
 
-<input id="facebook" placeholder="رابط فيسبوك">
+<input id="whatsapp" placeholder="واتساب">
 
-<input id="instagram" placeholder="رابط إنستجرام">
 
-<input id="website" placeholder="رابط الموقع">
+<input id="facebook" placeholder="فيسبوك">
 
-<input id="payment" placeholder="رابط الدفع">
+
+<input id="instagram" placeholder="انستجرام">
+
+
+<input id="website" placeholder="الموقع">
+
+
+<input id="payment" placeholder="الدفع">
 
 
 <button onclick="createJSON()">
@@ -116,22 +114,18 @@ display:none;
 </button>
 
 
-<hr>
-
-
-<h3>إنشاء QR Code</h3>
-
-<div id="qrcode"></div>
-
-<p id="qrLink"></p>
-
-
 <button onclick="createQR()">
 إنشاء QR
 </button>
 
 
-<button id="download" onclick="downloadQR()">
+<div id="qrcode"></div>
+
+
+<p id="qrLink"></p>
+
+
+<button onclick="downloadQR()">
 تحميل QR PNG
 </button>
 
@@ -141,12 +135,10 @@ display:none;
 
 
 
-
 <script>
 
 
 let qrImage;
-
 
 
 function login(){
@@ -159,6 +151,8 @@ if(pass==="CODE010951"){
 document.getElementById("login").style.display="none";
 
 document.getElementById("panel").style.display="block";
+
+generateNumber();
 
 }
 
@@ -173,14 +167,38 @@ alert("كلمة المرور غير صحيحة");
 
 
 
+function generateNumber(){
+
+let number =
+localStorage.getItem("qrNumber") || 1;
+
+
+let code =
+number.toString().padStart(3,"0");
+
+
+document.getElementById("id").value=code;
+
+
+localStorage.setItem(
+"qrNumber",
+parseInt(number)+1
+);
+
+}
+
+
+
+
 
 function createJSON(){
 
 
-let number=document.getElementById("id").value;
+let number=id.value;
 
 
 let data={
+
 
 "name":name.value,
 
@@ -206,9 +224,12 @@ let file=new Blob(
 
 [JSON.stringify(data,null,2)],
 
-{type:"application/json"}
+{
+type:"application/json"
+}
 
 );
+
 
 
 let link=document.createElement("a");
@@ -225,29 +246,15 @@ link.click();
 
 
 
-
-
-
 function createQR(){
 
 
-let id=document.getElementById("id").value;
-
-
-if(id===""){
-
-alert("اكتب رقم العميل أولاً");
-
-return;
-
-}
-
+let number=id.value;
 
 
 let url=
 "https://mohamdsagrsy692-a11y.github.io/qr-system/qr.html?id="
-+id;
-
++number;
 
 
 document.getElementById("qrLink").innerHTML=url;
@@ -281,14 +288,10 @@ setTimeout(()=>{
 
 qrImage=document.querySelector("#qrcode img");
 
-document.getElementById("download").style.display="block";
-
 },500);
 
 
-
 }
-
 
 
 
@@ -297,6 +300,8 @@ function downloadQR(){
 
 
 if(!qrImage){
+
+alert("أنشئ QR أولاً");
 
 return;
 
@@ -307,13 +312,12 @@ let link=document.createElement("a");
 
 link.href=qrImage.src;
 
-link.download="QR-Code.png";
+link.download="QR.png";
 
 link.click();
 
 
 }
-
 
 
 </script>
