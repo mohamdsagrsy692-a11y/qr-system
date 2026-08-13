@@ -67,7 +67,7 @@ margin:20px auto;
 
 <input id="password" type="password" placeholder="كلمة المرور">
 
-<button onclick="login()">
+<button id="loginBtn">
 دخول
 </button>
 
@@ -85,28 +85,34 @@ margin:20px auto;
 
 <input id="name" placeholder="اسم النشاط">
 
+
 <textarea id="description" placeholder="وصف النشاط"></textarea>
 
 
 <input id="logo" placeholder="رابط اللوجو">
 
+
 <input id="whatsapp" placeholder="واتساب">
+
 
 <input id="facebook" placeholder="فيسبوك">
 
+
 <input id="instagram" placeholder="انستجرام">
 
+
 <input id="website" placeholder="الموقع">
+
 
 <input id="payment" placeholder="الدفع">
 
 
-<button onclick="saveCustomer()">
+<button id="saveBtn">
 حفظ العميل
 </button>
 
 
-<button onclick="createQR()">
+<button id="qrBtn">
 إنشاء QR
 </button>
 
@@ -116,25 +122,21 @@ margin:20px auto;
 <p id="qrLink"></p>
 
 
-<button onclick="downloadQR()">
+<button id="downloadBtn">
 تحميل QR PNG
 </button>
 
 
 </div>
-  
-  <script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import { 
-getDatabase,
-ref,
-set
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
-// إعدادات Firebase
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+
+<script>
+
 
 const firebaseConfig = {
 
@@ -155,19 +157,18 @@ appId: "1:983573164670:web:4b352977dd6085b0649e2f"
 };
 
 
-// تشغيل Firebase
+firebase.initializeApp(firebaseConfig);
 
-const app = initializeApp(firebaseConfig);
 
-const db = getDatabase(app);
-
+const db = firebase.database();
 
 
 let qrImage;
 
 
 
-function login(){
+document.getElementById("loginBtn").onclick=function(){
+
 
 let pass=document.getElementById("password").value;
 
@@ -188,91 +189,94 @@ alert("كلمة المرور غير صحيحة");
 
 }
 
-}
+};
+
+
 
 
 
 function generateNumber(){
+
 
 let number =
 localStorage.getItem("qrNumber") || 1;
 
 
 let code =
-number.toString().padStart(3,"0");
+String(number).padStart(3,"0");
 
 
 document.getElementById("id").value=code;
 
 
-localStorage.setItem(
-"qrNumber",
-parseInt(number)+1
-);
-
-}
-
-
-
-
-// حفظ العميل في Firebase
-
-window.saveCustomer = function(){
-
-
-let number = document.getElementById("id").value;
-
-
-let data = {
-
-name: document.getElementById("name").value,
-
-description: document.getElementById("description").value,
-
-logo: document.getElementById("logo").value,
-
-whatsapp: document.getElementById("whatsapp").value,
-
-facebook: document.getElementById("facebook").value,
-
-instagram: document.getElementById("instagram").value,
-
-website: document.getElementById("website").value,
-
-payment: document.getElementById("payment").value
-
-};
-
-
-
-set(ref(db,"customers/"+number),data)
-
-.then(()=>{
-
-alert("تم حفظ العميل بنجاح في Firebase");
-
-})
-
-.catch((error)=>{
-
-alert(error);
-
-});
-
-
 }
 
 
 
 
 
-window.createQR = function(){
+document.getElementById("saveBtn").onclick=function(){
 
 
 let number=document.getElementById("id").value;
 
 
-let url =
+let data={
+
+name:name.value,
+
+description:description.value,
+
+logo:logo.value,
+
+whatsapp:whatsapp.value,
+
+facebook:facebook.value,
+
+instagram:instagram.value,
+
+website:website.value,
+
+payment:payment.value
+
+};
+
+
+db.ref("customers/"+number).set(data)
+
+.then(()=>{
+
+alert("تم حفظ العميل في Firebase ✅");
+
+
+localStorage.setItem(
+"qrNumber",
+Number(number)+1
+);
+
+})
+
+.catch(e=>{
+
+alert(e.message);
+
+});
+
+
+};
+
+
+
+
+
+
+document.getElementById("qrBtn").onclick=function(){
+
+
+let number=document.getElementById("id").value;
+
+
+let url=
 "https://mohamdsagrsy692-a11y.github.io/qr-system/qr.html?id="
 +number;
 
@@ -312,12 +316,13 @@ qrImage=document.querySelector("#qrcode img");
 },500);
 
 
-}
+};
 
 
 
 
-window.downloadQR=function(){
+
+document.getElementById("downloadBtn").onclick=function(){
 
 
 if(!qrImage){
@@ -329,21 +334,20 @@ return;
 }
 
 
-let link=document.createElement("a");
+let a=document.createElement("a");
 
-link.href=qrImage.src;
+a.href=qrImage.src;
 
-link.download="QR.png";
+a.download="QR.png";
 
-link.click();
+a.click();
 
 
-}
+};
 
 
 </script>
 
 
 </body>
-
 </html>
