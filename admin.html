@@ -75,11 +75,9 @@ margin:20px auto;
 
 
 
-
 <div id="panel" class="card" style="display:none">
 
-
-<h2>إنشاء QR جديد</h2>
+<h2>إضافة عميل جديد</h2>
 
 
 <input id="id" readonly>
@@ -87,30 +85,24 @@ margin:20px auto;
 
 <input id="name" placeholder="اسم النشاط">
 
-
 <textarea id="description" placeholder="وصف النشاط"></textarea>
 
 
 <input id="logo" placeholder="رابط اللوجو">
 
-
 <input id="whatsapp" placeholder="واتساب">
-
 
 <input id="facebook" placeholder="فيسبوك">
 
-
 <input id="instagram" placeholder="انستجرام">
 
-
 <input id="website" placeholder="الموقع">
-
 
 <input id="payment" placeholder="الدفع">
 
 
-<button onclick="createJSON()">
-إنشاء ملف JSON
+<button onclick="saveCustomer()">
+حفظ العميل
 </button>
 
 
@@ -121,7 +113,6 @@ margin:20px auto;
 
 <div id="qrcode"></div>
 
-
 <p id="qrLink"></p>
 
 
@@ -130,15 +121,48 @@ margin:20px auto;
 </button>
 
 
-</div>
+</div><script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import { 
+getDatabase,
+ref,
+set
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
+// إعدادات Firebase
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyDAXHBPfJUr2quRe_8OyhEDqGrHaneNmcc",
+
+authDomain: "qr-system-45702.firebaseapp.com",
+
+databaseURL: "https://qr-system-45702-default-rtdb.firebaseio.com",
+
+projectId: "qr-system-45702",
+
+storageBucket: "qr-system-45702.firebasestorage.app",
+
+messagingSenderId: "983573164670",
+
+appId: "1:983573164670:web:4b352977dd6085b0649e2f"
+
+};
 
 
-<script>
+// تشغيل Firebase
+
+const app = initializeApp(firebaseConfig);
+
+const db = getDatabase(app);
+
 
 
 let qrImage;
+
 
 
 function login(){
@@ -166,7 +190,6 @@ alert("كلمة المرور غير صحيحة");
 
 
 
-
 function generateNumber(){
 
 let number =
@@ -190,55 +213,49 @@ parseInt(number)+1
 
 
 
+// حفظ العميل في Firebase
 
-function createJSON(){
-
-
-let number=id.value;
+window.saveCustomer = function(){
 
 
-let data={
+let number = document.getElementById("id").value;
 
 
-"name":name.value,
+let data = {
 
-"description":description.value,
+name: document.getElementById("name").value,
 
-"logo":logo.value,
+description: document.getElementById("description").value,
 
-"whatsapp":whatsapp.value,
+logo: document.getElementById("logo").value,
 
-"facebook":facebook.value,
+whatsapp: document.getElementById("whatsapp").value,
 
-"instagram":instagram.value,
+facebook: document.getElementById("facebook").value,
 
-"website":website.value,
+instagram: document.getElementById("instagram").value,
 
-"payment":payment.value
+website: document.getElementById("website").value,
+
+payment: document.getElementById("payment").value
 
 };
 
 
 
-let file=new Blob(
+set(ref(db,"customers/"+number),data)
 
-[JSON.stringify(data,null,2)],
+.then(()=>{
 
-{
-type:"application/json"
-}
+alert("تم حفظ العميل بنجاح في Firebase");
 
-);
+})
 
+.catch((error)=>{
 
+alert(error);
 
-let link=document.createElement("a");
-
-link.href=URL.createObjectURL(file);
-
-link.download=number+".json";
-
-link.click();
+});
 
 
 }
@@ -246,15 +263,17 @@ link.click();
 
 
 
-function createQR(){
+
+window.createQR = function(){
 
 
-let number=id.value;
+let number=document.getElementById("id").value;
 
 
-let url=
+let url =
 "https://mohamdsagrsy692-a11y.github.io/qr-system/qr.html?id="
 +number;
+
 
 
 document.getElementById("qrLink").innerHTML=url;
@@ -296,7 +315,7 @@ qrImage=document.querySelector("#qrcode img");
 
 
 
-function downloadQR(){
+window.downloadQR=function(){
 
 
 if(!qrImage){
