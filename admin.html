@@ -6,6 +6,8 @@
 <meta charset="UTF-8">
 <title>إدارة QR</title>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 <style>
 
 body{
@@ -25,14 +27,12 @@ box-shadow:0 0 10px #ccc;
 }
 
 input, textarea{
-
 width:90%;
 padding:12px;
 margin:8px;
 border-radius:10px;
 border:1px solid #ccc;
 font-size:15px;
-
 }
 
 textarea{
@@ -40,7 +40,6 @@ height:80px;
 }
 
 button{
-
 background:#111;
 color:white;
 padding:15px;
@@ -49,19 +48,19 @@ border:0;
 border-radius:10px;
 font-size:16px;
 cursor:pointer;
-
+margin-top:10px;
 }
 
 button:hover{
-
 opacity:.8;
-
 }
 
-h2{
+#qrcode{
+margin:20px auto;
+}
 
-margin-bottom:20px;
-
+#download{
+display:none;
 }
 
 </style>
@@ -72,64 +71,42 @@ margin-bottom:20px;
 <body>
 
 
-<!-- تسجيل الدخول -->
-
 <div id="login" class="card">
 
 <h2>دخول الإدارة</h2>
 
-<input 
-id="password" 
-type="password" 
-placeholder="كلمة المرور">
-
+<input id="password" type="password" placeholder="كلمة المرور">
 
 <button onclick="login()">
 دخول
 </button>
 
-
 </div>
 
 
-
-<!-- لوحة التحكم -->
 
 
 <div id="panel" class="card" style="display:none">
 
 
-<h2>
-إضافة QR جديد
-</h2>
+<h2>إضافة QR جديد</h2>
 
 
 <input id="id" placeholder="رقم العميل مثال: 003">
 
-
 <input id="name" placeholder="اسم النشاط">
 
-
-<textarea 
-id="description" 
-placeholder="وصف النشاط">
-</textarea>
-
+<textarea id="description" placeholder="وصف النشاط"></textarea>
 
 <input id="logo" placeholder="رابط اللوجو">
 
-
 <input id="whatsapp" placeholder="رابط واتساب">
-
 
 <input id="facebook" placeholder="رابط فيسبوك">
 
-
 <input id="instagram" placeholder="رابط إنستجرام">
 
-
 <input id="website" placeholder="رابط الموقع">
-
 
 <input id="payment" placeholder="رابط الدفع">
 
@@ -139,7 +116,28 @@ placeholder="وصف النشاط">
 </button>
 
 
+<hr>
+
+
+<h3>إنشاء QR Code</h3>
+
+<div id="qrcode"></div>
+
+<p id="qrLink"></p>
+
+
+<button onclick="createQR()">
+إنشاء QR
+</button>
+
+
+<button id="download" onclick="downloadQR()">
+تحميل QR PNG
+</button>
+
+
 </div>
+
 
 
 
@@ -147,32 +145,31 @@ placeholder="وصف النشاط">
 <script>
 
 
+let qrImage;
+
+
+
 function login(){
 
+let pass=document.getElementById("password").value;
 
-let pass = document.getElementById("password").value;
 
-
-if(pass === "123456"){
-
+if(pass==="CODE010951"){
 
 document.getElementById("login").style.display="none";
 
 document.getElementById("panel").style.display="block";
 
-
 }
 
 else{
 
-
 alert("كلمة المرور غير صحيحة");
 
+}
 
 }
 
-
-}
 
 
 
@@ -180,60 +177,143 @@ alert("كلمة المرور غير صحيحة");
 function createJSON(){
 
 
-
-let number = document.getElementById("id").value;
-
-
-let data = {
+let number=document.getElementById("id").value;
 
 
-"name": document.getElementById("name").value,
+let data={
 
-"description": document.getElementById("description").value,
+"name":name.value,
 
-"logo": document.getElementById("logo").value,
+"description":description.value,
 
-"whatsapp": document.getElementById("whatsapp").value,
+"logo":logo.value,
 
-"facebook": document.getElementById("facebook").value,
+"whatsapp":whatsapp.value,
 
-"instagram": document.getElementById("instagram").value,
+"facebook":facebook.value,
 
-"website": document.getElementById("website").value,
+"instagram":instagram.value,
 
-"payment": document.getElementById("payment").value
+"website":website.value,
 
+"payment":payment.value
 
 };
 
 
 
-let file = new Blob(
+let file=new Blob(
 
 [JSON.stringify(data,null,2)],
 
+{type:"application/json"}
+
+);
+
+
+let link=document.createElement("a");
+
+link.href=URL.createObjectURL(file);
+
+link.download=number+".json";
+
+link.click();
+
+
+}
+
+
+
+
+
+
+
+function createQR(){
+
+
+let id=document.getElementById("id").value;
+
+
+if(id===""){
+
+alert("اكتب رقم العميل أولاً");
+
+return;
+
+}
+
+
+
+let url=
+"https://mohamdsagrsy692-a11y.github.io/qr-system/qr.html?id="
++id;
+
+
+
+document.getElementById("qrLink").innerHTML=url;
+
+
+document.getElementById("qrcode").innerHTML="";
+
+
+
+new QRCode(
+
+document.getElementById("qrcode"),
+
 {
-type:"application/json"
+
+text:url,
+
+width:250,
+
+height:250,
+
+correctLevel:QRCode.CorrectLevel.H
+
 }
 
 );
 
 
 
-let link = document.createElement("a");
+setTimeout(()=>{
 
+qrImage=document.querySelector("#qrcode img");
 
-link.href = URL.createObjectURL(file);
+document.getElementById("download").style.display="block";
 
-
-link.download = number + ".json";
-
-
-link.click();
+},500);
 
 
 
 }
+
+
+
+
+
+function downloadQR(){
+
+
+if(!qrImage){
+
+return;
+
+}
+
+
+let link=document.createElement("a");
+
+link.href=qrImage.src;
+
+link.download="QR-Code.png";
+
+link.click();
+
+
+}
+
 
 
 </script>
