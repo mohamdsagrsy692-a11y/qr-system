@@ -666,92 +666,54 @@ generateNumber();
 });
 
 
-}
-
 
 }
-
-
-
-
-
-
 
 
 function createQR(){
 
-
 let code=document.getElementById("id").value;
 
-
-
 let url=
-
 "https://mohamdsagrsy692-a11y.github.io/qr-system/qr.html?id="+code;
-
-
-
 
 document.getElementById("qrLink").innerHTML=url;
 
-
-
 document.getElementById("qrcode").innerHTML="";
 
+let dotColor =
+document.getElementById("dotColor").value;
 
+let dotStyle =
+document.getElementById("dotStyle").value;
 
+let bgColor =
+document.getElementById("bgColor").value;
 
 qrCode = new QRCodeStyling({
 
+width:300,
 
-width:250,
-
-
-height:250,
-
+height:300,
 
 data:url,
 
-
 dotsOptions:{
-
-
-color:"#000000",
-
-
-type:"rounded"
-
-
+color:dotColor,
+type:dotStyle
 },
 
-
 backgroundOptions:{
-
-
-color:"#ffffff"
-
-
+color:bgColor
 }
-
-
 
 });
 
-
-
-
 qrCode.append(
-
 document.getElementById("qrcode")
-
 );
 
-
-
 }
-
-
-
 
 
 
