@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <title>إدارة QR</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.6.0/lib/qr-code-styling.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
@@ -61,7 +61,6 @@ margin:20px auto;
 
 </head>
 
-
 <body>
 
 
@@ -103,7 +102,6 @@ margin:20px auto;
 
 
 <input id="id" readonly>
-
 
 <input id="name" placeholder="اسم النشاط">
 
@@ -184,8 +182,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 
-let qrImage;
-
+let qrCode;
 
 
 
@@ -231,7 +228,6 @@ String(n).padStart(3,"0");
 
 
 
-
 function loadCustomers(){
 
 db.ref("customers").once("value")
@@ -242,7 +238,7 @@ db.ref("customers").once("value")
 let select=document.getElementById("customerList");
 
 
-select.innerHTML=
+select.innerHTML =
 '<option value="">اختر العميل</option>';
 
 
@@ -261,7 +257,7 @@ let option=document.createElement("option");
 option.value=id;
 
 
-option.textContent=
+option.textContent =
 id+" - "+(data.name || "بدون اسم");
 
 
@@ -279,11 +275,10 @@ select.appendChild(option);
 
 
 
-
 function selectCustomer(){
 
-
-let id=document.getElementById("customerList").value;
+let id =
+document.getElementById("customerList").value;
 
 
 if(id!=""){
@@ -294,7 +289,6 @@ loadCustomer();
 
 }
 
-
 }
 
 
@@ -303,18 +297,8 @@ loadCustomer();
 
 function loadCustomer(){
 
-
-let id=document.getElementById("searchId").value;
-
-
-if(id==""){
-
-alert("اكتب رقم العميل");
-
-return;
-
-}
-
+let id =
+document.getElementById("searchId").value;
 
 
 db.ref("customers/"+id).once("value")
@@ -365,9 +349,7 @@ document.getElementById("payment").value=data.payment || "";
 
 
 
-
 function saveCustomer(){
-
 
 let number=document.getElementById("id").value;
 
@@ -398,24 +380,15 @@ db.ref("customers/"+number).set(data)
 
 .then(function(){
 
-
 alert("تم الحفظ بنجاح ✅");
 
-
 loadCustomers();
-
-
-})
-
-
-.catch(function(error){
-
-alert(error.message);
 
 });
 
 
 }
+
 
 
 
@@ -424,53 +397,27 @@ alert(error.message);
 
 function deleteCustomer(){
 
-
 let id=document.getElementById("id").value;
 
 
-if(id==""){
-
-alert("اختر عميل أولاً");
-
-return;
-
-}
-
-
-
-let confirmDelete =
-confirm("هل تريد حذف العميل "+id+" ؟");
-
-
-
-if(confirmDelete){
+if(confirm("حذف العميل "+id+" ؟")){
 
 
 db.ref("customers/"+id).remove()
 
 .then(function(){
 
-
-alert("تم حذف العميل ✅");
-
+alert("تم الحذف");
 
 loadCustomers();
-
-
-})
-
-
-.catch(function(error){
-
-alert(error.message);
 
 });
 
 
 }
 
-
 }
+
 
 
 
@@ -480,10 +427,12 @@ alert(error.message);
 function createQR(){
 
 
-let number=document.getElementById("id").value;
+let number =
+document.getElementById("id").value;
 
 
-let url=
+
+let url =
 "https://mohamdsagrsy692-a11y.github.io/qr-system/qr.html?id="+number;
 
 
@@ -495,33 +444,34 @@ document.getElementById("qrcode").innerHTML="";
 
 
 
-new QRCode(
-
-document.getElementById("qrcode"),
-
-{
-
-text:url,
+qrCode = new QRCodeStyling({
 
 width:250,
 
-height:250
+height:250,
 
+data:url,
+
+dotsOptions:{
+color:"#000000",
+type:"rounded"
+},
+
+backgroundOptions:{
+color:"#ffffff"
 }
 
+
+});
+
+
+
+qrCode.append(
+document.getElementById("qrcode")
 );
 
 
-
-setTimeout(function(){
-
-qrImage=document.querySelector("#qrcode img");
-
-},500);
-
-
 }
-
 
 
 
@@ -529,8 +479,7 @@ qrImage=document.querySelector("#qrcode img");
 
 function downloadQR(){
 
-
-if(!qrImage){
+if(!qrCode){
 
 alert("أنشئ QR أولاً");
 
@@ -539,16 +488,13 @@ return;
 }
 
 
-let a=document.createElement("a");
+qrCode.download({
 
+name:"QR",
 
-a.href=qrImage.src;
+extension:"png"
 
-
-a.download="QR.png";
-
-
-a.click();
+});
 
 
 }
