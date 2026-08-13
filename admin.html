@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+<title>إدارة QR</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f2f2f2;
+text-align:center;
+padding:30px;
+}
+
+.card{
+background:white;
+max-width:450px;
+margin:auto;
+padding:25px;
+border-radius:20px;
+box-shadow:0 0 10px #ccc;
+}
+
+input, textarea{
+
+width:90%;
+padding:12px;
+margin:8px;
+border-radius:10px;
+border:1px solid #ccc;
+font-size:15px;
+
+}
+
+textarea{
+height:80px;
+}
+
+button{
+
+background:#111;
+color:white;
+padding:15px;
+width:90%;
+border:0;
+border-radius:10px;
+font-size:16px;
+cursor:pointer;
+
+}
+
+button:hover{
+
+opacity:.8;
+
+}
+
+h2{
+
+margin-bottom:20px;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- تسجيل الدخول -->
+
+<div id="login" class="card">
+
+<h2>دخول الإدارة</h2>
+
+<input 
+id="password" 
+type="password" 
+placeholder="كلمة المرور">
+
+
+<button onclick="login()">
+دخول
+</button>
+
+
+</div>
+
+
+
+<!-- لوحة التحكم -->
+
+
+<div id="panel" class="card" style="display:none">
+
+
+<h2>
+إضافة QR جديد
+</h2>
+
+
+<input id="id" placeholder="رقم العميل مثال: 003">
+
+
+<input id="name" placeholder="اسم النشاط">
+
+
+<textarea 
+id="description" 
+placeholder="وصف النشاط">
+</textarea>
+
+
+<input id="logo" placeholder="رابط اللوجو">
+
+
+<input id="whatsapp" placeholder="رابط واتساب">
+
+
+<input id="facebook" placeholder="رابط فيسبوك">
+
+
+<input id="instagram" placeholder="رابط إنستجرام">
+
+
+<input id="website" placeholder="رابط الموقع">
+
+
+<input id="payment" placeholder="رابط الدفع">
+
+
+<button onclick="createJSON()">
+إنشاء ملف JSON
+</button>
+
+
+</div>
+
+
+
+
+<script>
+
+
+function login(){
+
+
+let pass = document.getElementById("password").value;
+
+
+if(pass === "123456"){
+
+
+document.getElementById("login").style.display="none";
+
+document.getElementById("panel").style.display="block";
+
+
+}
+
+else{
+
+
+alert("كلمة المرور غير صحيحة");
+
+
+}
+
+
+}
+
+
+
+
+function createJSON(){
+
+
+
+let number = document.getElementById("id").value;
+
+
+let data = {
+
+
+"name": document.getElementById("name").value,
+
+"description": document.getElementById("description").value,
+
+"logo": document.getElementById("logo").value,
+
+"whatsapp": document.getElementById("whatsapp").value,
+
+"facebook": document.getElementById("facebook").value,
+
+"instagram": document.getElementById("instagram").value,
+
+"website": document.getElementById("website").value,
+
+"payment": document.getElementById("payment").value
+
+
+};
+
+
+
+let file = new Blob(
+
+[JSON.stringify(data,null,2)],
+
+{
+type:"application/json"
+}
+
+);
+
+
+
+let link = document.createElement("a");
+
+
+link.href = URL.createObjectURL(file);
+
+
+link.download = number + ".json";
+
+
+link.click();
+
+
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
