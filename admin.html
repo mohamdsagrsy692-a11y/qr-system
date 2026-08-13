@@ -11,6 +11,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
+
 <style>
 
 body{
@@ -30,13 +31,11 @@ box-shadow:0 0 10px #ccc;
 }
 
 input,textarea,select{
-
 width:90%;
 padding:12px;
 margin:8px;
 border-radius:10px;
 border:1px solid #ccc;
-
 }
 
 textarea{
@@ -44,7 +43,6 @@ height:80px;
 }
 
 button{
-
 background:#111;
 color:white;
 padding:15px;
@@ -53,7 +51,6 @@ border:0;
 border-radius:10px;
 margin-top:10px;
 cursor:pointer;
-
 }
 
 #qrcode{
@@ -105,7 +102,6 @@ margin:20px auto;
 </button>
 
 
-
 <input id="id" readonly>
 
 
@@ -135,6 +131,11 @@ margin:20px auto;
 
 <button onclick="saveCustomer()">
 حفظ العميل
+</button>
+
+
+<button onclick="deleteCustomer()">
+حذف العميل
 </button>
 
 
@@ -187,6 +188,7 @@ let qrImage;
 
 
 
+
 function login(){
 
 let pass=document.getElementById("password").value;
@@ -215,11 +217,13 @@ alert("كلمة المرور غير صحيحة");
 
 
 
+
 function generateNumber(){
 
 let n=localStorage.getItem("qrNumber") || 1;
 
-document.getElementById("id").value =
+
+document.getElementById("id").value=
 String(n).padStart(3,"0");
 
 }
@@ -227,8 +231,8 @@ String(n).padStart(3,"0");
 
 
 
-function loadCustomers(){
 
+function loadCustomers(){
 
 db.ref("customers").once("value")
 
@@ -238,7 +242,7 @@ db.ref("customers").once("value")
 let select=document.getElementById("customerList");
 
 
-select.innerHTML =
+select.innerHTML=
 '<option value="">اختر العميل</option>';
 
 
@@ -251,20 +255,17 @@ let id=child.key;
 let data=child.val();
 
 
-
 let option=document.createElement("option");
 
 
 option.value=id;
 
 
-option.textContent =
+option.textContent=
 id+" - "+(data.name || "بدون اسم");
 
 
-
 select.appendChild(option);
-
 
 
 });
@@ -282,25 +283,19 @@ select.appendChild(option);
 function selectCustomer(){
 
 
-let id =
-document.getElementById("customerList").value;
-
+let id=document.getElementById("customerList").value;
 
 
 if(id!=""){
 
-
 document.getElementById("searchId").value=id;
-
 
 loadCustomer();
 
-
 }
 
 
 }
-
 
 
 
@@ -309,9 +304,7 @@ loadCustomer();
 function loadCustomer(){
 
 
-let id =
-document.getElementById("searchId").value;
-
+let id=document.getElementById("searchId").value;
 
 
 if(id==""){
@@ -372,16 +365,14 @@ document.getElementById("payment").value=data.payment || "";
 
 
 
+
 function saveCustomer(){
 
 
-let number =
-document.getElementById("id").value;
-
+let number=document.getElementById("id").value;
 
 
 let data={
-
 
 name:document.getElementById("name").value,
 
@@ -398,7 +389,6 @@ instagram:document.getElementById("instagram").value,
 website:document.getElementById("website").value,
 
 payment:document.getElementById("payment").value
-
 
 };
 
@@ -417,6 +407,7 @@ loadCustomers();
 
 })
 
+
 .catch(function(error){
 
 alert(error.message);
@@ -431,22 +422,73 @@ alert(error.message);
 
 
 
+function deleteCustomer(){
+
+
+let id=document.getElementById("id").value;
+
+
+if(id==""){
+
+alert("اختر عميل أولاً");
+
+return;
+
+}
+
+
+
+let confirmDelete =
+confirm("هل تريد حذف العميل "+id+" ؟");
+
+
+
+if(confirmDelete){
+
+
+db.ref("customers/"+id).remove()
+
+.then(function(){
+
+
+alert("تم حذف العميل ✅");
+
+
+loadCustomers();
+
+
+})
+
+
+.catch(function(error){
+
+alert(error.message);
+
+});
+
+
+}
+
+
+}
+
+
+
+
+
 
 function createQR(){
 
 
-let number =
-document.getElementById("id").value;
+let number=document.getElementById("id").value;
 
 
-
-let url =
+let url=
 "https://mohamdsagrsy692-a11y.github.io/qr-system/qr.html?id="+number;
 
 
 
 document.getElementById("qrLink").innerHTML=url;
-
 
 
 document.getElementById("qrcode").innerHTML="";
