@@ -101,6 +101,7 @@ background:url("assets/card-bg.jpg");
 background-size:cover;
 background-position:center;
 box-shadow:0 6px 15px rgba(0,0,0,.25);
+cursor:pointer;
 }
 
 
@@ -115,6 +116,7 @@ background:rgba(255,255,255,.75);
 .btn span{
 position:relative;
 z-index:2;
+direction: ltr;
 }
 
 
@@ -130,6 +132,9 @@ z-index:2;
 font-size:34px;
 }
 
+.phone-icon{
+color:#25D366;
+}
 
 .whatsapp-icon{
 color:#25D366;
@@ -184,6 +189,11 @@ text-shadow:0 2px 5px rgba(0,0,0,.5);
 <p id="description"></p>
 
 
+<!-- 📞 زر الهاتف والاتصال الحصري -->
+<a id="phone" class="btn" style="display:none;">
+<i class="fas fa-phone phone-icon"></i>
+<span id="phoneText"></span>
+</a>
 
 <a id="whatsapp" class="btn" target="_blank">
 <i class="fab fa-whatsapp whatsapp-icon"></i>
@@ -308,6 +318,38 @@ data.name || "";
 document.getElementById("description").textContent =
 data.description || "";
 
+
+// 📞 معالجة زر الاتصال وحفظ جهة الاتصال
+if (data.phone && data.phone.trim() !== "") {
+    const phoneBtn = document.getElementById("phone");
+    document.getElementById("phoneText").textContent = data.phone;
+    phoneBtn.style.display = "flex";
+
+    phoneBtn.onclick = function() {
+        // 1. توليد وحفظ جهة الاتصال vCard
+        const vcardData = 
+`BEGIN:VCARD
+VERSION:3.0
+FN:${data.name || 'جهة اتصال'}
+TEL;TYPE=CELL:${data.phone}
+END:VCARD`;
+
+        const blob = new Blob([vcardData], { type: 'text/vcard;charset=utf-8;' });
+        const blobUrl = URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.setAttribute('download', `${data.name || 'Contact'}.vcf`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // 2. تفعيل الاتصال المباشر
+        setTimeout(() => {
+            window.location.href = `tel:${data.phone}`;
+        }, 500);
+    };
+}
 
 
 document.getElementById("whatsapp").href =
