@@ -143,6 +143,15 @@
             margin: 15px 0;
         }
 
+        /* صندوق إعدادات التحميل */
+        .download-box {
+            background: #edf2f7;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            border: 1px solid #cbd5e0;
+        }
+
         /* صندوق التخصيص */
         .qr-custom-box {
             background: #f8fafc;
@@ -250,14 +259,38 @@
         <input type="text" id="footer" placeholder="اتركها فارغة لظهور: جميع الحقوق محفوظة ✓">
     </div>
 
-    <!-- 📍 معاينة الـ QR في الأعلى -->
+    <!-- 📍 معاينة الـ QR وخيارات التحميل المنسدلة -->
     <div class="qr-section" id="qrSection">
         <h3 style="font-size:18px; margin-bottom:5px;">معاينة الـ QR</h3>
         <div id="qrContainer"></div>
-        <button class="btn btn-download" onclick="downloadQR()">تحميل QR PNG</button>
+
+        <!-- 📥 خيارات مقاس وصيغة الملف قبل التحميل -->
+        <div class="download-box">
+            <div class="grid-2">
+                <div class="form-group" style="margin-bottom:5px;">
+                    <label style="text-align:right;">صيغة الحفظ</label>
+                    <select id="downloadFormat">
+                        <option value="png" selected>PNG (صورة عالية الوضوح)</option>
+                        <option value="jpeg">JPEG / JPG</option>
+                        <option value="svg">SVG (فيكتور للطباعة/الفيبر)</option>
+                        <option value="webp">WEBP</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom:5px;">
+                    <label style="text-align:right;">أبعاد المقاس (Size)</label>
+                    <select id="downloadSize">
+                        <option value="300">300x300 px (صغير للموبايل)</option>
+                        <option value="1000" selected>1000x1000 px (قياسي للطباعة)</option>
+                        <option value="2000">2000x2000 px (عالي الدقة HQ)</option>
+                        <option value="4000">4000x4000 px (Ultra HD للوحة كبيرة)</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-download" onclick="downloadQR()">تحميل الـ QR بالخيارات المحددة</button>
+        </div>
     </div>
 
-    <!-- 🎨 تخصيص الـ QR Code مع اختيار لوجو من المعرض -->
+    <!-- 🎨 تخصيص الـ QR Code -->
     <div class="qr-custom-box">
         <h3 style="font-size:16px; text-align:right; margin-bottom:12px;">🎨 تخصيص شكل الـ QR Code</h3>
         
@@ -290,7 +323,6 @@
             </div>
         </div>
 
-        <!-- اختيار رفع لوجو خاص بالـ QR من المعرض -->
         <div class="form-group">
             <label>صورة اللوجو لمنتصف الـ QR (اختياري من المعرض)</label>
             <div class="file-input-wrapper">
@@ -345,7 +377,6 @@
         return el ? el.value.trim() : "";
     }
 
-    // رفع اللوجو الأساسي للنشاط من المعرض
     function handleMainLogoUpload(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
@@ -362,7 +393,6 @@
         }
     }
 
-    // رفع لوجو مخصص للـ QR فقط من المعرض
     function handleQRLogoUpload(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
@@ -532,8 +562,6 @@
         const dotType = SafeGetValue("qrDotType") || "square";
         const cornerType = SafeGetValue("qrCornerType") || "square";
         const embedLogo = SafeGetValue("qrEmbedLogo");
-        
-        // الأولوية للوجو المخصص للـ QR من المعرض، فإن لم يوجد نأخذ لوجو العميل الأساسي
         const finalLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
 
         const qrContainer = document.getElementById("qrContainer");
@@ -542,7 +570,7 @@
         const qrConfig = {
             width: 260,
             height: 260,
-            type: "canvas", // تم التغيير لـ canvas لمنع ظهور خطوط التشريح إطلاقاً
+            type: "canvas",
             data: targetURL,
             dotsOptions: {
                 color: dotColor,
@@ -575,10 +603,40 @@
         document.getElementById("qrSection").style.display = "block";
     }
 
+    // 📥 تحميل الـ QR بناءً على الصيغة والمقاس المحددين في القائمة
     function downloadQR() {
         const code = SafeGetValue("code") || "QR_Code";
+        const selectedFormat = SafeGetValue("downloadFormat") || "png";
+        const selectedSize = parseInt(SafeGetValue("downloadSize")) || 1000;
+
         if (qrCodeInstance) {
-            qrCodeInstance.download({ name: code + "_QR", extension: "png" });
+            // إنشاء كائن مؤقت لإعادة إنشاء الـ QR بمقاس التحميل المخصص دون التأثير على معاينة الشاشة
+            const targetURL = window.location.origin + window.location.pathname.replace("admin.html", "qr.html") + "?id=" + encodeURIComponent(code);
+            const dotColor = SafeGetValue("qrDotColor") || "#000000";
+            const bgColor = SafeGetValue("qrBgColor") || "#ffffff";
+            const dotType = SafeGetValue("qrDotType") || "square";
+            const cornerType = SafeGetValue("qrCornerType") || "square";
+            const embedLogo = SafeGetValue("qrEmbedLogo");
+            const finalLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
+
+            const exportConfig = {
+                width: selectedSize,
+                height: selectedSize,
+                type: selectedFormat === "svg" ? "svg" : "canvas",
+                data: targetURL,
+                dotsOptions: { color: dotColor, type: dotType },
+                backgroundOptions: { color: bgColor },
+                cornersSquareOptions: { type: cornerType, color: dotColor },
+                cornersDotOptions: { type: cornerType, color: dotColor },
+                imageOptions: { crossOrigin: "anonymous", margin: selectedSize * 0.015, imageSize: 0.26 }
+            };
+
+            if (embedLogo === "yes" && finalLogo) {
+                exportConfig.image = finalLogo;
+            }
+
+            const exportQR = new QRCodeStyling(exportConfig);
+            exportQR.download({ name: code + "_" + selectedSize + "px", extension: selectedFormat });
         }
     }
 </script>
