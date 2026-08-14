@@ -60,6 +60,7 @@ margin-bottom:30px;
 text-shadow:0 2px 8px rgba(0,0,0,.5);
 }
 
+
 .btn{
 display:flex;
 align-items:center;
@@ -79,6 +80,7 @@ background-position:center;
 box-shadow:0 6px 15px rgba(0,0,0,.25);
 }
 
+
 .btn::before{
 content:"";
 position:absolute;
@@ -86,10 +88,12 @@ inset:0;
 background:rgba(255,255,255,.75);
 }
 
+
 .btn span{
 position:relative;
 z-index:2;
 }
+
 
 .btn i,
 .btn img{
@@ -98,9 +102,11 @@ right:20px;
 z-index:2;
 }
 
+
 .btn i{
 font-size:34px;
 }
+
 
 .whatsapp-icon{
 color:#25D366;
@@ -118,73 +124,100 @@ color:#E4405F;
 color:#444;
 }
 
+
 .custom-icon{
 width:38px;
 height:38px;
 object-fit:contain;
 }
 
+
 .footer{
 margin-top:20px;
 color:#fff;
 font-size:15px;
 font-weight:bold;
-text-shadow:0 2px 8px rgba(0,0,0,.5);
 }
 
 </style>
 
 </head>
 
+
 <body>
+
 
 <div class="card">
 
-<img id="logo" class="logo" src="">
+
+<img id="logo" class="logo">
+
 
 <h1 id="name"></h1>
 
 <p id="description"></p>
+
+
 
 <a id="whatsapp" class="btn" target="_blank">
 <i class="fab fa-whatsapp whatsapp-icon"></i>
 <span>WhatsApp</span>
 </a>
 
+
 <a id="facebook" class="btn" target="_blank">
 <i class="fab fa-facebook facebook-icon"></i>
 <span>Facebook</span>
 </a>
+
 
 <a id="instagram" class="btn" target="_blank">
 <i class="fab fa-instagram instagram-icon"></i>
 <span>Instagram</span>
 </a>
 
+
 <a id="website" class="btn" target="_blank">
 <i class="fas fa-globe website-icon"></i>
 <span>Website</span>
 </a>
 
-<a id="payment" class="btn" target="_blank">
+
+
+<a id="instapay" class="btn" target="_blank">
 <img src="assets/instapay.png" class="custom-icon">
 <span>InstaPay</span>
 </a>
+
+
+
+<a id="vodafonecash" class="btn" target="_blank">
+<img src="assets/vodafonecash.png" class="custom-icon">
+<span>Vodafone Cash</span>
+</a>
+
+
 
 <div class="footer">
 QR Business Card
 </div>
 
+
 </div>
 
+
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
 
 <script>
 
+
 const firebaseConfig = {
 
-apiKey: "AIzaSyDAXHBPfJUr2quRe_8OyhEDqGrHaneNmcc",
+apiKey: "AIzaDAXHBPfJUr2quRe_8OyhEDqGrHaneNmcc",
 
 authDomain: "qr-system-45702.firebaseapp.com",
 
@@ -200,18 +233,27 @@ appId: "1:983573164670:web:4b352977dd6085b0649e2f"
 
 };
 
+
 firebase.initializeApp(firebaseConfig);
 
+
 const db = firebase.database();
+
 
 const params = new URLSearchParams(window.location.search);
 
 const id = params.get("id");
 
+
+
 db.ref("customers/" + id).once("value")
+
 .then(function(snapshot){
 
+
 const data = snapshot.val();
+
+
 
 if(!data){
 
@@ -222,49 +264,78 @@ return;
 
 }
 
+
+
 document.getElementById("logo").src =
 data.logo || "";
+
 
 document.getElementById("name").textContent =
 data.name || "";
 
+
 document.getElementById("description").textContent =
 data.description || "";
+
+
 
 document.getElementById("whatsapp").href =
 data.whatsapp || "#";
 
+
 document.getElementById("facebook").href =
 data.facebook || "#";
+
 
 document.getElementById("instagram").href =
 data.instagram || "#";
 
+
 document.getElementById("website").href =
 data.website || "#";
 
-document.getElementById("payment").href =
-data.payment || "#";
 
+document.getElementById("instapay").href =
+data.instapay || "#";
+
+
+document.getElementById("vodafonecash").href =
+data.vodafonecash || "#";
+
+
+
+
+// إخفاء الروابط الفاضية
 
 if(!data.whatsapp)
 document.getElementById("whatsapp").style.display="none";
 
+
 if(!data.facebook)
 document.getElementById("facebook").style.display="none";
+
 
 if(!data.instagram)
 document.getElementById("instagram").style.display="none";
 
+
 if(!data.website)
 document.getElementById("website").style.display="none";
 
-if(!data.payment)
-document.getElementById("payment").style.display="none";
+
+if(!data.instapay)
+document.getElementById("instapay").style.display="none";
+
+
+if(!data.vodafonecash)
+document.getElementById("vodafonecash").style.display="none";
+
 
 });
 
+
 </script>
+
 
 </body>
 </html>
