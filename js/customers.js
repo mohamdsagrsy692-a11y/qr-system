@@ -71,7 +71,6 @@ function loadCustomers(){
     alert("تعذر تحميل العملاء: " + error.message);
 
   });
-  {
 
 }
 
@@ -160,9 +159,7 @@ function loadCustomer(){
     document.getElementById("customerList").value=id;
 
 
-
     updateBottomPreview();
-
 
 
   })
@@ -172,6 +169,9 @@ function loadCustomer(){
     alert("تعذر تحميل العميل: " + error.message);
 
   });
+
+    }
+
 function saveCustomer(){
 
   const code =
@@ -255,7 +255,6 @@ function saveCustomer(){
 
   });
 
-
 }
 
 
@@ -330,7 +329,7 @@ function deleteCustomer(){
       document.getElementById("bottomPreview").textContent="";
 
 
-      qrCode=null;
+      qrCode = null;
 
 
     })
@@ -345,5 +344,4 @@ function deleteCustomer(){
 
   }
 
-}
-}
+           }
