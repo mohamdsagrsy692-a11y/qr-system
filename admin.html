@@ -29,7 +29,7 @@
             padding: 25px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            display: none; /* إخفاء لوحة التحكم حتى تسجيل الدخول */
+            display: none;
         }
 
         .header-bar {
@@ -125,28 +125,11 @@
             opacity: 0.9;
         }
 
-        .btn-save {
-            background-color: #111;
-            color: #fff;
-        }
+        .btn-save { background-color: #111; color: #fff; }
+        .btn-delete { background-color: #c53030; color: #fff; }
+        .btn-qr { background-color: #2d3748; color: #fff; }
+        .btn-download { background-color: #111; color: #fff; margin-top: 10px; }
 
-        .btn-delete {
-            background-color: #c53030;
-            color: #fff;
-        }
-
-        .btn-qr {
-            background-color: #2d3748;
-            color: #fff;
-        }
-
-        .btn-download {
-            background-color: #111;
-            color: #fff;
-            margin-top: 10px;
-        }
-
-        /* قسم معاينة الـ QR */
         .qr-section {
             margin-bottom: 20px;
             padding: 15px;
@@ -163,7 +146,6 @@
             margin: 15px 0;
         }
 
-        /* صندوق إعدادات التحميل */
         .download-box {
             background: #edf2f7;
             padding: 12px;
@@ -172,7 +154,6 @@
             border: 1px solid #cbd5e0;
         }
 
-        /* صندوق التخصيص */
         .qr-custom-box {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
@@ -196,7 +177,6 @@
             border: 1px solid #ddd;
         }
 
-        /* 🔒 تصميم نافذة تسجيل الدخول المعتمدة على الصورة */
         .login-overlay {
             position: fixed;
             top: 0;
@@ -228,7 +208,7 @@
         }
 
         .login-header h2 {
-            color: #8b0000; /* لون أحمر عنابي جذاب مطابق للصورة */
+            color: #8b0000;
             font-size: 22px;
             font-weight: bold;
             margin: 0;
@@ -259,13 +239,8 @@
             background-color: #fafafa;
         }
 
-        .login-body input:focus {
-            background-color: #fff;
-            border-color: #48bb78;
-        }
-
         .btn-login-submit {
-            background-color: #48bb78; /* اللون الأخضر الموحد للصورة */
+            background-color: #48bb78;
             color: white;
             border: none;
             padding: 8px 22px;
@@ -275,11 +250,6 @@
             cursor: pointer;
             display: block;
             margin-top: 15px;
-            transition: background 0.2s;
-        }
-
-        .btn-login-submit:hover {
-            background-color: #38a169;
         }
 
         .error-msg {
@@ -293,7 +263,6 @@
 </head>
 <body>
 
-<!-- 🔒 نافذة تسجيل الدخول بنفس شكل الصورة بالضبط -->
 <div class="login-overlay" id="loginModal">
     <div class="login-card">
         <div class="login-header">
@@ -317,7 +286,6 @@
     </div>
 </div>
 
-<!-- 🛠️ لوحة التحكم الرئيسية -->
 <div class="container" id="adminContainer">
     <div class="header-bar">
         <h2>إدارة العملاء</h2>
@@ -355,7 +323,6 @@
         <textarea id="description" rows="2" placeholder="الدعاية والاعلان"></textarea>
     </div>
 
-    <!-- رفع لوجو العميل الأساسي -->
     <div class="form-group">
         <label>صورة اللوجو الأساسية للنشاط</label>
         <div class="file-input-wrapper">
@@ -364,6 +331,12 @@
             <input type="file" id="logoFileInput" accept="image/*" onchange="handleMainLogoUpload(this)">
         </div>
         <img id="logoPreview" class="preview-logo" alt="معاينة اللوجو">
+    </div>
+
+    <!-- 📞 الحقل الجديد للاتصال -->
+    <div class="form-group">
+        <label>رقم الهاتف / الاتصال</label>
+        <input type="text" id="phone" placeholder="01095195829">
     </div>
 
     <div class="form-group">
@@ -401,12 +374,10 @@
         <input type="text" id="footer" placeholder="اتركها فارغة لظهور: جميع الحقوق محفوظة ✓">
     </div>
 
-    <!-- 📍 معاينة الـ QR وخيارات التحميل المنسدلة -->
     <div class="qr-section" id="qrSection">
         <h3 style="font-size:18px; margin-bottom:5px;">معاينة الـ QR</h3>
         <div id="qrContainer"></div>
 
-        <!-- 📥 خيارات مقاس وصيغة الملف قبل التحميل -->
         <div class="download-box">
             <div class="grid-2">
                 <div class="form-group" style="margin-bottom:5px;">
@@ -432,7 +403,6 @@
         </div>
     </div>
 
-    <!-- 🎨 تخصيص الـ QR Code -->
     <div class="qr-custom-box">
         <h3 style="font-size:16px; text-align:right; margin-bottom:12px;">🎨 تخصيص شكل الـ QR Code</h3>
         
@@ -489,16 +459,13 @@
 
 </div>
 
-<!-- خدمات فايربيس -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
 <script>
-    // 🔑 بيانات تسجيل الدخول المطلوبة
     const ADMIN_USERNAME = "abdallah.haroun";
     const ADMIN_PASSWORD = "CODE010951";
 
-    // التحقق عند فتح الصفحة
     window.onload = function() {
         if (sessionStorage.getItem("adminLoggedIn") === "true") {
             document.getElementById("loginModal").style.display = "none";
@@ -634,6 +601,7 @@
         SafeSetValue("name", data.name);
         SafeSetValue("description", data.description);
         SafeSetValue("logo", data.logo);
+        SafeSetValue("phone", data.phone); // تحميل الهاتف
         SafeSetValue("whatsapp", data.whatsapp);
         SafeSetValue("facebook", data.facebook);
         SafeSetValue("instagram", data.instagram);
@@ -664,6 +632,7 @@
             name: SafeGetValue("name"),
             description: SafeGetValue("description"),
             logo: SafeGetValue("logo"),
+            phone: SafeGetValue("phone"), // حفظ الهاتف
             whatsapp: SafeGetValue("whatsapp"),
             facebook: SafeGetValue("facebook"),
             instagram: SafeGetValue("instagram"),
@@ -707,6 +676,7 @@
         SafeSetValue("name", "");
         SafeSetValue("description", "");
         SafeSetValue("logo", "");
+        SafeSetValue("phone", "");
         SafeSetValue("qrCustomLogo", "");
         SafeSetValue("whatsapp", "");
         SafeSetValue("facebook", "");
@@ -752,26 +722,11 @@
             height: 260,
             type: "canvas",
             data: targetURL,
-            dotsOptions: {
-                color: dotColor,
-                type: dotType
-            },
-            backgroundOptions: {
-                color: bgColor
-            },
-            cornersSquareOptions: {
-                type: cornerType,
-                color: dotColor
-            },
-            cornersDotOptions: {
-                type: cornerType,
-                color: dotColor
-            },
-            imageOptions: {
-                crossOrigin: "anonymous",
-                margin: 4,
-                imageSize: 0.26
-            }
+            dotsOptions: { color: dotColor, type: dotType },
+            backgroundOptions: { color: bgColor },
+            cornersSquareOptions: { type: cornerType, color: dotColor },
+            cornersDotOptions: { type: cornerType, color: dotColor },
+            imageOptions: { crossOrigin: "anonymous", margin: 4, imageSize: 0.26 }
         };
 
         if (embedLogo === "yes" && finalLogo) {
