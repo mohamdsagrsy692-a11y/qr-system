@@ -12,16 +12,31 @@ function generateNumber() {
     });  
 
     const next = max + 1;  
-
-    document.getElementById("id").value =  
-      "CODE" + String(next).padStart(3, "0");
+    
+    const idElem = document.getElementById("id");
+    if (idElem) {
+      idElem.value = "CODE" + String(next).padStart(3, "0");
+    }
 
   });
+}
+
+// دالة مساعدة لكتابة القيم بأمان بدون Crash
+function SafeSetValue(elementId, val) {
+  const el = document.getElementById(elementId);
+  if (el) el.value = val || "";
+}
+
+// دالة مساعدة لقراءة القيم بأمان
+function SafeGetValue(elementId) {
+  const el = document.getElementById(elementId);
+  return el ? el.value : "";
 }
 
 function loadCustomers() {
   db.ref("customers").once("value").then(function(snapshot) {
     const select = document.getElementById("customerList");
+    if (!select) return;
 
     select.innerHTML = '<option value="">اختر العميل</option>';  
 
@@ -44,16 +59,20 @@ function loadCustomers() {
 }
 
 function selectCustomer() {
-  const id = document.getElementById("customerList").value;
+  const selectElem = document.getElementById("customerList");
+  const id = selectElem ? selectElem.value : "";
 
   if (id) {
-    document.getElementById("searchId").value = id;
+    SafeSetValue("searchId", id);
     loadCustomer();
   }
 }
 
 function loadCustomer() {
-  const id = document.getElementById("searchId").value.trim();
+  const searchInput = document.getElementById("searchId");
+  if (!searchInput) return;
+
+  const id = searchInput.value.trim();
 
   if (!id) {
     alert("اكتب كود العميل");
@@ -66,43 +85,45 @@ function loadCustomer() {
 
     // لو العميل جديد ومش موجود في قاعدة البيانات
     if (!data) {  
-      document.getElementById("name").value = "";  
-      document.getElementById("description").value = "";  
-      document.getElementById("logo").value = "";  
-      document.getElementById("whatsapp").value = "";  
-      document.getElementById("facebook").value = "";  
-      document.getElementById("instagram").value = "";  
-      document.getElementById("website").value = "";  
-      document.getElementById("payment").value = "";  
+      SafeSetValue("name", "");  
+      SafeSetValue("description", "");  
+      SafeSetValue("logo", "");  
+      SafeSetValue("whatsapp", "");  
+      SafeSetValue("facebook", "");  
+      SafeSetValue("instagram", "");  
+      SafeSetValue("website", "");  
+      SafeSetValue("instapay", "");  
+      SafeSetValue("vodafonecash", "");  
       
       if (typeof resetQRDesign === "function") resetQRDesign();
       return;  
     }  
 
     // لو العميل موجود فعلاً
-    document.getElementById("id").value = id;  
-    document.getElementById("name").value = data.name || "";  
-    document.getElementById("description").value = data.description || "";  
-    document.getElementById("logo").value = data.logo || "";  
-    document.getElementById("whatsapp").value = data.whatsapp || "";  
-    document.getElementById("facebook").value = data.facebook || "";  
-    document.getElementById("instagram").value = data.instagram || "";  
-    document.getElementById("website").value = data.website || "";  
-    document.getElementById("payment").value = data.payment || "";  
+    SafeSetValue("id", id);  
+    SafeSetValue("name", data.name);  
+    SafeSetValue("description", data.description);  
+    SafeSetValue("logo", data.logo);  
+    SafeSetValue("whatsapp", data.whatsapp);  
+    SafeSetValue("facebook", data.facebook);  
+    SafeSetValue("instagram", data.instagram);  
+    SafeSetValue("website", data.website);  
+    SafeSetValue("instapay", data.instapay);  
+    SafeSetValue("vodafonecash", data.vodafonecash);  
 
     if (data.qrStyle) {  
-      if (document.getElementById("dotColor")) document.getElementById("dotColor").value = data.qrStyle.dotColor || "#000000";  
-      if (document.getElementById("dotStyle")) document.getElementById("dotStyle").value = data.qrStyle.dotStyle || "rounded";  
-      if (document.getElementById("cornerColor")) document.getElementById("cornerColor").value = data.qrStyle.cornerColor || "#000000";  
-      if (document.getElementById("cornerStyle")) document.getElementById("cornerStyle").value = data.qrStyle.cornerStyle || "square";  
-      if (document.getElementById("bgColor")) document.getElementById("bgColor").value = data.qrStyle.bgColor || "#ffffff";  
-      if (document.getElementById("qrLogo")) document.getElementById("qrLogo").value = data.qrStyle.qrLogo || "";  
-      if (document.getElementById("bottomText")) document.getElementById("bottomText").value = data.qrStyle.bottomText || "";  
+      SafeSetValue("dotColor", data.qrStyle.dotColor || "#000000");  
+      SafeSetValue("dotStyle", data.qrStyle.dotStyle || "rounded");  
+      SafeSetValue("cornerColor", data.qrStyle.cornerColor || "#000000");  
+      SafeSetValue("cornerStyle", data.qrStyle.cornerStyle || "square");  
+      SafeSetValue("bgColor", data.qrStyle.bgColor || "#ffffff");  
+      SafeSetValue("qrLogo", data.qrStyle.qrLogo || "");  
+      SafeSetValue("bottomText", data.qrStyle.bottomText || "");  
     } else {  
       if (typeof resetQRDesign === "function") resetQRDesign();  
     }  
 
-    document.getElementById("customerList").value = id;  
+    SafeSetValue("customerList", id);  
 
     if (typeof updateBottomPreview === "function") updateBottomPreview();
 
@@ -114,23 +135,23 @@ function loadCustomer() {
 
 function saveCustomer() {
 
-  const code = document.getElementById("id").value.trim();
+  const code = SafeGetValue("id").trim();
 
   if (!code) {
     alert("لا يوجد كود للعميل");
     return;
   }
 
-  // ✅ تم تصحيح Const إلى const هنا
   const data = {
-    name: document.getElementById("name").value,
-    description: document.getElementById("description").value,
-    logo: document.getElementById("logo").value,
-    whatsapp: document.getElementById("whatsapp").value,
-    facebook: document.getElementById("facebook").value,
-    instagram: document.getElementById("instagram").value,
-    website: document.getElementById("website").value,
-    payment: document.getElementById("payment").value
+    name: SafeGetValue("name"),
+    description: SafeGetValue("description"),
+    logo: SafeGetValue("logo"),
+    whatsapp: SafeGetValue("whatsapp"),
+    facebook: SafeGetValue("facebook"),
+    instagram: SafeGetValue("instagram"),
+    website: SafeGetValue("website"),
+    instapay: SafeGetValue("instapay"),
+    vodafonecash: SafeGetValue("vodafonecash")
   };
 
   db.ref("customers/" + code)
@@ -147,7 +168,7 @@ function saveCustomer() {
 
 function deleteCustomer() {
 
-  const id = document.getElementById("id").value.trim();
+  const id = SafeGetValue("id").trim();
 
   if (!id) {
     alert("اختر عميل أولاً");
@@ -165,22 +186,28 @@ function deleteCustomer() {
         loadCustomers();  
         generateNumber();  
 
-        document.getElementById("customerList").value = "";  
-        document.getElementById("searchId").value = "";  
-        document.getElementById("name").value = "";  
-        document.getElementById("description").value = "";  
-        document.getElementById("logo").value = "";  
-        document.getElementById("whatsapp").value = "";  
-        document.getElementById("facebook").value = "";  
-        document.getElementById("instagram").value = "";  
-        document.getElementById("website").value = "";  
-        document.getElementById("payment").value = "";  
-        if (document.getElementById("qrLogo")) document.getElementById("qrLogo").value = "";  
-        if (document.getElementById("bottomText")) document.getElementById("bottomText").value = "";  
+        SafeSetValue("customerList", "");  
+        SafeSetValue("searchId", "");  
+        SafeSetValue("name", "");  
+        SafeSetValue("description", "");  
+        SafeSetValue("logo", "");  
+        SafeSetValue("whatsapp", "");  
+        SafeSetValue("facebook", "");  
+        SafeSetValue("instagram", "");  
+        SafeSetValue("website", "");  
+        SafeSetValue("instapay", "");  
+        SafeSetValue("vodafonecash", "");  
+        SafeSetValue("qrLogo", "");  
+        SafeSetValue("bottomText", "");  
 
-        if (document.getElementById("qrcode")) document.getElementById("qrcode").innerHTML = "";  
-        if (document.getElementById("qrLink")) document.getElementById("qrLink").textContent = "";  
-        if (document.getElementById("bottomPreview")) document.getElementById("bottomPreview").textContent = "";  
+        const qrcodeElem = document.getElementById("qrcode");
+        if (qrcodeElem) qrcodeElem.innerHTML = "";  
+        
+        const qrLinkElem = document.getElementById("qrLink");
+        if (qrLinkElem) qrLinkElem.textContent = "";  
+        
+        const bottomPreviewElem = document.getElementById("bottomPreview");
+        if (bottomPreviewElem) bottomPreviewElem.textContent = "";  
 
         if (typeof qrCode !== "undefined") qrCode = null;  
 
