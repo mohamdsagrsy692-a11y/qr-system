@@ -496,20 +496,43 @@
 
         <div class="grid-2">
             <div class="form-group">
-                <label>شكل النقاط</label>
+                <label>شكل النقاط (Dots)</label>
                 <select id="qrDotType" onchange="updateQRLive()">
-                    <option value="square" selected>كلاسيكي قياسي (مربعات صريحة)</option>
-                    <option value="rounded">انحناء ناعم (Rounded)</option>
+                    <option value="square" selected>مربعات صريحة (Square)</option>
                     <option value="dots">نقاط دائرية (Dots)</option>
+                    <option value="rounded">انحناء ناعم (Rounded)</option>
+                    <option value="classy">كلاسيكي (Classy)</option>
+                    <option value="classy-rounded">كلاسيكي دائري (Classy Rounded)</option>
+                    <option value="extra-rounded">انحناء إضافي (Extra Rounded)</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>شكل زوايا الـ QR</label>
+                <label>شكل إطار الزوايا (Marker Border)</label>
                 <select id="qrCornerType" onchange="updateQRLive()">
-                    <option value="square" selected>مربع كلاسيكي (Square)</option>
+                    <option value="square" selected>مربع (Square)</option>
+                    <option value="dot">دائري (Dot)</option>
+                    <option value="extra-rounded">انحناء ناعم (Extra Rounded)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label>لون إطار الزوايا</label>
+                <input type="color" id="qrCornerColor" value="#000000" oninput="updateQRLive()">
+            </div>
+            <div class="form-group">
+                <label>شكل مركز الزوايا (Marker Center)</label>
+                <select id="qrCornerDotType" onchange="updateQRLive()">
+                    <option value="square" selected>مربع (Square)</option>
                     <option value="dot">دائري (Dot)</option>
                 </select>
             </div>
+        </div>
+
+        <div class="form-group">
+            <label>لون مركز الزوايا</label>
+            <input type="color" id="qrCornerDotColor" value="#000000" oninput="updateQRLive()">
         </div>
 
         <div class="form-group">
@@ -859,7 +882,13 @@
         const dotColor = SafeGetValue("qrDotColor") || "#000000";
         const bgColor = SafeGetValue("qrBgColor") || "#ffffff";
         const dotType = SafeGetValue("qrDotType") || "square";
+        
         const cornerType = SafeGetValue("qrCornerType") || "square";
+        const cornerColor = SafeGetValue("qrCornerColor") || dotColor;
+        
+        const cornerDotType = SafeGetValue("qrCornerDotType") || "square";
+        const cornerDotColor = SafeGetValue("qrCornerDotColor") || dotColor;
+
         const embedLogo = SafeGetValue("qrEmbedLogo");
         const finalLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
 
@@ -873,8 +902,8 @@
             data: targetURL,
             dotsOptions: { color: dotColor, type: dotType },
             backgroundOptions: { color: bgColor },
-            cornersSquareOptions: { type: cornerType, color: dotColor },
-            cornersDotOptions: { type: cornerType, color: dotColor },
+            cornersSquareOptions: { type: cornerType, color: cornerColor },
+            cornersDotOptions: { type: cornerDotType, color: cornerDotColor },
             imageOptions: { crossOrigin: "anonymous", margin: 4, imageSize: 0.26 }
         };
 
@@ -897,7 +926,13 @@
             const dotColor = SafeGetValue("qrDotColor") || "#000000";
             const bgColor = SafeGetValue("qrBgColor") || "#ffffff";
             const dotType = SafeGetValue("qrDotType") || "square";
+            
             const cornerType = SafeGetValue("qrCornerType") || "square";
+            const cornerColor = SafeGetValue("qrCornerColor") || dotColor;
+            
+            const cornerDotType = SafeGetValue("qrCornerDotType") || "square";
+            const cornerDotColor = SafeGetValue("qrCornerDotColor") || dotColor;
+
             const embedLogo = SafeGetValue("qrEmbedLogo");
             const finalLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
 
@@ -908,8 +943,8 @@
                 data: targetURL,
                 dotsOptions: { color: dotColor, type: dotType },
                 backgroundOptions: { color: bgColor },
-                cornersSquareOptions: { type: cornerType, color: dotColor },
-                cornersDotOptions: { type: cornerType, color: dotColor },
+                cornersSquareOptions: { type: cornerType, color: cornerColor },
+                cornersDotOptions: { type: cornerDotType, color: cornerDotColor },
                 imageOptions: { crossOrigin: "anonymous", margin: selectedSize * 0.015, imageSize: 0.26 }
             };
 
