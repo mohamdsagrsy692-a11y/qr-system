@@ -39,11 +39,12 @@ width:140px;
 height:140px;
 border-radius:50%;
 background:#fff;
-padding:10px;
+padding:5px;
 margin:20px auto;
 overflow:hidden;
 box-shadow:0 4px 15px rgba(0,0,0,.35);
 object-fit:cover;
+display:block;
 }
 
 #name{
@@ -150,7 +151,7 @@ font-weight:bold;
 <div class="card">
 
 
-<img id="logo" class="logo">
+<img id="logo" class="logo" style="display:none;">
 
 
 <h1 id="name"></h1>
@@ -265,9 +266,14 @@ return;
 }
 
 
-
-document.getElementById("logo").src =
-data.logo || "";
+// معالجة عرض اللوجو بشكل صحيح
+const logoElem = document.getElementById("logo");
+if (data.logo && data.logo.trim() !== "") {
+    logoElem.src = data.logo;
+    logoElem.style.display = "block";
+} else {
+    logoElem.style.display = "none";
+}
 
 
 document.getElementById("name").textContent =
