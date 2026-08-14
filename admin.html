@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول - لوحة التحكم</title>
     
-    <!-- ربط الأيقونة الجديدة للشاشة الرئيسية (PWA / Desktop Shortcut) -->
     <link rel="icon" type="image/png" href="assets/icon.png">
     <link rel="apple-touch-icon" href="assets/icon.png">
 
-    <!-- مكتبة إنشاء وتخصيص QR Code -->
     <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
     
     <style>
@@ -144,7 +142,6 @@
             display: none;
         }
 
-        /* حاوية الإطار للـ QR */
         .qr-frame-wrapper {
             display: inline-block;
             padding: 15px;
@@ -279,7 +276,6 @@
             text-align: center;
         }
 
-        /* تصميم النافذة المنبثقة الاحترافية (Custom Modal) */
         .custom-modal-overlay {
             position: fixed;
             top: 0;
@@ -364,7 +360,6 @@
     </div>
 </div>
 
-<!-- النافذة المنبثقة الاحترافية (Custom Modal HTML) -->
 <div class="custom-modal-overlay" id="customModal">
     <div class="custom-modal-box">
         <div class="custom-modal-msg" id="customModalMsg">رسالة التنبيه هنا</div>
@@ -469,7 +464,6 @@
     <div class="qr-section" id="qrSection">
         <h3 style="font-size:18px; margin-bottom:5px;">معاينة الـ QR</h3>
         
-        <!-- حاوية الإطار للـ QR -->
         <div id="qrFrameWrapper" class="qr-frame-wrapper" style="border: 3px solid #000000; border-radius: 10px;">
             <div id="qrContainer"></div>
             <div id="qrFrameText" class="qr-frame-text" style="color: #000000; display: none;">SCAN ME</div>
@@ -503,7 +497,6 @@
     <div class="qr-custom-box">
         <h3 style="font-size:16px; text-align:right; margin-bottom:12px;">🎨 تخصيص شكل الإطار والـ QR Code</h3>
         
-        <!-- قسم الفريمات الجديد -->
         <div class="grid-2">
             <div class="form-group">
                 <label>شكل الإطار الخارجي (Frame)</label>
@@ -526,6 +519,18 @@
         </div>
 
         <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
+
+        <!-- تحكم في عدد ونطاق نقاط المصفوفة (QR Version / Grid Density) -->
+        <div class="form-group">
+            <label>حجم ومستوى مصفوفة النقاط (QR Version / Grid Density)</label>
+            <select id="qrVersion" onchange="updateQRLive()">
+                <option value="0" selected>تلقائي (حسب طول الرابط)</option>
+                <option value="3">نسخة صغيرة (نقاط أقل وأكبر حجماً)</option>
+                <option value="5">نسخة متوسطة</option>
+                <option value="8">نسخة كثيفة (نقاط أكتر وبدقة أعلى)</option>
+                <option value="12">نسخة مكثفة جداً (Ultra Dense)</option>
+            </select>
+        </div>
 
         <div class="grid-2">
             <div class="form-group">
@@ -610,7 +615,6 @@
     const ADMIN_USERNAME = "abdallah.haroun";
     const ADMIN_PASSWORD = "CODE010951";
 
-    // دوال النافذة المنبثقة الاحترافية
     function showCustomAlert(message, callback) {
         const modal = document.getElementById("customModal");
         const msgEl = document.getElementById("customModalMsg");
@@ -936,7 +940,9 @@
         const embedLogo = SafeGetValue("qrEmbedLogo");
         const finalLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
 
-        // إعدادات الفريم
+        // قراءة حجم النسخة/المصفوفة المختار
+        const qrVersionVal = parseInt(SafeGetValue("qrVersion")) || 0;
+
         const frameStyle = SafeGetValue("qrFrameStyle") || "none";
         const frameColor = SafeGetValue("qrFrameColor") || "#000000";
         const framePhrase = SafeGetValue("qrFramePhrase") || "SCAN ME";
@@ -944,7 +950,6 @@
         const frameWrapper = document.getElementById("qrFrameWrapper");
         const frameTextEl = document.getElementById("qrFrameText");
 
-        // تطبيق شكل الفريم في المعاينة
         if (frameStyle === "none") {
             frameWrapper.style.border = "none";
             frameWrapper.style.borderRadius = "0px";
@@ -983,6 +988,10 @@
             imageOptions: { crossOrigin: "anonymous", margin: 4, imageSize: 0.26 }
         };
 
+        if (qrVersionVal > 0) {
+            qrConfig.qrOptions = { version: qrVersionVal };
+        }
+
         if (embedLogo === "yes" && finalLogo) {
             qrConfig.image = finalLogo;
         }
@@ -996,6 +1005,7 @@
         const code = SafeGetValue("code") || "QR_Code";
         const selectedFormat = SafeGetValue("downloadFormat") || "png";
         const selectedSize = parseInt(SafeGetValue("downloadSize")) || 1000;
+        const qrVersionVal = parseInt(SafeGetValue("qrVersion")) || 0;
 
         if (qrCodeInstance) {
             const targetURL = window.location.origin + window.location.pathname.replace("admin.html", "qr.html") + "?id=" + encodeURIComponent(code);
@@ -1023,6 +1033,10 @@
                 cornersDotOptions: { type: cornerDotType, color: cornerDotColor },
                 imageOptions: { crossOrigin: "anonymous", margin: selectedSize * 0.015, imageSize: 0.26 }
             };
+
+            if (qrVersionVal > 0) {
+                exportConfig.qrOptions = { version: qrVersionVal };
+            }
 
             if (embedLogo === "yes" && finalLogo) {
                 exportConfig.image = finalLogo;
