@@ -311,3 +311,4 @@ function deleteCustomer() {
   }
 
 }
+alert("customers.js شغال");
