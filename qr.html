@@ -295,6 +295,12 @@ return;
 
 }
 
+// [إضافة التوجيه]:
+if (data.redirectUrl && data.redirectUrl.trim() !== "") {
+    window.location.replace(data.redirectUrl.trim());
+    return;
+}
+
 
 // معالجة عرض إطار اللوجو بأسلوب الأزرار
 const logoElem = document.getElementById("logo");
