@@ -11,14 +11,10 @@
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Tahoma,sans-serif;
-}
-
+/* إخفاء الصفحة مؤقتاً في البداية لمنع ظهور أي ومض قبل التحويل المباشر */
 body{
+opacity: 0;
+transition: opacity 0.2s;
 background:url("assets/background.jpg") center center/cover no-repeat;
 background-attachment:fixed;
 min-height:100vh;
@@ -26,6 +22,13 @@ display:flex;
 justify-content:center;
 align-items:center;
 padding:20px;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Tahoma,sans-serif;
 }
 
 .card{
@@ -291,6 +294,8 @@ if(!data){
 document.querySelector(".card").innerHTML =
 "<h2 style='color:white'>العميل غير موجود</h2>";
 
+document.body.style.opacity = "1";
+
 return;
 
 }
@@ -300,6 +305,10 @@ if (data.redirectUrl && data.redirectUrl.trim() !== "") {
     window.location.replace(data.redirectUrl.trim());
     return;
 }
+
+
+// إظهار الصفحة في حال عدم وجود توجيه مباشر
+document.body.style.opacity = "1";
 
 
 // معالجة عرض إطار اللوجو بأسلوب الأزرار
