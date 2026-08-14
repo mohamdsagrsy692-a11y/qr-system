@@ -1,252 +1,389 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>معلومات النشاط</title>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        body {
-            background-color: #f7f9fc;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 15px;
-        }
+<title>QR Profile</title>
 
-        .card {
-            background: #ffffff;
-            width: 100%;
-            max-width: 420px;
-            padding: 30px 20px;
-            border-radius: 16px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            text-align: center;
-            display: none; /* مخفي لحين تحميل البيانات */
-        }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-        .logo-container {
-            width: 95px;
-            height: 95px;
-            margin: 0 auto 15px auto;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 3px solid #f1f5f9;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            background: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+<style>
 
-        .logo-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Tahoma,sans-serif;
+}
 
-        h1 {
-            font-size: 22px;
-            color: #1a202c;
-            margin-bottom: 8px;
-        }
+body{
+background:url("assets/background.jpg") center center/cover no-repeat;
+background-attachment:fixed;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
 
-        .description {
-            font-size: 14px;
-            color: #64748b;
-            margin-bottom: 25px;
-            line-height: 1.6;
-            padding: 0 10px;
-        }
+.card{
+width:100%;
+max-width:500px;
+text-align:center;
+}
 
-        .links-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 25px;
-        }
+/* إطار اللوجو بنفس خامة ولون أزرار الأيقونات */
+.logo-container{
+width: 100%;
+height: 200px;
+border-radius: 18px;
+margin: 20px auto;
+overflow: hidden;
+position: relative;
+background: url("assets/card-bg.jpg") center center/cover;
+box-shadow: 0 6px 15px rgba(0,0,0,.25);
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 15px;
+}
 
-        .btn-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: #ffffff;
-            color: #1e293b;
-            text-decoration: none;
-            padding: 12px 15px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 15px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-            transition: all 0.2s ease;
-        }
+/* الطبقة الشفافة البيضاء بنفس درجة الأزرار */
+.logo-container::before{
+content: "";
+position: absolute;
+inset: 0;
+background: rgba(255,255,255,.75);
+z-index: 1;
+}
 
-        .btn-link:hover {
-            background: #f8fafc;
-            border-color: #cbd5e1;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
+/* صورة اللوجو نفسها فوق الطبقة الشفافة */
+.logo-container img{
+max-width: 100%;
+max-height: 100%;
+object-fit: contain;
+position: relative;
+z-index: 2;
+display: block;
+}
 
-        .btn-link svg {
-            width: 20px;
-            height: 20px;
-        }
+#name{
+color:#fff;
+font-size:34px;
+margin-bottom:5px;
+text-shadow:0 2px 8px rgba(0,0,0,.5);
+}
 
-        /* تخصيص ألوان الأزرار البارزة */
-        .btn-whatsapp { background-color: #25d366 !important; color: white !important; border: none !important; }
-        .btn-phone { background-color: #0ea5e9 !important; color: white !important; border: none !important; }
-        .btn-facebook { background-color: #1877f2 !important; color: white !important; border: none !important; }
-        .btn-instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888) !important; color: white !important; border: none !important; }
+#description{
+color:#fff;
+font-size:18px;
+margin-bottom:30px;
+text-shadow:0 2px 8px rgba(0,0,0,.5);
+}
 
-        .footer {
-            font-size: 12px;
-            color: #94a3b8;
-            border-top: 1px solid #f1f5f9;
-            padding-top: 15px;
-            margin-top: 10px;
-        }
 
-        /* شاشة التحميل البسيطة */
-        #loading {
-            font-size: 16px;
-            color: #64748b;
-            font-weight: 500;
-        }
-    </style>
+.btn{
+display:flex;
+align-items:center;
+justify-content:center;
+padding:18px 20px;
+margin-bottom:15px;
+border-radius:18px;
+text-decoration:none;
+color:#111;
+font-size:20px;
+font-weight:bold;
+position:relative;
+overflow:hidden;
+background:url("assets/card-bg.jpg");
+background-size:cover;
+background-position:center;
+box-shadow:0 6px 15px rgba(0,0,0,.25);
+cursor:pointer;
+}
+
+
+.btn::before{
+content:"";
+position:absolute;
+inset:0;
+background:rgba(255,255,255,.75);
+}
+
+
+.btn span{
+position:relative;
+z-index:2;
+}
+
+
+.btn i,
+.btn img{
+position:absolute;
+right:20px;
+z-index:2;
+}
+
+
+.btn i{
+font-size:34px;
+}
+
+/* أيقونة الاتصال باللون الأزرق */
+.phone-icon{
+color:#0d6efd;
+}
+
+.whatsapp-icon{
+color:#25D366;
+}
+
+.facebook-icon{
+color:#1877F2;
+}
+
+.instagram-icon{
+color:#E4405F;
+}
+
+
+.custom-icon{
+width:38px;
+height:38px;
+object-fit:contain;
+}
+
+
+.footer{
+margin-top:20px;
+color:#fff;
+font-size:15px;
+font-weight:bold;
+text-shadow:0 2px 5px rgba(0,0,0,.5);
+}
+
+</style>
+
 </head>
+
+
 <body>
 
-    <div id="loading">جاري التحميل...</div>
 
-    <div class="card" id="profileCard">
-        <div class="logo-container" id="logoBox" style="display: none;">
-            <img id="clientLogo" src="" alt="شعار النشاط">
-        </div>
-        
-        <h1 id="clientName"></h1>
-        <p class="description" id="clientDesc"></p>
+<div class="card">
 
-        <div class="links-container" id="linksContainer"></div>
+<!-- برواز اللوجو بخامة وتصميم الأزرار -->
+<div id="logoWrapper" class="logo-container" style="display:none;">
+    <img id="logo">
+</div>
 
-        <div class="footer" id="clientFooter">جميع الحقوق محفوظة ✓</div>
-    </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<h1 id="name"></h1>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaDAXHBPfJUr2quRe_8OyhEDqGrHaneNmcc",
-            authDomain: "qr-system-45702.firebaseapp.com",
-            databaseURL: "https://qr-system-45702-default-rtdb.firebaseio.com",
-            projectId: "qr-system-45702",
-            storageBucket: "qr-system-45702.firebasestorage.app",
-            messagingSenderId: "983573164670",
-            appId: "1:983573164670:web:4b352977dd6085b0649e2f"
-        };
+<p id="description"></p>
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
 
-        // استخراج معرف العميل من الرابط (Query Parameter ?id=...)
-        const urlParams = new URLSearchParams(window.location.search);
-        const customerId = urlParams.get("id");
+<!-- 📞 زر الاتصال المباشر -->
+<a id="phone" class="btn" style="display:none;">
+<i class="fas fa-phone phone-icon"></i>
+<span>Call me</span>
+</a>
 
-        if (!customerId) {
-            document.getElementById("loading").textContent = "معرف العميل غير موجود في الرابط!";
-        } else {
-            db.ref("customers/" + customerId).once("value").then(snapshot => {
-                const data = snapshot.val();
+<a id="whatsapp" class="btn" target="_blank">
+<i class="fab fa-whatsapp whatsapp-icon"></i>
+<span>WhatsApp</span>
+</a>
 
-                if (!data) {
-                    document.getElementById("loading").textContent = "عذراً، بيانات هذا العميل غير موجودة.";
-                    return;
-                }
 
-                // 🚀 التحقق من وجود رابط توجيه مباشر
-                if (data.redirectUrl && data.redirectUrl.trim() !== "") {
-                    // تحويل الزائر فوراً للرابط المحدد
-                    window.location.replace(data.redirectUrl.trim());
-                    return;
-                }
+<a id="facebook" class="btn" target="_blank">
+<i class="fab fa-facebook facebook-icon"></i>
+<span>Facebook</span>
+</a>
 
-                // لو مفيش رابط تحويل مباشر، اعرض الكارت الشخصي المنظم
-                document.getElementById("loading").style.display = "none";
-                document.getElementById("profileCard").style.display = "block";
 
-                // اسم النشاط
-                if (data.name) {
-                    document.getElementById("clientName").textContent = data.name;
-                    document.title = data.name;
-                } else {
-                    document.getElementById("clientName").style.display = "none";
-                }
+<a id="instagram" class="btn" target="_blank">
+<i class="fab fa-instagram instagram-icon"></i>
+<span>Instagram</span>
+</a>
 
-                // وصف النشاط
-                if (data.description) {
-                    document.getElementById("clientDesc").textContent = data.description;
-                    document.getElementById("clientDesc").style.display = "block";
-                } else {
-                    document.getElementById("clientDesc").style.display = "none";
-                }
 
-                // اللوجو
-                if (data.logo) {
-                    document.getElementById("clientLogo").src = data.logo;
-                    document.getElementById("logoBox").style.display = "flex";
-                }
+<!-- ⭐ زر المراجعات باستخدام صورة review.png المخصصة -->
+<a id="website" class="btn" target="_blank">
+<img src="assets/review.png" class="custom-icon">
+<span>Review</span>
+</a>
 
-                // بناء أزرار التواصل ديناميكياً
-                const linksContainer = document.getElementById("linksContainer");
-                linksContainer.innerHTML = "";
 
-                const addLinkButton = (url, text, className, svgIcon) => {
-                    if (!url) return;
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.className = "btn-link " + className;
-                    a.target = "_blank";
-                    a.innerHTML = svgIcon + "<span>" + text + "</span>";
-                    linksContainer.appendChild(a);
-                };
 
-                // الأيقونات المتجهية (SVG)
-                const phoneSvg = '<svg fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>';
-                const waSvg = '<svg fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>';
-                const fbSvg = '<svg fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/></svg>';
-                const instaSvg = '<svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>';
-                const webSvg = '<svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 10-4.486 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm1 2h-2v3.05c-1.542.232-2.903 1.055-3.834 2.234l2.122 2.122c.465-.679 1.189-1.182 2.052-1.306v4.398c-1.319.324-2.316 1.516-2.316 2.942 0 1.657 1.343 3 3 3s3-1.343 3-3c0-1.426-.997-2.618-2.316-2.942v-4.398c.863.124 1.587.627 2.052 1.306l2.122-2.122c-.931-1.179-2.292-2.002-3.834-2.234v-3.05z"/></svg>';
+<a id="instapay" class="btn" target="_blank">
+<img src="assets/instapay.png" class="custom-icon">
+<span>InstaPay</span>
+</a>
 
-                // إضافة الأزرار المتاحة فقط
-                addLinkButton(data.phone ? "tel:" + data.phone : "", "اتصال هاتفي", "btn-phone", phoneSvg);
-                addLinkButton(data.whatsapp ? "https://wa.me/" + data.whatsapp : "", "مراسلة واتساب", "btn-whatsapp", waSvg);
-                addLinkButton(data.facebook, "صفحتنا على فيسبوك", "btn-facebook", fbSvg);
-                addLinkButton(data.instagram, "حسابنا على انستجرام", "btn-instagram", instaSvg);
-                addLinkButton(data.website, "الموقع الإلكتروني / التقييم", "btn-website", webSvg);
-                addLinkButton(data.instapay, "تحويل InstaPay", "btn-instapay", webSvg);
-                addLinkButton(data.vodafonecash, "فودافون كاش", "btn-vodafonecash", phoneSvg);
 
-                // الحقوق (الفوتر)
-                if (data.footer !== undefined) {
-                    document.getElementById("clientFooter").textContent = data.footer.trim() === "" ? "جميع الحقوق محفوظة ✓" : data.footer;
-                }
-            }).catch(err => {
-                document.getElementById("loading").textContent = "حدث خطأ أثناء تحميل البيانات.";
-            });
-        }
-    </script>
+
+<a id="vodafonecash" class="btn" target="_blank">
+<img src="assets/vodafonecash.png" class="custom-icon">
+<span>Vodafone Cash</span>
+</a>
+
+
+<!-- نص الحقوق الديناميكي -->
+<div id="footerText" class="footer"></div>
+
+
+</div>
+
+
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+
+<script>
+
+
+const firebaseConfig = {
+
+apiKey: "AIzaDAXHBPfJUr2quRe_8OyhEDqGrHaneNmcc",
+
+authDomain: "qr-system-45702.firebaseapp.com",
+
+databaseURL: "https://qr-system-45702-default-rtdb.firebaseio.com",
+
+projectId: "qr-system-45702",
+
+storageBucket: "qr-system-45702.firebasestorage.app",
+
+messagingSenderId: "983573164670",
+
+appId: "1:983573164670:web:4b352977dd6085b0649e2f"
+
+};
+
+
+firebase.initializeApp(firebaseConfig);
+
+
+const db = firebase.database();
+
+
+const params = new URLSearchParams(window.location.search);
+
+const id = params.get("id");
+
+
+
+db.ref("customers/" + id).once("value")
+
+.then(function(snapshot){
+
+
+const data = snapshot.val();
+
+
+
+if(!data){
+
+document.querySelector(".card").innerHTML =
+"<h2 style='color:white'>العميل غير موجود</h2>";
+
+return;
+
+}
+
+
+// معالجة عرض إطار اللوجو بأسلوب الأزرار
+const logoElem = document.getElementById("logo");
+const logoWrapper = document.getElementById("logoWrapper");
+
+if (data.logo && data.logo.trim() !== "") {
+    logoElem.src = data.logo;
+    logoWrapper.style.display = "flex";
+} else {
+    logoWrapper.style.display = "none";
+}
+
+
+document.getElementById("name").textContent =
+data.name || "";
+
+
+document.getElementById("description").textContent =
+data.description || "";
+
+
+// 📞 معالجة زر الاتصال المباشر
+if (data.phone && data.phone.trim() !== "") {
+    const phoneBtn = document.getElementById("phone");
+    phoneBtn.href = "tel:" + data.phone.trim();
+    phoneBtn.style.display = "flex";
+}
+
+
+document.getElementById("whatsapp").href =
+data.whatsapp || "#";
+
+
+document.getElementById("facebook").href =
+data.facebook || "#";
+
+
+document.getElementById("instagram").href =
+data.instagram || "#";
+
+
+document.getElementById("website").href =
+data.website || "#";
+
+
+document.getElementById("instapay").href =
+data.instapay || "#";
+
+
+document.getElementById("vodafonecash").href =
+data.vodafonecash || "#";
+
+
+// معالجة عرض نص الحقوق (الفوتر)
+document.getElementById("footerText").textContent = 
+    (data.footer && data.footer.trim() !== "") ? data.footer : "جميع الحقوق محفوظة ✓";
+
+
+// إخفاء الروابط الفاضية
+
+if(!data.whatsapp)
+document.getElementById("whatsapp").style.display="none";
+
+
+if(!data.facebook)
+document.getElementById("facebook").style.display="none";
+
+
+if(!data.instagram)
+document.getElementById("instagram").style.display="none";
+
+
+if(!data.website)
+document.getElementById("website").style.display="none";
+
+
+if(!data.instapay)
+document.getElementById("instapay").style.display="none";
+
+
+if(!data.vodafonecash)
+document.getElementById("vodafonecash").style.display="none";
+
+
+});
+
+
+</script>
+
+
 </body>
 </html>
