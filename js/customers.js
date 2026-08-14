@@ -71,6 +71,7 @@ function loadCustomers(){
     alert("تعذر تحميل العملاء: " + error.message);
 
   });
+  {
 
 }
 
