@@ -1,25 +1,30 @@
 function login() {
 
-  alert("login يعمل");
-
   const pass =
     document.getElementById("password").value;
+
 
   if (pass === "CODE010951") {
 
     document.getElementById("login").style.display = "none";
+
     document.getElementById("panel").style.display = "block";
 
-    alert("هبدأ تحميل العملاء");
 
     generateNumber();
+
     loadCustomers();
+
 
   } else {
 
     alert("كلمة المرور غير صحيحة");
+
   }
+
 }
+
+
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -30,32 +35,45 @@ document.addEventListener("DOMContentLoaded", () => {
       .querySelectorAll("input,select,textarea")
       .forEach(el => {
 
+
         el.addEventListener("input", () => {
 
           if (typeof createQR === "function") {
+
             createQR();
+
           }
 
         });
+
 
 
         el.addEventListener("change", () => {
 
           if (typeof createQR === "function") {
+
             createQR();
+
           }
 
         });
 
+
       });
 
-  }, 500);
+
+  },500);
+
 
 });
 
 
 
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
+
 
   const btns =
     document.querySelectorAll(".tab-buttons button");
@@ -66,32 +84,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-  btns.forEach((btn, index) => {
+  btns.forEach((btn,index)=>{
 
 
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click",()=>{
 
 
-      btns.forEach(b =>
-        b.classList.remove("active")
-      );
+      btns.forEach(b=>{
+
+        b.classList.remove("active");
+
+      });
+
 
 
       btn.classList.add("active");
 
 
 
-      sections.forEach(sec => {
+      sections.forEach(sec=>{
 
-        sec.style.display = "none";
+        sec.style.display="none";
 
       });
 
 
 
-      if (sections[index]) {
+      if(sections[index]){
 
-        sections[index].style.display = "block";
+        sections[index].style.display="block";
 
       }
 
@@ -103,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-  if (btns.length) {
+  if(btns.length){
 
     btns[0].click();
 
