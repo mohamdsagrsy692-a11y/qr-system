@@ -3,83 +3,132 @@
 
 <head>
 <meta charset="UTF-8">
-<title>QR</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Profile</title>
 
 <style>
 
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
 body{
-font-family:Arial;
-background:#f2f2f2;
-text-align:center;
-padding:30px;
+background:url("assets/background.jpg") center center/cover no-repeat;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
 }
 
 .card{
-background:white;
-max-width:400px;
-margin:auto;
-padding:25px;
-border-radius:20px;
+width:100%;
+max-width:420px;
+background:url("assets/card-bg.jpg") center center/cover no-repeat;
+border-radius:25px;
+padding:30px;
+text-align:center;
+color:white;
+backdrop-filter:blur(10px);
+box-shadow:0 10px 30px rgba(0,0,0,.3);
 }
 
 .logo{
-width:100px;
-height:100px;
+width:120px;
+height:120px;
 border-radius:50%;
+object-fit:cover;
+border:4px solid white;
+margin-bottom:15px;
+}
+
+h1{
+margin-bottom:10px;
+font-size:28px;
+}
+
+.description{
+margin-bottom:20px;
+line-height:1.7;
+opacity:.95;
 }
 
 .btn{
 display:block;
-margin:15px 0;
-padding:15px;
-background:#111;
-color:white;
+width:100%;
+padding:14px;
+margin-top:12px;
+border-radius:14px;
 text-decoration:none;
-border-radius:12px;
+color:white;
+font-weight:bold;
+background:rgba(255,255,255,.15);
+border:1px solid rgba(255,255,255,.2);
+backdrop-filter:blur(8px);
+transition:.3s;
+}
+
+.btn:hover{
+transform:translateY(-2px);
+}
+
+.pay-btn{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+}
+
+.pay-btn img{
+width:26px;
+height:26px;
+object-fit:contain;
 }
 
 </style>
-
 </head>
-
 
 <body>
 
-
 <div class="card">
 
-
-<img id="logo" class="logo">
-
+<img id="logo" class="logo" src="">
 
 <h1 id="name"></h1>
 
+<p id="description" class="description"></p>
 
-<p id="description"></p>
+<a id="whatsapp" class="btn" target="_blank">
+واتساب
+</a>
 
+<a id="facebook" class="btn" target="_blank">
+فيسبوك
+</a>
 
-<a id="whatsapp" class="btn">واتساب</a>
+<a id="instagram" class="btn" target="_blank">
+إنستجرام
+</a>
 
-<a id="facebook" class="btn">فيسبوك</a>
+<a id="website" class="btn" target="_blank">
+الموقع الإلكتروني
+</a>
 
-<a id="instagram" class="btn">إنستجرام</a>
-
-<a id="website" class="btn">الموقع</a>
-
-<a id="payment" class="btn">الدفع</a>
-
+<a id="payment" class="btn pay-btn" target="_blank">
+<img src="assets/instapay.png">
+<span>الدفع</span>
+</a>
 
 </div>
 
 
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
-
 <script>
-
 
 const firebaseConfig = {
 
@@ -99,61 +148,55 @@ appId: "1:983573164670:web:4b352977dd6085b0649e2f"
 
 };
 
-
 firebase.initializeApp(firebaseConfig);
 
+const db = firebase.database();
 
-const db=firebase.database();
+const params = new URLSearchParams(window.location.search);
 
+const id = params.get("id");
 
-
-let params=new URLSearchParams(window.location.search);
-
-let id=params.get("id");
-
-
-
-db.ref("customers/"+id).once("value")
-
+db.ref("customers/" + id).once("value")
 .then(function(snapshot){
 
-
-let data=snapshot.val();
-
+const data = snapshot.val();
 
 if(!data){
 
-document.querySelector(".card").innerHTML="العميل غير موجود";
+document.querySelector(".card").innerHTML =
+"<h2>العميل غير موجود</h2>";
 
 return;
 
 }
 
+document.getElementById("logo").src =
+data.logo || "";
 
+document.getElementById("name").textContent =
+data.name || "";
 
-document.getElementById("logo").src=data.logo;
+document.getElementById("description").textContent =
+data.description || "";
 
-document.getElementById("name").innerHTML=data.name;
+document.getElementById("whatsapp").href =
+data.whatsapp || "#";
 
-document.getElementById("description").innerHTML=data.description;
+document.getElementById("facebook").href =
+data.facebook || "#";
 
+document.getElementById("instagram").href =
+data.instagram || "#";
 
-document.getElementById("whatsapp").href=data.whatsapp;
+document.getElementById("website").href =
+data.website || "#";
 
-document.getElementById("facebook").href=data.facebook;
-
-document.getElementById("instagram").href=data.instagram;
-
-document.getElementById("website").href=data.website;
-
-document.getElementById("payment").href=data.payment;
-
+document.getElementById("payment").href =
+data.payment || "#";
 
 });
 
-
 </script>
-
 
 </body>
 </html>
