@@ -39,7 +39,7 @@ function loadCustomers() {
     });
 
   }).catch(function(error) {
-    alert("تعذر تحميل العملاء: " + error.message);
+    alert("تعذر تحميل قائمة العملاء: " + error.message);
   });
 }
 
@@ -64,11 +64,22 @@ function loadCustomer() {
 
     const data = snapshot.val();  
 
+    // لو العميل جديد ومش موجود في قاعدة البيانات
     if (!data) {  
-      alert("العميل غير موجود");  
+      document.getElementById("name").value = "";  
+      document.getElementById("description").value = "";  
+      document.getElementById("logo").value = "";  
+      document.getElementById("whatsapp").value = "";  
+      document.getElementById("facebook").value = "";  
+      document.getElementById("instagram").value = "";  
+      document.getElementById("website").value = "";  
+      document.getElementById("payment").value = "";  
+      
+      if (typeof resetQRDesign === "function") resetQRDesign();
       return;  
     }  
 
+    // لو العميل موجود فعلاً
     document.getElementById("id").value = id;  
     document.getElementById("name").value = data.name || "";  
     document.getElementById("description").value = data.description || "";  
@@ -80,35 +91,23 @@ function loadCustomer() {
     document.getElementById("payment").value = data.payment || "";  
 
     if (data.qrStyle) {  
-      document.getElementById("dotColor").value =  
-        data.qrStyle.dotColor || "#000000";  
-
-      document.getElementById("dotStyle").value =  
-        data.qrStyle.dotStyle || "rounded";  
-
-      document.getElementById("cornerColor").value =  
-        data.qrStyle.cornerColor || "#000000";  
-
-      document.getElementById("cornerStyle").value =  
-        data.qrStyle.cornerStyle || "square";  
-
-      document.getElementById("bgColor").value =  
-        data.qrStyle.bgColor || "#ffffff";  
-
-      document.getElementById("qrLogo").value =  
-        data.qrStyle.qrLogo || "";  
-
-      document.getElementById("bottomText").value =  
-        data.qrStyle.bottomText || "";  
+      if (document.getElementById("dotColor")) document.getElementById("dotColor").value = data.qrStyle.dotColor || "#000000";  
+      if (document.getElementById("dotStyle")) document.getElementById("dotStyle").value = data.qrStyle.dotStyle || "rounded";  
+      if (document.getElementById("cornerColor")) document.getElementById("cornerColor").value = data.qrStyle.cornerColor || "#000000";  
+      if (document.getElementById("cornerStyle")) document.getElementById("cornerStyle").value = data.qrStyle.cornerStyle || "square";  
+      if (document.getElementById("bgColor")) document.getElementById("bgColor").value = data.qrStyle.bgColor || "#ffffff";  
+      if (document.getElementById("qrLogo")) document.getElementById("qrLogo").value = data.qrStyle.qrLogo || "";  
+      if (document.getElementById("bottomText")) document.getElementById("bottomText").value = data.qrStyle.bottomText || "";  
     } else {  
-      resetQRDesign();  
+      if (typeof resetQRDesign === "function") resetQRDesign();  
     }  
 
     document.getElementById("customerList").value = id;  
 
-    updateBottomPreview();
+    if (typeof updateBottomPreview === "function") updateBottomPreview();
 
   }).catch(function(error) {
+    console.error(error);
     alert("تعذر تحميل العميل: " + error.message);
   });
 }
@@ -122,6 +121,7 @@ function saveCustomer() {
     return;
   }
 
+  // ✅ تم تصحيح Const إلى const هنا
   const data = {
     name: document.getElementById("name").value,
     description: document.getElementById("description").value,
@@ -141,7 +141,7 @@ function saveCustomer() {
       generateNumber();
     })
     .catch(function(error) {
-      alert(error.message);
+      alert("خطأ في الحفظ: " + error.message);
     });
 }
 
@@ -175,14 +175,14 @@ function deleteCustomer() {
         document.getElementById("instagram").value = "";  
         document.getElementById("website").value = "";  
         document.getElementById("payment").value = "";  
-        document.getElementById("qrLogo").value = "";  
-        document.getElementById("bottomText").value = "";  
+        if (document.getElementById("qrLogo")) document.getElementById("qrLogo").value = "";  
+        if (document.getElementById("bottomText")) document.getElementById("bottomText").value = "";  
 
-        document.getElementById("qrcode").innerHTML = "";  
-        document.getElementById("qrLink").textContent = "";  
-        document.getElementById("bottomPreview").textContent = "";  
+        if (document.getElementById("qrcode")) document.getElementById("qrcode").innerHTML = "";  
+        if (document.getElementById("qrLink")) document.getElementById("qrLink").textContent = "";  
+        if (document.getElementById("bottomPreview")) document.getElementById("bottomPreview").textContent = "";  
 
-        qrCode = null;  
+        if (typeof qrCode !== "undefined") qrCode = null;  
 
       })  
       .catch(function(error) {  
