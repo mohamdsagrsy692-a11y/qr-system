@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>معلومات النشاط</title>
+    <title>تسجيل الدخول - لوحة التحكم</title>
+    
+    <!-- مكتبة إنشاء وتخصيص QR Code -->
+    <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
     
     <style>
         * {
@@ -14,239 +17,907 @@
         }
 
         body {
-            background-color: #f7f9fc;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 15px;
+            background-color: #f2f2f2;
+            padding: 20px;
+            direction: rtl;
         }
 
-        .card {
-            background: #ffffff;
-            width: 100%;
-            max-width: 420px;
-            padding: 30px 20px;
-            border-radius: 16px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            text-align: center;
-            display: none; /* مخفي لحين تحميل البيانات */
-        }
-
-        .logo-container {
-            width: 95px;
-            height: 95px;
-            margin: 0 auto 15px auto;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 3px solid #f1f5f9;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
             background: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            display: none;
         }
 
-        .logo-container img {
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #edf2f7;
+        }
+
+        .header-bar h2 {
+            margin: 0;
+            color: #222;
+        }
+
+        .btn-logout {
+            background-color: #e53e3e;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #444;
+            font-size: 14px;
+        }
+
+        input[type="text"], input[type="password"], input[type="color"], select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #dcdcdc;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            background-color: #fff;
+            transition: border-color 0.2s;
+        }
+
+        input[type="color"] {
+            height: 42px;
+            padding: 4px;
+            cursor: pointer;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus, select:focus, textarea:focus {
+            border-color: #888;
+        }
+
+        .file-input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            display: none;
+        }
+
+        .btn-upload {
+            background: #4A5568;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-save { background-color: #111; color: #fff; }
+        .btn-delete { background-color: #c53030; color: #fff; }
+        .btn-qr { background-color: #2d3748; color: #fff; }
+        .btn-download { background-color: #111; color: #fff; margin-top: 10px; }
+
+        .qr-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+        }
+
+        #qrContainer {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .download-box {
+            background: #edf2f7;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            border: 1px solid #cbd5e0;
+        }
+
+        .qr-custom-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .preview-logo {
+            max-width: 80px;
+            max-height: 80px;
+            margin-top: 10px;
+            border-radius: 8px;
+            display: none;
+            border: 1px solid #ddd;
+        }
+
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-        }
-
-        h1 {
-            font-size: 22px;
-            color: #1a202c;
-            margin-bottom: 8px;
-        }
-
-        .description {
-            font-size: 14px;
-            color: #64748b;
-            margin-bottom: 25px;
-            line-height: 1.6;
-            padding: 0 10px;
-        }
-
-        .links-container {
+            background: #e9ecef;
             display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 25px;
-        }
-
-        .btn-link {
-            display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 10px;
-            background: #ffffff;
-            color: #1e293b;
-            text-decoration: none;
-            padding: 12px 15px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 15px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-            transition: all 0.2s ease;
+            align-items: center;
+            z-index: 9999;
         }
 
-        .btn-link:hover {
-            background: #f8fafc;
-            border-color: #cbd5e1;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        .login-card {
+            background: white;
+            width: 90%;
+            max-width: 380px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid #ddd;
         }
 
-        .btn-link svg {
-            width: 20px;
-            height: 20px;
+        .login-header {
+            background-color: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
         }
 
-        /* تخصيص ألوان الأزرار البارزة */
-        .btn-whatsapp { background-color: #25d366 !important; color: white !important; border: none !important; }
-        .btn-phone { background-color: #0ea5e9 !important; color: white !important; border: none !important; }
-        .btn-facebook { background-color: #1877f2 !important; color: white !important; border: none !important; }
-        .btn-instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888) !important; color: white !important; border: none !important; }
+        .login-header h2 {
+            color: #8b0000;
+            font-size: 22px;
+            font-weight: bold;
+            margin: 0;
+        }
 
-        .footer {
+        .login-body {
+            padding: 20px 25px 25px 25px;
+        }
+
+        .login-body .form-group {
+            margin-bottom: 15px;
+            text-align: right;
+        }
+
+        .login-body label {
+            font-size: 13px;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .login-body input {
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 8px 10px;
+            font-size: 14px;
+            width: 100%;
+            background-color: #fafafa;
+        }
+
+        .btn-login-submit {
+            background-color: #48bb78;
+            color: white;
+            border: none;
+            padding: 8px 22px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            display: block;
+            margin-top: 15px;
+        }
+
+        .error-msg {
+            color: #e53e3e;
             font-size: 12px;
-            color: #94a3b8;
-            border-top: 1px solid #f1f5f9;
-            padding-top: 15px;
-            margin-top: 10px;
+            margin-top: 8px;
+            display: none;
+            text-align: center;
         }
 
-        /* شاشة التحميل البسيطة */
-        #loading {
-            font-size: 16px;
-            color: #64748b;
-            font-weight: 500;
+        /* تصميم النافذة المنبثقة الاحترافية (Custom Modal) */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.2s ease;
         }
+
+        .custom-modal-box {
+            background: #fff;
+            width: 90%;
+            max-width: 340px;
+            padding: 25px 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transform: scale(0.9);
+            animation: scaleUp 0.2s ease forwards;
+        }
+
+        .custom-modal-msg {
+            font-size: 16px;
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .custom-modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .custom-modal-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .custom-modal-btn:hover { opacity: 0.85; }
+        .btn-modal-ok { background-color: #111; color: #fff; }
+        .btn-modal-cancel { background-color: #e2e8f0; color: #4a5568; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes scaleUp { from { transform: scale(0.9); } to { transform: scale(1); } }
     </style>
 </head>
 <body>
 
-    <div id="loading">جاري التحميل...</div>
-
-    <div class="card" id="profileCard">
-        <div class="logo-container" id="logoBox" style="display: none;">
-            <img id="clientLogo" src="" alt="شعار النشاط">
+<div class="login-overlay" id="loginModal">
+    <div class="login-card">
+        <div class="login-header">
+            <h2>تسجيل الدخول</h2>
         </div>
-        
-        <h1 id="clientName"></h1>
-        <p class="description" id="clientDesc"></p>
+        <div class="login-body">
+            <div class="form-group">
+                <label>اسم المستخدم</label>
+                <input type="text" id="adminUsername" placeholder="اسم المستخدم" onkeypress="handleKeyPress(event)">
+            </div>
+            
+            <div class="form-group">
+                <label>كلمة المرور</label>
+                <input type="password" id="adminPassword" placeholder="كلمة المرور" onkeypress="handleKeyPress(event)">
+            </div>
+            
+            <p class="error-msg" id="loginError">اسم المستخدم أو كلمة المرور غير صحيحة!</p>
 
-        <div class="links-container" id="linksContainer"></div>
+            <button class="btn-login-submit" onclick="checkLogin()">دخول</button>
+        </div>
+    </div>
+</div>
 
-        <div class="footer" id="clientFooter">جميع الحقوق محفوظة ✓</div>
+<!-- النافذة المنبثقة الاحترافية (Custom Modal HTML) -->
+<div class="custom-modal-overlay" id="customModal">
+    <div class="custom-modal-box">
+        <div class="custom-modal-msg" id="customModalMsg">رسالة التنبيه هنا</div>
+        <div class="custom-modal-buttons" id="customModalButtons">
+            <button class="custom-modal-btn btn-modal-ok" id="customModalOkBtn">حسناً</button>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="adminContainer">
+    <div class="header-bar">
+        <h2>إدارة العملاء</h2>
+        <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
     </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+    <div class="form-group">
+        <label>اختيار عميل</label>
+        <select id="customerSelect" onchange="loadSelectedCustomer()">
+            <option value="">اختر العميل</option>
+        </select>
+    </div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaDAXHBPfJUr2quRe_8OyhEDqGrHaneNmcc",
-            authDomain: "qr-system-45702.firebaseapp.com",
-            databaseURL: "https://qr-system-45702-default-rtdb.firebaseio.com",
-            projectId: "qr-system-45702",
-            storageBucket: "qr-system-45702.firebasestorage.app",
-            messagingSenderId: "983573164670",
-            appId: "1:983573164670:web:4b352977dd6085b0649e2f"
+    <div class="form-group">
+        <label>كود العميل للبحث</label>
+        <input type="text" id="searchCode" placeholder="ابحث بكود العميل">
+    </div>
+
+    <button class="btn btn-save" onclick="searchCustomerByCode()">تحميل بيانات العميل</button>
+
+    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+
+    <div class="form-group">
+        <label>كود العميل (تلقائي)</label>
+        <input type="text" id="code" placeholder="" oninput="updateQRLive()">
+    </div>
+
+    <div class="form-group">
+        <label>رابط تحويل مباشر (اختياري)</label>
+        <input type="text" id="redirectUrl" placeholder="https://g.page/r/... (اتركه فارغاً لفتح الكارت الشخصي)">
+    </div>
+
+    <div class="form-group">
+        <label>اسم النشاط</label>
+        <input type="text" id="name" placeholder="">
+    </div>
+
+    <div class="form-group">
+        <label>وصف النشاط</label>
+        <textarea id="description" rows="2" placeholder=""></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>صورة اللوجو الأساسية للنشاط</label>
+        <div class="file-input-wrapper">
+            <input type="text" id="logo" placeholder="" onchange="updateQRLive()">
+            <label class="btn-upload" for="logoFileInput">اختر صورة من المعرض</label>
+            <input type="file" id="logoFileInput" accept="image/*" onchange="handleMainLogoUpload(this)">
+        </div>
+        <img id="logoPreview" class="preview-logo" alt="معاينة اللوجو">
+    </div>
+
+    <div class="form-group">
+        <label>رقم الهاتف / الاتصال</label>
+        <input type="text" id="phone" placeholder="">
+    </div>
+
+    <div class="form-group">
+        <label>واتساب</label>
+        <input type="text" id="whatsapp" placeholder="">
+    </div>
+
+    <div class="form-group">
+        <label>فيسبوك</label>
+        <input type="text" id="facebook" placeholder="">
+    </div>
+
+    <div class="form-group">
+        <label>انستجرام</label>
+        <input type="text" id="instagram" placeholder="">
+    </div>
+
+    <div class="form-group">
+        <label>الموقع (Review)</label>
+        <input type="text" id="website" placeholder="">
+    </div>
+
+    <div class="form-group">
+        <label>InstaPay</label>
+        <input type="text" id="instapay" placeholder="">
+    </div>
+
+    <div class="form-group">
+        <label>Vodafone Cash</label>
+        <input type="text" id="vodafonecash" placeholder="">
+    </div>
+
+    <div class="form-group">
+        <label>الحقوق (الفوتر)</label>
+        <input type="text" id="footer" placeholder="اتركها فارغة لظهور: جميع الحقوق محفوظة ✓">
+    </div>
+
+    <div class="qr-section" id="qrSection">
+        <h3 style="font-size:18px; margin-bottom:5px;">معاينة الـ QR</h3>
+        <div id="qrContainer"></div>
+
+        <div class="download-box">
+            <div class="grid-2">
+                <div class="form-group" style="margin-bottom:5px;">
+                    <label style="text-align:right;">صيغة الحفظ</label>
+                    <select id="downloadFormat">
+                        <option value="png" selected>PNG (صورة عالية الوضوح)</option>
+                        <option value="jpeg">JPEG / JPG</option>
+                        <option value="svg">SVG (فيكتور للطباعة/الفيبر)</option>
+                        <option value="webp">WEBP</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom:5px;">
+                    <label style="text-align:right;">أبعاد المقاس (Size)</label>
+                    <select id="downloadSize">
+                        <option value="300">300x300 px (صغير للموبايل)</option>
+                        <option value="1000" selected>1000x1000 px (قياسي للطباعة)</option>
+                        <option value="2000">2000x2000 px (عالي الدقة HQ)</option>
+                        <option value="4000">4000x4000 px (Ultra HD للوحة كبيرة)</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-download" onclick="downloadQR()">تحميل الـ QR بالخيارات المحددة</button>
+        </div>
+    </div>
+
+    <div class="qr-custom-box">
+        <h3 style="font-size:16px; text-align:right; margin-bottom:12px;">🎨 تخصيص شكل الـ QR Code</h3>
+        
+        <div class="grid-2">
+            <div class="form-group">
+                <label>لون نقاط الـ QR</label>
+                <input type="color" id="qrDotColor" value="#000000" oninput="updateQRLive()">
+            </div>
+            <div class="form-group">
+                <label>لون الخلفية</label>
+                <input type="color" id="qrBgColor" value="#ffffff" oninput="updateQRLive()">
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label>شكل النقاط</label>
+                <select id="qrDotType" onchange="updateQRLive()">
+                    <option value="square" selected>كلاسيكي قياسي (مربعات صريحة)</option>
+                    <option value="rounded">انحناء ناعم (Rounded)</option>
+                    <option value="dots">نقاط دائرية (Dots)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>شكل زوايا الـ QR</label>
+                <select id="qrCornerType" onchange="updateQRLive()">
+                    <option value="square" selected>مربع كلاسيكي (Square)</option>
+                    <option value="dot">دائري (Dot)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>صورة اللوجو لمنتصف الـ QR (اختياري من المعرض)</label>
+            <div class="file-input-wrapper">
+                <input type="text" id="qrCustomLogo" placeholder="" onchange="updateQRLive()">
+                <label class="btn-upload" for="qrLogoFileInput">من المعرض</label>
+                <input type="file" id="qrLogoFileInput" accept="image/*" onchange="handleQRLogoUpload(this)">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>إظهار اللوجو وسط الـ QR؟</label>
+            <select id="qrEmbedLogo" onchange="updateQRLive()">
+                <option value="yes" selected>نعم</option>
+                <option value="no">لا (بدون لوجو في المنتصف)</option>
+            </select>
+        </div>
+    </div>
+
+    <button class="btn btn-save" onclick="saveCustomer()">حفظ العميل</button>
+    <button class="btn btn-delete" onclick="deleteCustomer()">حذف العميل</button>
+    <button class="btn btn-qr" onclick="generateQR()">إنشاء / تحديث QR</button>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<script>
+    const ADMIN_USERNAME = "abdallah.haroun";
+    const ADMIN_PASSWORD = "CODE010951";
+
+    // دوال النافذة المنبثقة الاحترافية
+    function showCustomAlert(message, callback) {
+        const modal = document.getElementById("customModal");
+        const msgEl = document.getElementById("customModalMsg");
+        const buttonsEl = document.getElementById("customModalButtons");
+
+        msgEl.textContent = message;
+        buttonsEl.innerHTML = '<button class="custom-modal-btn btn-modal-ok" id="modalOkBtn">حسناً</button>';
+        modal.style.display = "flex";
+
+        document.getElementById("modalOkBtn").onclick = function() {
+            modal.style.display = "none";
+            if (callback) callback();
+        };
+    }
+
+    function showCustomConfirm(message, onConfirm) {
+        const modal = document.getElementById("customModal");
+        const msgEl = document.getElementById("customModalMsg");
+        const buttonsEl = document.getElementById("customModalButtons");
+
+        msgEl.textContent = message;
+        buttonsEl.innerHTML = `
+            <button class="custom-modal-btn btn-modal-cancel" id="modalCancelBtn">إلغاء</button>
+            <button class="custom-modal-btn btn-modal-ok" style="background-color: #c53030;" id="modalConfirmBtn">تأكيد الحذف</button>
+        `;
+        modal.style.display = "flex";
+
+        document.getElementById("modalCancelBtn").onclick = function() {
+            modal.style.display = "none";
         };
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+        document.getElementById("modalConfirmBtn").onclick = function() {
+            modal.style.display = "none";
+            if (onConfirm) onConfirm();
+        };
+    }
 
-        // استخراج معرف العميل من الرابط (Query Parameter ?id=...)
-        const urlParams = new URLSearchParams(window.location.search);
-        const customerId = urlParams.get("id");
-
-        if (!customerId) {
-            document.getElementById("loading").textContent = "معرف العميل غير موجود في الرابط!";
-        } else {
-            db.ref("customers/" + customerId).once("value").then(snapshot => {
-                const data = snapshot.val();
-
-                if (!data) {
-                    document.getElementById("loading").textContent = "عذراً، بيانات هذا العميل غير موجودة.";
-                    return;
-                }
-
-                // 🚀 التحقق من وجود رابط توجيه مباشر
-                if (data.redirectUrl && data.redirectUrl.trim() !== "") {
-                    // تحويل الزائر فوراً للرابط المحدد
-                    window.location.replace(data.redirectUrl.trim());
-                    return;
-                }
-
-                // لو مفيش رابط تحويل مباشر، اعرض الكارت الشخصي المنظم
-                document.getElementById("loading").style.display = "none";
-                document.getElementById("profileCard").style.display = "block";
-
-                // اسم النشاط
-                if (data.name) {
-                    document.getElementById("clientName").textContent = data.name;
-                    document.title = data.name;
-                } else {
-                    document.getElementById("clientName").style.display = "none";
-                }
-
-                // وصف النشاط
-                if (data.description) {
-                    document.getElementById("clientDesc").textContent = data.description;
-                    document.getElementById("clientDesc").style.display = "block";
-                } else {
-                    document.getElementById("clientDesc").style.display = "none";
-                }
-
-                // اللوجو
-                if (data.logo) {
-                    document.getElementById("clientLogo").src = data.logo;
-                    document.getElementById("logoBox").style.display = "flex";
-                }
-
-                // بناء أزرار التواصل ديناميكياً
-                const linksContainer = document.getElementById("linksContainer");
-                linksContainer.innerHTML = "";
-
-                const addLinkButton = (url, text, className, svgIcon) => {
-                    if (!url) return;
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.className = "btn-link " + className;
-                    a.target = "_blank";
-                    a.innerHTML = svgIcon + "<span>" + text + "</span>";
-                    linksContainer.appendChild(a);
-                };
-
-                // الأيقونات المتجهية (SVG)
-                const phoneSvg = '<svg fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>';
-                const waSvg = '<svg fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>';
-                const fbSvg = '<svg fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/></svg>';
-                const instaSvg = '<svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>';
-                const webSvg = '<svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 10-4.486 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm1 2h-2v3.05c-1.542.232-2.903 1.055-3.834 2.234l2.122 2.122c.465-.679 1.189-1.182 2.052-1.306v4.398c-1.319.324-2.316 1.516-2.316 2.942 0 1.657 1.343 3 3 3s3-1.343 3-3c0-1.426-.997-2.618-2.316-2.942v-4.398c.863.124 1.587.627 2.052 1.306l2.122-2.122c-.931-1.179-2.292-2.002-3.834-2.234v-3.05z"/></svg>';
-
-                // إضافة الأزرار المتاحة فقط
-                addLinkButton(data.phone ? "tel:" + data.phone : "", "اتصال هاتفي", "btn-phone", phoneSvg);
-                addLinkButton(data.whatsapp ? "https://wa.me/" + data.whatsapp : "", "مراسلة واتساب", "btn-whatsapp", waSvg);
-                addLinkButton(data.facebook, "صفحتنا على فيسبوك", "btn-facebook", fbSvg);
-                addLinkButton(data.instagram, "حسابنا على انستجرام", "btn-instagram", instaSvg);
-                addLinkButton(data.website, "الموقع الإلكتروني / التقييم", "btn-website", webSvg);
-                addLinkButton(data.instapay, "تحويل InstaPay", "btn-instapay", webSvg);
-                addLinkButton(data.vodafonecash, "فودافون كاش", "btn-vodafonecash", phoneSvg);
-
-                // الحقوق (الفوتر)
-                if (data.footer !== undefined) {
-                    document.getElementById("clientFooter").textContent = data.footer.trim() === "" ? "جميع الحقوق محفوظة ✓" : data.footer;
-                }
-            }).catch(err => {
-                document.getElementById("loading").textContent = "حدث خطأ أثناء تحميل البيانات.";
-            });
+    window.onload = function() {
+        if (sessionStorage.getItem("adminLoggedIn") === "true") {
+            document.getElementById("loginModal").style.display = "none";
+            document.getElementById("adminContainer").style.display = "block";
+            loadCustomerList();
+            generateNextCustomerCode();
         }
-    </script>
+    };
+
+    function checkLogin() {
+        const inputUser = document.getElementById("adminUsername").value.trim();
+        const inputPass = document.getElementById("adminPassword").value.trim();
+        const errorMsg = document.getElementById("loginError");
+
+        if (inputUser === ADMIN_USERNAME && inputPass === ADMIN_PASSWORD) {
+            sessionStorage.setItem("adminLoggedIn", "true");
+            document.getElementById("loginModal").style.display = "none";
+            document.getElementById("adminContainer").style.display = "block";
+            errorMsg.style.display = "none";
+            loadCustomerList();
+            generateNextCustomerCode();
+        } else {
+            errorMsg.style.display = "block";
+        }
+    }
+
+    function handleKeyPress(e) {
+        if (e.key === "Enter") {
+            checkLogin();
+        }
+    }
+
+    function logout() {
+        sessionStorage.removeItem("adminLoggedIn");
+        location.reload();
+    }
+
+    const firebaseConfig = {
+        apiKey: "AIzaDAXHBPfJUr2quRe_8OyhEDqGrHaneNmcc",
+        authDomain: "qr-system-45702.firebaseapp.com",
+        databaseURL: "https://qr-system-45702-default-rtdb.firebaseio.com",
+        projectId: "qr-system-45702",
+        storageBucket: "qr-system-45702.firebasestorage.app",
+        messagingSenderId: "983573164670",
+        appId: "1:983573164670:web:4b352977dd6085b0649e2f"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let qrCodeInstance = null;
+
+    function SafeSetValue(id, val) {
+        const el = document.getElementById(id);
+        if (el) el.value = val || "";
+    }
+
+    function SafeGetValue(id) {
+        const el = document.getElementById(id);
+        return el ? el.value.trim() : "";
+    }
+
+    function generateNextCustomerCode() {
+        db.ref("customers").once("value").then(snapshot => {
+            const data = snapshot.val();
+            let maxNum = 0;
+
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    const numMatch = key.match(/\d+/);
+                    if (numMatch) {
+                        const num = parseInt(numMatch[0], 10);
+                        if (num > maxNum) {
+                            maxNum = num;
+                        }
+                    }
+                });
+            }
+
+            const nextNum = maxNum + 1;
+            const nextCode = "CODE" + String(nextNum).padStart(3, "0");
+            SafeSetValue("code", nextCode);
+        }).catch(err => {
+            SafeSetValue("code", "CODE001");
+        });
+    }
+
+    function handleMainLogoUpload(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                SafeSetValue("logo", e.target.result);
+                const preview = document.getElementById("logoPreview");
+                if (preview) {
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                }
+                updateQRLive();
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function handleQRLogoUpload(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                SafeSetValue("qrCustomLogo", e.target.result);
+                updateQRLive();
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function loadCustomerList() {
+        db.ref("customers").on("value", function(snapshot) {
+            const select = document.getElementById("customerSelect");
+            select.innerHTML = '<option value="">اختر العميل</option>';
+            snapshot.forEach(function(child) {
+                const data = child.val();
+                const option = document.createElement("option");
+                option.value = child.key;
+                option.textContent = (data.name || "عميل بدون اسم") + " (" + child.key + ")";
+                select.appendChild(option);
+            });
+        });
+    }
+
+    function loadSelectedCustomer() {
+        const id = SafeGetValue("customerSelect");
+        if (!id) return;
+
+        db.ref("customers/" + id).once("value").then(function(snapshot) {
+            const data = snapshot.val();
+            if (data) {
+                populateForm(id, data);
+            }
+        });
+    }
+
+    function searchCustomerByCode() {
+        const code = SafeGetValue("searchCode");
+        if (!code) {
+            showCustomAlert("يرجى إدخال كود العميل أولاً");
+            return;
+        }
+
+        db.ref("customers/" + code).once("value").then(function(snapshot) {
+            const data = snapshot.val();
+            if (data) {
+                populateForm(code, data);
+            } else {
+                showCustomAlert("لم يتم العثور على عميل بهذا الكود");
+            }
+        });
+    }
+
+    function populateForm(id, data) {
+        SafeSetValue("code", id);
+        SafeSetValue("redirectUrl", data.redirectUrl);
+        SafeSetValue("name", data.name);
+        SafeSetValue("description", data.description);
+        SafeSetValue("logo", data.logo);
+        SafeSetValue("phone", data.phone);
+        SafeSetValue("whatsapp", data.whatsapp);
+        SafeSetValue("facebook", data.facebook);
+        SafeSetValue("instagram", data.instagram);
+        SafeSetValue("website", data.website);
+        SafeSetValue("instapay", data.instapay);
+        SafeSetValue("vodafonecash", data.vodafonecash);
+        SafeSetValue("footer", data.footer);
+
+        const preview = document.getElementById("logoPreview");
+        if (data.logo && preview) {
+            preview.src = data.logo;
+            preview.style.display = "block";
+        } else if (preview) {
+            preview.style.display = "none";
+        }
+
+        generateQR();
+    }
+
+    function saveCustomer() {
+        const code = SafeGetValue("code");
+        if (!code) {
+            showCustomAlert("يرجى إدخال كود العميل أولاً");
+            return;
+        }
+
+        const customerData = {
+            redirectUrl: SafeGetValue("redirectUrl"),
+            name: SafeGetValue("name"),
+            description: SafeGetValue("description"),
+            logo: SafeGetValue("logo"),
+            phone: SafeGetValue("phone"),
+            whatsapp: SafeGetValue("whatsapp"),
+            facebook: SafeGetValue("facebook"),
+            instagram: SafeGetValue("instagram"),
+            website: SafeGetValue("website"),
+            instapay: SafeGetValue("instapay"),
+            vodafonecash: SafeGetValue("vodafonecash"),
+            footer: SafeGetValue("footer")
+        };
+
+        db.ref("customers/" + code).set(customerData)
+            .then(function() {
+                showCustomAlert("تم حفظ بيانات العميل بنجاح!", function() {
+                    clearForm();
+                });
+            })
+            .catch(function(error) {
+                showCustomAlert("حدث خطأ أثناء الحفظ: " + error.message);
+            });
+    }
+
+    function deleteCustomer() {
+        const code = SafeGetValue("code");
+        if (!code) {
+            showCustomAlert("يرجى تحديد كود العميل للحذف");
+            return;
+        }
+
+        showCustomConfirm("هل أنت متأكد من حذف هذا العميل نهائياً؟", function() {
+            db.ref("customers/" + code).remove()
+                .then(function() {
+                    showCustomAlert("تم حذف العميل بنجاح", function() {
+                        clearForm();
+                    });
+                })
+                .catch(function(error) {
+                    showCustomAlert("خطأ أثناء الحذف: " + error.message);
+                });
+        });
+    }
+
+    function clearForm() {
+        SafeSetValue("searchCode", "");
+        SafeSetValue("redirectUrl", "");
+        SafeSetValue("name", "");
+        SafeSetValue("description", "");
+        SafeSetValue("logo", "");
+        SafeSetValue("phone", "");
+        SafeSetValue("qrCustomLogo", "");
+        SafeSetValue("whatsapp", "");
+        SafeSetValue("facebook", "");
+        SafeSetValue("instagram", "");
+        SafeSetValue("website", "");
+        SafeSetValue("instapay", "");
+        SafeSetValue("vodafonecash", "");
+        SafeSetValue("footer", "");
+        document.getElementById("customerSelect").value = "";
+        const preview = document.getElementById("logoPreview");
+        if (preview) preview.style.display = "none";
+        document.getElementById("qrSection").style.display = "none";
+        
+        generateNextCustomerCode();
+    }
+
+    function updateQRLive() {
+        const code = SafeGetValue("code");
+        if (code && document.getElementById("qrSection").style.display === "block") {
+            generateQR();
+        }
+    }
+
+    function generateQR() {
+        const code = SafeGetValue("code");
+        if (!code) {
+            showCustomAlert("يرجى إدخال كود العميل أولاً");
+            return;
+        }
+
+        const targetURL = window.location.origin + window.location.pathname.replace("admin.html", "qr.html") + "?id=" + encodeURIComponent(code);
+
+        const dotColor = SafeGetValue("qrDotColor") || "#000000";
+        const bgColor = SafeGetValue("qrBgColor") || "#ffffff";
+        const dotType = SafeGetValue("qrDotType") || "square";
+        const cornerType = SafeGetValue("qrCornerType") || "square";
+        const embedLogo = SafeGetValue("qrEmbedLogo");
+        const finalLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
+
+        const qrContainer = document.getElementById("qrContainer");
+        qrContainer.innerHTML = "";
+
+        const qrConfig = {
+            width: 260,
+            height: 260,
+            type: "canvas",
+            data: targetURL,
+            dotsOptions: { color: dotColor, type: dotType },
+            backgroundOptions: { color: bgColor },
+            cornersSquareOptions: { type: cornerType, color: dotColor },
+            cornersDotOptions: { type: cornerType, color: dotColor },
+            imageOptions: { crossOrigin: "anonymous", margin: 4, imageSize: 0.26 }
+        };
+
+        if (embedLogo === "yes" && finalLogo) {
+            qrConfig.image = finalLogo;
+        }
+
+        qrCodeInstance = new QRCodeStyling(qrConfig);
+        qrCodeInstance.append(qrContainer);
+        document.getElementById("qrSection").style.display = "block";
+    }
+
+    function downloadQR() {
+        const code = SafeGetValue("code") || "QR_Code";
+        const selectedFormat = SafeGetValue("downloadFormat") || "png";
+        const selectedSize = parseInt(SafeGetValue("downloadSize")) || 1000;
+
+        if (qrCodeInstance) {
+            const targetURL = window.location.origin + window.location.pathname.replace("admin.html", "qr.html") + "?id=" + encodeURIComponent(code);
+            const dotColor = SafeGetValue("qrDotColor") || "#000000";
+            const bgColor = SafeGetValue("qrBgColor") || "#ffffff";
+            const dotType = SafeGetValue("qrDotType") || "square";
+            const cornerType = SafeGetValue("qrCornerType") || "square";
+            const embedLogo = SafeGetValue("qrEmbedLogo");
+            const finalLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
+
+            const exportConfig = {
+                width: selectedSize,
+                height: selectedSize,
+                type: selectedFormat === "svg" ? "svg" : "canvas",
+                data: targetURL,
+                dotsOptions: { color: dotColor, type: dotType },
+                backgroundOptions: { color: bgColor },
+                cornersSquareOptions: { type: cornerType, color: dotColor },
+                cornersDotOptions: { type: cornerType, color: dotColor },
+                imageOptions: { crossOrigin: "anonymous", margin: selectedSize * 0.015, imageSize: 0.26 }
+            };
+
+            if (embedLogo === "yes" && finalLogo) {
+                exportConfig.image = finalLogo;
+            }
+
+            const exportQR = new QRCodeStyling(exportConfig);
+            exportQR.download({ name: code + "_" + selectedSize + "px", extension: selectedFormat });
+        }
+    }
+</script>
+
 </body>
 </html>
