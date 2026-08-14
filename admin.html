@@ -126,7 +126,7 @@
             margin-top: 10px;
         }
 
-        /* قسم معاينة الـ QR أعلى التخصيص */
+        /* قسم معاينة الـ QR */
         .qr-section {
             margin-bottom: 20px;
             padding: 15px;
@@ -143,7 +143,7 @@
             margin: 15px 0;
         }
 
-        /* قسم تخصيص الـ QR */
+        /* صندوق التخصيص */
         .qr-custom-box {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
@@ -204,13 +204,13 @@
         <textarea id="description" rows="2" placeholder="الدعاية والاعلان"></textarea>
     </div>
 
-    <!-- حقل رفع اللوجو -->
+    <!-- رفع لوجو العميل الأساسي -->
     <div class="form-group">
-        <label>صورة اللوجو</label>
+        <label>صورة اللوجو الأساسية للنشاط</label>
         <div class="file-input-wrapper">
-            <input type="text" id="logo" placeholder="رابط صورة اللوجو أو قم برفع ملف" onchange="updateQRLive()">
-            <label class="btn-upload" for="logoFileInput">اختر صورة</label>
-            <input type="file" id="logoFileInput" accept="image/*" onchange="handleLogoUpload(this)">
+            <input type="text" id="logo" placeholder="رابط صورة اللوجو أو اختر من المعرض" onchange="updateQRLive()">
+            <label class="btn-upload" for="logoFileInput">اختر صورة من المعرض</label>
+            <input type="file" id="logoFileInput" accept="image/*" onchange="handleMainLogoUpload(this)">
         </div>
         <img id="logoPreview" class="preview-logo" alt="معاينة اللوجو">
     </div>
@@ -245,27 +245,26 @@
         <input type="text" id="vodafonecash" placeholder="رابط Vodafone Cash">
     </div>
 
-    <!-- الخانة الجديدة: الحقوق (الفوتر) -->
     <div class="form-group">
         <label>الحقوق (الفوتر)</label>
         <input type="text" id="footer" placeholder="اتركها فارغة لظهور: جميع الحقوق محفوظة ✓">
     </div>
 
-    <!-- 📍 1. قسم معاينة الـ QR (أصبح في الأعلى قبل خيارات التخصيص) -->
+    <!-- 📍 1. معاينة الـ QR في الأعلى -->
     <div class="qr-section" id="qrSection">
         <h3 style="font-size:18px; margin-bottom:5px;">معاينة الـ QR</h3>
         <div id="qrContainer"></div>
         <button class="btn btn-download" onclick="downloadQR()">تحميل QR PNG</button>
     </div>
 
-    <!-- 🎨 2. صندوق تخصيص الـ QR Code -->
+    <!-- 🎨 2. تخصيص الـ QR Code مع اختيار لوجو من المعرض -->
     <div class="qr-custom-box">
         <h3 style="font-size:16px; text-align:right; margin-bottom:12px;">🎨 تخصيص شكل الـ QR Code</h3>
         
         <div class="grid-2">
             <div class="form-group">
                 <label>لون نقاط الـ QR</label>
-                <input type="color" id="qrDotColor" value="#111111" oninput="updateQRLive()">
+                <input type="color" id="qrDotColor" value="#000000" oninput="updateQRLive()">
             </div>
             <div class="form-group">
                 <label>لون الخلفية</label>
@@ -277,27 +276,34 @@
             <div class="form-group">
                 <label>شكل النقاط</label>
                 <select id="qrDotType" onchange="updateQRLive()">
-                    <option value="extra-rounded" selected>انحناء عالي (Extra Rounded)</option>
-                    <option value="rounded">دائري (Rounded)</option>
-                    <option value="dots">نقاط (Dots)</option>
-                    <option value="classy">كلاسيكي راقي (Classy)</option>
-                    <option value="square">مربع (Square)</option>
+                    <option value="square" selected>كلاسيكي قياسي (مربعات صريحة)</option>
+                    <option value="rounded">انحناء ناعم (Rounded)</option>
+                    <option value="dots">نقاط دائرية (Dots)</option>
                 </select>
             </div>
             <div class="form-group">
                 <label>شكل زوايا الـ QR</label>
                 <select id="qrCornerType" onchange="updateQRLive()">
-                    <option value="extra-rounded" selected>دائري (Rounded)</option>
-                    <option value="dot">نقطة (Dot)</option>
-                    <option value="square">مربع (Square)</option>
+                    <option value="square" selected>مربع كلاسيكي (Square)</option>
+                    <option value="dot">دائري (Dot)</option>
                 </select>
             </div>
         </div>
 
+        <!-- اختيار رفع لوجو خاص بالـ QR من المعرض -->
         <div class="form-group">
-            <label>إضافة اللوجو وسط الـ QR؟</label>
+            <label>صورة اللوجو لمنتصف الـ QR (اختياري من المعرض)</label>
+            <div class="file-input-wrapper">
+                <input type="text" id="qrCustomLogo" placeholder="اختر لوجو خاص بالـ QR أو يترك لاستخدام لوجو العميل" onchange="updateQRLive()">
+                <label class="btn-upload" for="qrLogoFileInput">من المعرض</label>
+                <input type="file" id="qrLogoFileInput" accept="image/*" onchange="handleQRLogoUpload(this)">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>إظهار اللوجو وسط الـ QR؟</label>
             <select id="qrEmbedLogo" onchange="updateQRLive()">
-                <option value="yes" selected>نعم (استخدم اللوجو المرفوع)</option>
+                <option value="yes" selected>نعم</option>
                 <option value="no">لا (بدون لوجو في المنتصف)</option>
             </select>
         </div>
@@ -339,8 +345,8 @@
         return el ? el.value.trim() : "";
     }
 
-    // رفع اللوجو وحفظه كـ Base64 وتحديث معاينة الـ QR
-    function handleLogoUpload(input) {
+    // رفع اللوجو الأساسي للنشاط من المعرض
+    function handleMainLogoUpload(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -350,6 +356,18 @@
                     preview.src = e.target.result;
                     preview.style.display = "block";
                 }
+                updateQRLive();
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // رفع لوجو مخصص للـ QR فقط من المعرض
+    function handleQRLogoUpload(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                SafeSetValue("qrCustomLogo", e.target.result);
                 updateQRLive();
             };
             reader.readAsDataURL(input.files[0]);
@@ -479,6 +497,7 @@
         SafeSetValue("name", "");
         SafeSetValue("description", "");
         SafeSetValue("logo", "");
+        SafeSetValue("qrCustomLogo", "");
         SafeSetValue("whatsapp", "");
         SafeSetValue("facebook", "");
         SafeSetValue("instagram", "");
@@ -492,7 +511,6 @@
         document.getElementById("qrSection").style.display = "none";
     }
 
-    // التحديث اللحظي للـ QR عند تغيير الخصائص
     function updateQRLive() {
         const code = SafeGetValue("code");
         if (code && document.getElementById("qrSection").style.display === "block") {
@@ -500,7 +518,6 @@
         }
     }
 
-    // إنشاء وتخصيص الـ QR Code
     function generateQR() {
         const code = SafeGetValue("code");
         if (!code) {
@@ -510,12 +527,14 @@
 
         const targetURL = window.location.origin + window.location.pathname.replace("admin.html", "qr.html") + "?id=" + encodeURIComponent(code);
 
-        const dotColor = SafeGetValue("qrDotColor") || "#111111";
+        const dotColor = SafeGetValue("qrDotColor") || "#000000";
         const bgColor = SafeGetValue("qrBgColor") || "#ffffff";
-        const dotType = SafeGetValue("qrDotType") || "extra-rounded";
-        const cornerType = SafeGetValue("qrCornerType") || "extra-rounded";
+        const dotType = SafeGetValue("qrDotType") || "square";
+        const cornerType = SafeGetValue("qrCornerType") || "square";
         const embedLogo = SafeGetValue("qrEmbedLogo");
-        const logoUrl = SafeGetValue("logo");
+        
+        // الأولوية للوجو المخصص للـ QR من المعرض، فإن لم يوجد نأخذ لوجو العميل الأساسي
+        const finalLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
 
         const qrContainer = document.getElementById("qrContainer");
         qrContainer.innerHTML = "";
@@ -543,12 +562,12 @@
             imageOptions: {
                 crossOrigin: "anonymous",
                 margin: 4,
-                imageSize: 0.28
+                imageSize: 0.26
             }
         };
 
-        if (embedLogo === "yes" && logoUrl) {
-            qrConfig.image = logoUrl;
+        if (embedLogo === "yes" && finalLogo) {
+            qrConfig.image = finalLogo;
         }
 
         qrCodeInstance = new QRCodeStyling(qrConfig);
