@@ -1,38 +1,46 @@
-function saveCustomer() {
+function generateNumber() {
 
-alert("زر الحفظ وصل للدالة");
-
-return;
-
-}
-
-  db.ref("customers").once("value").then(function(snapshot) {
+  db.ref("customers").once("value")
+  .then(function(snapshot) {
 
     let max = 0;
 
     snapshot.forEach(function(child) {
 
-      const code = child.key || "";
+      let code = child.key || "";
 
-      if (code.startsWith("CODE")) {
+      if(code.startsWith("CODE")) {
 
-        const number =
-          parseInt(code.replace("CODE", ""), 10) || 0;
+        let num =
+        parseInt(code.replace("CODE","")) || 0;
 
-        if (number > max)
-          max = number;
+        if(num > max){
+          max = num;
+        }
 
       }
 
     });
 
 
-    const next = max + 1;
+    let next = max + 1;
 
 
-    document.getElementById("id").value =
+    let input = document.getElementById("id");
+
+    if(input){
+
+      input.value =
       "CODE" + String(next).padStart(3,"0");
 
+    }
+
+
+  })
+
+  .catch(function(error){
+
+    alert("خطأ في توليد الكود: " + error.message);
 
   });
 
@@ -40,46 +48,63 @@ return;
 
 
 
-function loadCustomers() {
 
-  db.ref("customers").once("value").then(function(snapshot) {
+function loadCustomers(){
+
+  db.ref("customers").once("value")
+
+  .then(function(snapshot){
+
 
     const select =
-      document.getElementById("customerList");
+    document.getElementById("customerList");
+
+
+    if(!select) return;
+
 
 
     select.innerHTML =
-      '<option value="">اختر العميل</option>';
+    '<option value="">اختر العميل</option>';
 
 
 
-    snapshot.forEach(function(child) {
-
-      const id = child.key;
-
-      const data = child.val() || {};
+    snapshot.forEach(function(child){
 
 
-      const option =
-        document.createElement("option");
+      let id = child.key;
+
+      let data = child.val() || {};
+
+
+
+      let option =
+      document.createElement("option");
+
 
 
       option.value = id;
 
 
       option.textContent =
-        id + " - " + (data.name || "بدون اسم");
+      id + " - " + (data.name || "بدون اسم");
+
 
 
       select.appendChild(option);
 
 
+
     });
 
 
-  }).catch(function(error) {
 
-    alert("تعذر تحميل العملاء: " + error.message);
+  })
+
+
+  .catch(function(error){
+
+    alert("خطأ تحميل العملاء: " + error.message);
 
   });
 
@@ -87,10 +112,11 @@ function loadCustomers() {
 
 
 
-function selectCustomer() {
 
-  const id =
-    document.getElementById("customerList").value;
+function selectCustomer(){
+
+  let id =
+  document.getElementById("customerList").value;
 
 
   if(id){
@@ -105,10 +131,13 @@ function selectCustomer() {
 
 
 
-function loadCustomer() {
 
-  const id =
-    document.getElementById("searchId").value.trim();
+function loadCustomer(){
+
+
+  let id =
+  document.getElementById("searchId").value.trim();
+
 
 
   if(!id){
@@ -121,12 +150,16 @@ function loadCustomer() {
 
 
 
-  db.ref("customers/" + id).once("value")
+  db.ref("customers/" + id)
+
+  .once("value")
+
 
   .then(function(snapshot){
 
 
-    const data = snapshot.val();
+    let data = snapshot.val();
+
 
 
     if(!data){
@@ -138,44 +171,53 @@ function loadCustomer() {
     }
 
 
-    document.getElementById("id").value = id;
-    document.getElementById("name").value = data.name || "";
-    document.getElementById("description").value = data.description || "";
-    document.getElementById("logo").value = data.logo || "";
-    document.getElementById("whatsapp").value = data.whatsapp || "";
-    document.getElementById("facebook").value = data.facebook || "";
-    document.getElementById("instagram").value = data.instagram || "";
-    document.getElementById("website").value = data.website || "";
-    document.getElementById("payment").value = data.payment || "";
+
+    document.getElementById("id").value=id;
+
+    document.getElementById("name").value=data.name || "";
+
+    document.getElementById("description").value=data.description || "";
+
+    document.getElementById("logo").value=data.logo || "";
+
+    document.getElementById("whatsapp").value=data.whatsapp || "";
+
+    document.getElementById("facebook").value=data.facebook || "";
+
+    document.getElementById("instagram").value=data.instagram || "";
+
+    document.getElementById("website").value=data.website || "";
+
+    document.getElementById("instapay").value=data.instapay || "";
+
+    document.getElementById("vodafonecash").value=data.vodafonecash || "";
 
 
-    document.getElementById("customerList").value = id;
 
-
-    updateBottomPreview();
+    document.getElementById("customerList").value=id;
 
 
   })
 
+
   .catch(function(error){
 
-    alert("تعذر تحميل العميل: " + error.message);
+    alert("خطأ تحميل العميل: " + error.message);
 
   });
+
 
 }
 
 
 
 
-function saveCustomer() {
+
+function saveCustomer(){
 
 
-  alert("دخلت حفظ العميل");
-
-
-  const code =
-    document.getElementById("id").value.trim();
+  let code =
+  document.getElementById("id").value.trim();
 
 
 
@@ -189,7 +231,7 @@ function saveCustomer() {
 
 
 
-  const data = {
+  let data = {
 
 
     name:
@@ -220,16 +262,15 @@ function saveCustomer() {
     document.getElementById("website").value,
 
 
-    payment:
-    document.getElementById("payment").value,
+    instapay:
+    document.getElementById("instapay").value,
 
 
-    qrStyle:
-    typeof getQRStyleData === "function"
-    ? getQRStyleData()
-    : {}
+    vodafonecash:
+    document.getElementById("vodafonecash").value
 
   };
+
 
 
 
@@ -241,7 +282,7 @@ function saveCustomer() {
   .then(function(){
 
 
-    alert("تم حفظ العميل بنجاح ✅");
+    alert("تم حفظ العميل ✅");
 
 
     loadCustomers();
@@ -254,11 +295,10 @@ function saveCustomer() {
 
   .catch(function(error){
 
-
-    alert("خطأ في الحفظ: " + error.message);
-
+    alert("خطأ الحفظ: " + error.message);
 
   });
+
 
 
 }
@@ -266,17 +306,18 @@ function saveCustomer() {
 
 
 
-function deleteCustomer() {
+
+function deleteCustomer(){
 
 
-  const id =
-    document.getElementById("id").value.trim();
+  let id =
+  document.getElementById("id").value.trim();
 
 
 
   if(!id){
 
-    alert("اختر عميل أولاً");
+    alert("اختر عميل");
 
     return;
 
@@ -284,12 +325,13 @@ function deleteCustomer() {
 
 
 
-  if(confirm("هل تريد حذف " + id + " ؟")){
+  if(confirm("حذف "+id+" ؟")){
 
 
     db.ref("customers/" + id)
 
     .remove()
+
 
     .then(function(){
 
@@ -302,14 +344,13 @@ function deleteCustomer() {
       generateNumber();
 
 
+
     })
 
 
     .catch(function(error){
 
-
-      alert("تعذر الحذف: " + error.message);
-
+      alert("خطأ الحذف: " + error.message);
 
     });
 
@@ -317,4 +358,3 @@ function deleteCustomer() {
   }
 
 }
-alert("customers.js شغال");
