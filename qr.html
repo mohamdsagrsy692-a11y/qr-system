@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<title>QR</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f2f2f2;
+text-align:center;
+padding:30px;
+}
+
+.card{
+background:white;
+max-width:400px;
+margin:auto;
+padding:25px;
+border-radius:20px;
+}
+
+.logo{
+width:100px;
+height:100px;
+border-radius:50%;
+}
+
+.btn{
+display:block;
+margin:15px 0;
+padding:15px;
+background:#111;
+color:white;
+text-decoration:none;
+border-radius:12px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="card">
+
+
+<img id="logo" class="logo">
+
+
+<h1 id="name"></h1>
+
+
+<p id="description"></p>
+
+
+<a id="whatsapp" class="btn">واتساب</a>
+
+<a id="facebook" class="btn">فيسبوك</a>
+
+<a id="instagram" class="btn">إنستجرام</a>
+
+<a id="website" class="btn">الموقع</a>
+
+<a id="payment" class="btn">الدفع</a>
+
+
+</div>
+
+
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+
+<script>
+
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyDAXHBPfJUr2quRe_8OyhEDqGrHaneNmcc",
+
+authDomain: "qr-system-45702.firebaseapp.com",
+
+databaseURL: "https://qr-system-45702-default-rtdb.firebaseio.com",
+
+projectId: "qr-system-45702",
+
+storageBucket: "qr-system-45702.firebasestorage.app",
+
+messagingSenderId: "983573164670",
+
+appId: "1:983573164670:web:4b352977dd6085b0649e2f"
+
+};
+
+
+firebase.initializeApp(firebaseConfig);
+
+
+const db=firebase.database();
+
+
+
+let params=new URLSearchParams(window.location.search);
+
+let id=params.get("id");
+
+
+
+db.ref("customers/"+id).once("value")
+
+.then(function(snapshot){
+
+
+let data=snapshot.val();
+
+
+if(!data){
+
+document.querySelector(".card").innerHTML="العميل غير موجود";
+
+return;
+
+}
+
+
+
+document.getElementById("logo").src=data.logo;
+
+document.getElementById("name").innerHTML=data.name;
+
+document.getElementById("description").innerHTML=data.description;
+
+
+document.getElementById("whatsapp").href=data.whatsapp;
+
+document.getElementById("facebook").href=data.facebook;
+
+document.getElementById("instagram").href=data.instagram;
+
+document.getElementById("website").href=data.website;
+
+document.getElementById("payment").href=data.payment;
+
+
+});
+
+
+</script>
+
+
+</body>
+</html>
