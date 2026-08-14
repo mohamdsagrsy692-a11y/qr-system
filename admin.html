@@ -163,23 +163,14 @@ hr{
   .left-panel,.right-panel{min-width:100%;width:100%}
 }
 
-.scan-frame{background:#111;padding:14px;border-radius:20px;display:inline-block}
-.scan-footer{background:#111;color:#fff;padding:12px;text-align:center;font-weight:bold;border-radius:0 0 16px 16px}
-</style>
-
-<style>
 .tab-buttons{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
 .tab-buttons button{width:auto;padding:10px 14px}
 .tab-content{border:1px solid #e5e5e5;padding:10px;border-radius:12px;margin-top:8px}
-</style>
 
-<style>
 .tab-panel{display:none}
 .tab-panel.active{display:block}
 .tab-buttons button.active{background:#2563eb}
-</style>
 
-<style>
 .qr-frame{background:#111;padding:14px;border-radius:20px;display:inline-block}
 .qr-footer{background:#111;color:#fff;padding:10px;border-radius:0 0 16px 16px;text-align:center;font-weight:bold}
 </style>
@@ -190,7 +181,7 @@ hr{
 <div id="login" class="card">
   <h2>دخول الإدارة</h2>
   <input id="password" type="password" placeholder="كلمة المرور">
-  <button onclick="login()">دخول</button>
+  <button type="button" onclick="login()">دخول</button>
 </div>
 
 <div id="panel" class="card" style="display:none">
@@ -207,7 +198,7 @@ hr{
       <label class="field-label">كود العميل للبحث</label>
       <input id="searchId" placeholder="مثال: CODE001">
 
-      <button onclick="loadCustomer()">تحميل بيانات العميل</button>
+      <button type="button" onclick="loadCustomer()">تحميل بيانات العميل</button>
 
       <label class="field-label">كود العميل</label>
       <input id="id" readonly>
@@ -218,8 +209,11 @@ hr{
       <label class="field-label">وصف النشاط</label>
       <textarea id="description" placeholder="وصف النشاط"></textarea>
 
-      <label class="field-label">رابط اللوجو</label>
-      <input id="logo" placeholder="رابط صورة اللوجو">
+      <!-- اختيار لوجو العميل وتحويله لصورة -->
+      <label class="field-label">لوجو العميل (PNG / JPG)</label>
+      <input type="file" id="logoInput" accept="image/*" onchange="handleLogoUpload(event)">
+      <input type="hidden" id="logo">
+      <img id="logoPreviewAdmin" style="max-width:110px; display:none; margin:10px auto; border-radius:12px; border:1px solid #ddd; padding:4px;">
 
       <label class="field-label">واتساب</label>
       <input id="whatsapp" placeholder="رابط واتساب">
@@ -234,15 +228,14 @@ hr{
       <input id="website" placeholder="رابط الموقع">
 
       <label class="field-label">InstaPay</label>
-<input id="instapay" placeholder="رابط InstaPay">
+      <input id="instapay" placeholder="رابط InstaPay">
 
+      <label class="field-label">Vodafone Cash</label>
+      <input id="vodafonecash" placeholder="رابط Vodafone Cash">
 
-<label class="field-label">Vodafone Cash</label>
-<input id="vodafonecash" placeholder="رابط Vodafone Cash">
-
-      <button onclick="saveCustomer()">حفظ العميل</button>
-      <button class="danger" onclick="deleteCustomer()">حذف العميل</button>
-      <button onclick="createQR()">إنشاء / تحديث QR</button>
+      <button type="button" onclick="saveCustomer()">حفظ العميل</button>
+      <button type="button" class="danger" onclick="deleteCustomer()">حذف العميل</button>
+      <button type="button" onclick="createQR()">إنشاء / تحديث QR</button>
     </div>
 
     <div class="right-panel">
@@ -252,7 +245,7 @@ hr{
         <div id="qrcode"></div>
         <div id="bottomPreview"></div>
         <p id="qrLink"></p>
-        <button onclick="downloadQR()">تحميل QR PNG</button>
+        <button type="button" onclick="downloadQR()">تحميل QR PNG</button>
       </div>
 
       <hr>
@@ -275,7 +268,7 @@ hr{
         <option value="luxury">Luxury Gold</option>
         <option value="social">Social Media</option>
       </select>
-      <button onclick="applyTemplate()">تطبيق القالب</button>
+      <button type="button" onclick="applyTemplate()">تطبيق القالب</button>
 
       <label class="field-label">لون النقاط</label>
       <input type="color" id="dotColor" value="#000000">
@@ -340,18 +333,16 @@ hr{
       <label class="field-label">النص أسفل QR</label>
       <input id="bottomText" placeholder="يمكن تركه فارغًا">
 
-      <button onclick="resetQRDesign()">إعادة الإعدادات الافتراضية</button>
+      <button type="button" onclick="resetQRDesign()">إعادة الإعدادات الافتراضية</button>
 
       <div class="small-note">
-        المعاينة تعرض النص أسفل QR. في هذه المرحلة، تحميل PNG ينزل QR نفسه من مكتبة التوليد؛
-        إضافة إطار/نص/تصميم كامل داخل ملف PNG ستكون في خطوة التخصيص المتقدمة التالية.
+        المعاينة تعرض النص أسفل QR. في هذه المرحلة، تحميل PNG ينزل QR نفسه من مكتبة التوليد.
       </div>
     </div>
 
   </div>
 </div>
 
-<!-- استدعاء الملفات الخارجية بعد حذف كل السكريبتات المكررة من الملف -->
 <script src="js/firebase.js"></script>
 <script src="js/customers.js"></script>
 <script src="js/qr-generator.js"></script>
