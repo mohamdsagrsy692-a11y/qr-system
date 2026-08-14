@@ -1,4 +1,10 @@
-function generateNumber() {
+function saveCustomer() {
+
+alert("زر الحفظ وصل للدالة");
+
+return;
+
+}
 
   db.ref("customers").once("value").then(function(snapshot) {
 
