@@ -34,17 +34,39 @@ max-width:500px;
 text-align:center;
 }
 
-.logo{
-width: 100%;            /* عرض كامل لعرض الكارت */
-height: 220px;          /* ارتفاع المستطيل */
-border-radius: 18px;    /* نفس انحناء الأزرار */
-background: #fff;       /* خلفية بيضاء للوجو */
-padding: 15px;          /* مسافة داخلية */
+/* 🎯 تعديل إطار اللوجو ليكون بنفس خامة ولون أزرار الأيقونات بالضبط */
+.logo-container{
+width: 100%;
+height: 200px;
+border-radius: 18px;
 margin: 20px auto;
 overflow: hidden;
-object-fit: contain;    /* يضمن ظهور اللوجو بالكامل */
+position: relative;
+background: url("assets/card-bg.jpg") center center/cover;
+box-shadow: 0 6px 15px rgba(0,0,0,.25);
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 15px;
+}
+
+/* الطبقة الشفافة البيضاء بنفس درجة الأزرار */
+.logo-container::before{
+content: "";
+position: absolute;
+inset: 0;
+background: rgba(255,255,255,.75);
+z-index: 1;
+}
+
+/* صورة اللوجو نفسها فوق الطبقة الشفافة */
+.logo-container img{
+max-width: 100%;
+max-height: 100%;
+object-fit: contain;
+position: relative;
+z-index: 2;
 display: block;
-box-shadow: 0 4px 15px rgba(0,0,0,.25);
 }
 
 #name{
@@ -150,8 +172,10 @@ font-weight:bold;
 
 <div class="card">
 
-
-<img id="logo" class="logo" style="display:none;">
+<!-- برواز اللوجو بخامة وتصميم الأزرار -->
+<div id="logoWrapper" class="logo-container" style="display:none;">
+    <img id="logo">
+</div>
 
 
 <h1 id="name"></h1>
@@ -266,13 +290,15 @@ return;
 }
 
 
-// معالجة عرض اللوجو
+// معالجة عرض إطار اللوجو بأسلوب الأزرار
 const logoElem = document.getElementById("logo");
+const logoWrapper = document.getElementById("logoWrapper");
+
 if (data.logo && data.logo.trim() !== "") {
     logoElem.src = data.logo;
-    logoElem.style.display = "block";
+    logoWrapper.style.display = "flex";
 } else {
-    logoElem.style.display = "none";
+    logoWrapper.style.display = "none";
 }
 
 
