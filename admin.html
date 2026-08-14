@@ -301,7 +301,7 @@
 
     <div class="form-group">
         <label>كود العميل للبحث</label>
-        <input type="text" id="searchCode" placeholder="CODE001">
+        <input type="text" id="searchCode" placeholder="ابحث بكود العميل">
     </div>
 
     <button class="btn btn-save" onclick="searchCustomerByCode()">تحميل بيانات العميل</button>
@@ -309,69 +309,69 @@
     <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
 
     <div class="form-group">
-        <label>كود العميل</label>
-        <input type="text" id="code" placeholder="CODE001" oninput="updateQRLive()">
+        <label>كود العميل (تلقائي)</label>
+        <input type="text" id="code" placeholder="" oninput="updateQRLive()">
     </div>
 
     <div class="form-group">
         <label>اسم النشاط</label>
-        <input type="text" id="name" placeholder="النور">
+        <input type="text" id="name" placeholder="">
     </div>
 
     <div class="form-group">
         <label>وصف النشاط</label>
-        <textarea id="description" rows="2" placeholder="الدعاية والاعلان"></textarea>
+        <textarea id="description" rows="2" placeholder=""></textarea>
     </div>
 
     <div class="form-group">
         <label>صورة اللوجو الأساسية للنشاط</label>
         <div class="file-input-wrapper">
-            <input type="text" id="logo" placeholder="رابط صورة اللوجو أو اختر من المعرض" onchange="updateQRLive()">
+            <input type="text" id="logo" placeholder="" onchange="updateQRLive()">
             <label class="btn-upload" for="logoFileInput">اختر صورة من المعرض</label>
             <input type="file" id="logoFileInput" accept="image/*" onchange="handleMainLogoUpload(this)">
         </div>
         <img id="logoPreview" class="preview-logo" alt="معاينة اللوجو">
     </div>
 
-    <!-- 📞 الحقل الجديد للاتصال -->
+    <!-- 📞 الحقل للاتصال -->
     <div class="form-group">
         <label>رقم الهاتف / الاتصال</label>
-        <input type="text" id="phone" placeholder="01095195829">
+        <input type="text" id="phone" placeholder="">
     </div>
 
     <div class="form-group">
         <label>واتساب</label>
-        <input type="text" id="whatsapp" placeholder="رابط واتساب">
+        <input type="text" id="whatsapp" placeholder="">
     </div>
 
     <div class="form-group">
         <label>فيسبوك</label>
-        <input type="text" id="facebook" placeholder="رابط فيسبوك">
+        <input type="text" id="facebook" placeholder="">
     </div>
 
     <div class="form-group">
         <label>انستجرام</label>
-        <input type="text" id="instagram" placeholder="رابط انستجرام">
+        <input type="text" id="instagram" placeholder="">
     </div>
 
     <div class="form-group">
-        <label>الموقع</label>
-        <input type="text" id="website" placeholder="رابط الموقع">
+        <label>الموقع (Review)</label>
+        <input type="text" id="website" placeholder="">
     </div>
 
     <div class="form-group">
         <label>InstaPay</label>
-        <input type="text" id="instapay" placeholder="رابط InstaPay">
+        <input type="text" id="instapay" placeholder="">
     </div>
 
     <div class="form-group">
         <label>Vodafone Cash</label>
-        <input type="text" id="vodafonecash" placeholder="رابط Vodafone Cash">
+        <input type="text" id="vodafonecash" placeholder="">
     </div>
 
     <div class="form-group">
         <label>الحقوق (الفوتر)</label>
-        <input type="text" id="footer" placeholder="اتركها فارغة لظهور: جميع الحقوق محفوظة ✓">
+        <input type="text" id="footer" placeholder="">
     </div>
 
     <div class="qr-section" id="qrSection">
@@ -438,7 +438,7 @@
         <div class="form-group">
             <label>صورة اللوجو لمنتصف الـ QR (اختياري من المعرض)</label>
             <div class="file-input-wrapper">
-                <input type="text" id="qrCustomLogo" placeholder="اختر لوجو خاص بالـ QR أو يترك لاستخدام لوجو العميل" onchange="updateQRLive()">
+                <input type="text" id="qrCustomLogo" placeholder="" onchange="updateQRLive()">
                 <label class="btn-upload" for="qrLogoFileInput">من المعرض</label>
                 <input type="file" id="qrLogoFileInput" accept="image/*" onchange="handleQRLogoUpload(this)">
             </div>
@@ -471,6 +471,7 @@
             document.getElementById("loginModal").style.display = "none";
             document.getElementById("adminContainer").style.display = "block";
             loadCustomerList();
+            generateNextCustomerCode();
         }
     };
 
@@ -485,6 +486,7 @@
             document.getElementById("adminContainer").style.display = "block";
             errorMsg.style.display = "none";
             loadCustomerList();
+            generateNextCustomerCode();
         } else {
             errorMsg.style.display = "block";
         }
@@ -524,6 +526,32 @@
     function SafeGetValue(id) {
         const el = document.getElementById(id);
         return el ? el.value.trim() : "";
+    }
+
+    // 🔄 دالة توليد كود العميل المتسلسل تلقائياً
+    function generateNextCustomerCode() {
+        db.ref("customers").once("value").then(snapshot => {
+            const data = snapshot.val();
+            let maxNum = 0;
+
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    const numMatch = key.match(/\d+/);
+                    if (numMatch) {
+                        const num = parseInt(numMatch[0], 10);
+                        if (num > maxNum) {
+                            maxNum = num;
+                        }
+                    }
+                });
+            }
+
+            const nextNum = maxNum + 1;
+            const nextCode = "CODE" + String(nextNum).padStart(3, "0");
+            SafeSetValue("code", nextCode);
+        }).catch(err => {
+            SafeSetValue("code", "CODE001");
+        });
     }
 
     function handleMainLogoUpload(input) {
@@ -601,7 +629,7 @@
         SafeSetValue("name", data.name);
         SafeSetValue("description", data.description);
         SafeSetValue("logo", data.logo);
-        SafeSetValue("phone", data.phone); // تحميل الهاتف
+        SafeSetValue("phone", data.phone);
         SafeSetValue("whatsapp", data.whatsapp);
         SafeSetValue("facebook", data.facebook);
         SafeSetValue("instagram", data.instagram);
@@ -632,7 +660,7 @@
             name: SafeGetValue("name"),
             description: SafeGetValue("description"),
             logo: SafeGetValue("logo"),
-            phone: SafeGetValue("phone"), // حفظ الهاتف
+            phone: SafeGetValue("phone"),
             whatsapp: SafeGetValue("whatsapp"),
             facebook: SafeGetValue("facebook"),
             instagram: SafeGetValue("instagram"),
@@ -645,6 +673,7 @@
         db.ref("customers/" + code).set(customerData)
             .then(function() {
                 alert("تم حفظ بيانات العميل بنجاح!");
+                clearForm();
             })
             .catch(function(error) {
                 alert("حدث خطأ أثناء الحفظ: " + error.message);
@@ -670,8 +699,8 @@
         }
     }
 
+    // 🧹 دالة تفريغ جميع الخانات وتجهيز كود جديد تلقائياً
     function clearForm() {
-        SafeSetValue("code", "");
         SafeSetValue("searchCode", "");
         SafeSetValue("name", "");
         SafeSetValue("description", "");
@@ -689,6 +718,9 @@
         const preview = document.getElementById("logoPreview");
         if (preview) preview.style.display = "none";
         document.getElementById("qrSection").style.display = "none";
+        
+        // توليد كود العميل المتسلسل الجديد تلقائياً
+        generateNextCustomerCode();
     }
 
     function updateQRLive() {
