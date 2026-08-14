@@ -34,7 +34,7 @@ max-width:500px;
 text-align:center;
 }
 
-/* 🎯 تعديل إطار اللوجو ليكون بنفس خامة ولون أزرار الأيقونات بالضبط */
+/* إطار اللوجو بنفس خامة ولون أزرار الأيقونات */
 .logo-container{
 width: 100%;
 height: 200px;
@@ -160,6 +160,7 @@ margin-top:20px;
 color:#fff;
 font-size:15px;
 font-weight:bold;
+text-shadow:0 2px 5px rgba(0,0,0,.5);
 }
 
 </style>
@@ -222,10 +223,8 @@ font-weight:bold;
 </a>
 
 
-
-<div class="footer">
-QR Business Card
-</div>
+<!-- نص الحقوق الديناميكي -->
+<div id="footerText" class="footer"></div>
 
 
 </div>
@@ -335,6 +334,9 @@ document.getElementById("vodafonecash").href =
 data.vodafonecash || "#";
 
 
+// معالجة عرض نص الحقوق (الفوتر)
+document.getElementById("footerText").textContent = 
+    (data.footer && data.footer.trim() !== "") ? data.footer : "جميع الحقوق محفوظة ✓";
 
 
 // إخفاء الروابط الفاضية
