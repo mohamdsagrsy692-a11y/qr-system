@@ -1,5 +1,7 @@
 function login() {
 
+  alert("login يعمل");
+
   const pass =
     document.getElementById("password").value;
 
@@ -7,6 +9,8 @@ function login() {
 
     document.getElementById("login").style.display = "none";
     document.getElementById("panel").style.display = "block";
+
+    alert("هبدأ تحميل العملاء");
 
     generateNumber();
     loadCustomers();
@@ -16,6 +20,7 @@ function login() {
     alert("كلمة المرور غير صحيحة");
   }
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -33,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         });
 
+
         el.addEventListener("change", () => {
 
           if (typeof createQR === "function") {
@@ -48,36 +54,60 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+
 document.addEventListener("DOMContentLoaded", () => {
 
   const btns =
     document.querySelectorAll(".tab-buttons button");
 
+
   const sections =
     document.querySelectorAll("[data-tab]");
 
+
+
   btns.forEach((btn, index) => {
+
 
     btn.addEventListener("click", () => {
 
-      btns.forEach(b => b.classList.remove("active"));
+
+      btns.forEach(b =>
+        b.classList.remove("active")
+      );
+
 
       btn.classList.add("active");
 
+
+
       sections.forEach(sec => {
+
         sec.style.display = "none";
+
       });
 
+
+
       if (sections[index]) {
+
         sections[index].style.display = "block";
+
       }
+
 
     });
 
+
   });
 
+
+
   if (btns.length) {
+
     btns[0].click();
+
   }
+
 
 });
