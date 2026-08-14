@@ -259,6 +259,65 @@
             display: none;
             text-align: center;
         }
+
+        /* تصميم النافذة المنبثقة الاحترافية (Custom Modal) */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .custom-modal-box {
+            background: #fff;
+            width: 90%;
+            max-width: 340px;
+            padding: 25px 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transform: scale(0.9);
+            animation: scaleUp 0.2s ease forwards;
+        }
+
+        .custom-modal-msg {
+            font-size: 16px;
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .custom-modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .custom-modal-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .custom-modal-btn:hover { opacity: 0.85; }
+        .btn-modal-ok { background-color: #111; color: #fff; }
+        .btn-modal-cancel { background-color: #e2e8f0; color: #4a5568; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes scaleUp { from { transform: scale(0.9); } to { transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -282,6 +341,16 @@
             <p class="error-msg" id="loginError">اسم المستخدم أو كلمة المرور غير صحيحة!</p>
 
             <button class="btn-login-submit" onclick="checkLogin()">دخول</button>
+        </div>
+    </div>
+</div>
+
+<!-- النافذة المنبثقة الاحترافية (Custom Modal HTML) -->
+<div class="custom-modal-overlay" id="customModal">
+    <div class="custom-modal-box">
+        <div class="custom-modal-msg" id="customModalMsg">رسالة التنبيه هنا</div>
+        <div class="custom-modal-buttons" id="customModalButtons">
+            <button class="custom-modal-btn btn-modal-ok" id="customModalOkBtn">حسناً</button>
         </div>
     </div>
 </div>
@@ -313,7 +382,6 @@
         <input type="text" id="code" placeholder="" oninput="updateQRLive()">
     </div>
 
-    <!-- 🔗 الخانة الجديدة للتحويل المباشر تحت كود العميل -->
     <div class="form-group">
         <label>رابط تحويل مباشر (اختياري)</label>
         <input type="text" id="redirectUrl" placeholder="https://g.page/r/... (اتركه فارغاً لفتح الكارت الشخصي)">
@@ -471,6 +539,44 @@
     const ADMIN_USERNAME = "abdallah.haroun";
     const ADMIN_PASSWORD = "CODE010951";
 
+    // دوال النافذة المنبثقة الاحترافية
+    function showCustomAlert(message, callback) {
+        const modal = document.getElementById("customModal");
+        const msgEl = document.getElementById("customModalMsg");
+        const buttonsEl = document.getElementById("customModalButtons");
+
+        msgEl.textContent = message;
+        buttonsEl.innerHTML = '<button class="custom-modal-btn btn-modal-ok" id="modalOkBtn">حسناً</button>';
+        modal.style.display = "flex";
+
+        document.getElementById("modalOkBtn").onclick = function() {
+            modal.style.display = "none";
+            if (callback) callback();
+        };
+    }
+
+    function showCustomConfirm(message, onConfirm) {
+        const modal = document.getElementById("customModal");
+        const msgEl = document.getElementById("customModalMsg");
+        const buttonsEl = document.getElementById("customModalButtons");
+
+        msgEl.textContent = message;
+        buttonsEl.innerHTML = `
+            <button class="custom-modal-btn btn-modal-cancel" id="modalCancelBtn">إلغاء</button>
+            <button class="custom-modal-btn btn-modal-ok" style="background-color: #c53030;" id="modalConfirmBtn">تأكيد الحذف</button>
+        `;
+        modal.style.display = "flex";
+
+        document.getElementById("modalCancelBtn").onclick = function() {
+            modal.style.display = "none";
+        };
+
+        document.getElementById("modalConfirmBtn").onclick = function() {
+            modal.style.display = "none";
+            if (onConfirm) onConfirm();
+        };
+    }
+
     window.onload = function() {
         if (sessionStorage.getItem("adminLoggedIn") === "true") {
             document.getElementById("loginModal").style.display = "none";
@@ -533,7 +639,6 @@
         return el ? el.value.trim() : "";
     }
 
-    // 🔄 دالة توليد كود العميل المتسلسل تلقائياً
     function generateNextCustomerCode() {
         db.ref("customers").once("value").then(snapshot => {
             const data = snapshot.val();
@@ -615,7 +720,7 @@
     function searchCustomerByCode() {
         const code = SafeGetValue("searchCode");
         if (!code) {
-            alert("يرجى إدخال كود العميل أولاً");
+            showCustomAlert("يرجى إدخال كود العميل أولاً");
             return;
         }
 
@@ -624,14 +729,14 @@
             if (data) {
                 populateForm(code, data);
             } else {
-                alert("لم يتم العثور على عميل بهذا الكود");
+                showCustomAlert("لم يتم العثور على عميل بهذا الكود");
             }
         });
     }
 
     function populateForm(id, data) {
         SafeSetValue("code", id);
-        SafeSetValue("redirectUrl", data.redirectUrl); // تحميل رابط التحويل المباشر
+        SafeSetValue("redirectUrl", data.redirectUrl);
         SafeSetValue("name", data.name);
         SafeSetValue("description", data.description);
         SafeSetValue("logo", data.logo);
@@ -658,12 +763,12 @@
     function saveCustomer() {
         const code = SafeGetValue("code");
         if (!code) {
-            alert("يرجى إدخال كود العميل أولاً");
+            showCustomAlert("يرجى إدخال كود العميل أولاً");
             return;
         }
 
         const customerData = {
-            redirectUrl: SafeGetValue("redirectUrl"), // حفظ رابط التحويل المباشر
+            redirectUrl: SafeGetValue("redirectUrl"),
             name: SafeGetValue("name"),
             description: SafeGetValue("description"),
             logo: SafeGetValue("logo"),
@@ -679,37 +784,38 @@
 
         db.ref("customers/" + code).set(customerData)
             .then(function() {
-                alert("تم حفظ بيانات العميل بنجاح!");
-                clearForm();
+                showCustomAlert("تم حفظ بيانات العميل بنجاح!", function() {
+                    clearForm();
+                });
             })
             .catch(function(error) {
-                alert("حدث خطأ أثناء الحفظ: " + error.message);
+                showCustomAlert("حدث خطأ أثناء الحفظ: " + error.message);
             });
     }
 
     function deleteCustomer() {
         const code = SafeGetValue("code");
         if (!code) {
-            alert("يرجى تحديد كود العميل للحذف");
+            showCustomAlert("يرجى تحديد كود العميل للحذف");
             return;
         }
 
-        if (confirm("هل أنت تأكد من حذف هذا العميل نهائياً؟")) {
+        showCustomConfirm("هل أنت متأكد من حذف هذا العميل نهائياً؟", function() {
             db.ref("customers/" + code).remove()
                 .then(function() {
-                    alert("تم حذف العميل بنجاح");
-                    clearForm();
+                    showCustomAlert("تم حذف العميل بنجاح", function() {
+                        clearForm();
+                    });
                 })
                 .catch(function(error) {
-                    alert("خطأ أثناء الحذف: " + error.message);
+                    showCustomAlert("خطأ أثناء الحذف: " + error.message);
                 });
-        }
+        });
     }
 
-    // 🧹 دالة تفريغ جميع الخانات وتجهيز كود جديد تلقائياً
     function clearForm() {
         SafeSetValue("searchCode", "");
-        SafeSetValue("redirectUrl", ""); // تفريغ خانة رابط التحويل المباشر
+        SafeSetValue("redirectUrl", "");
         SafeSetValue("name", "");
         SafeSetValue("description", "");
         SafeSetValue("logo", "");
@@ -727,7 +833,6 @@
         if (preview) preview.style.display = "none";
         document.getElementById("qrSection").style.display = "none";
         
-        // توليد كود العميل المتسلسل الجديد تلقائياً
         generateNextCustomerCode();
     }
 
@@ -741,7 +846,7 @@
     function generateQR() {
         const code = SafeGetValue("code");
         if (!code) {
-            alert("يرجى إدخال كود العميل أولاً");
+            showCustomAlert("يرجى إدخال كود العميل أولاً");
             return;
         }
 
