@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إدارة العملاء - QR Admin</title>
     
-    <!-- مكتبة إنشاء QR Code -->
+    <!-- مكتبة إنشاء وتخصيص QR Code -->
     <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
     
     <style>
@@ -31,7 +31,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        h2 {
+        h2, h3 {
             text-align: center;
             margin-bottom: 20px;
             color: #222;
@@ -49,7 +49,7 @@
             font-size: 14px;
         }
 
-        input[type="text"], select, textarea {
+        input[type="text"], input[type="color"], select, textarea {
             width: 100%;
             padding: 10px 12px;
             border: 1px solid #ccc;
@@ -57,6 +57,12 @@
             font-size: 14px;
             outline: none;
             transition: border-color 0.2s;
+        }
+
+        input[type="color"] {
+            height: 42px;
+            padding: 4px;
+            cursor: pointer;
         }
 
         input[type="text"]:focus, select:focus, textarea:focus {
@@ -118,6 +124,21 @@
             background-color: #111;
             color: #fff;
             margin-top: 15px;
+        }
+
+        /* قسم تخصيص الـ QR */
+        .qr-custom-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
         }
 
         .qr-section {
@@ -221,10 +242,55 @@
         <input type="text" id="vodafonecash" placeholder="رابط Vodafone Cash">
     </div>
 
-    <!-- 🎯 الخانة الجديدة: الحقوق / الفوتر -->
+    <!-- الخانة الجديدة: الحقوق (الفوتر) -->
     <div class="form-group">
         <label>الحقوق (الفوتر)</label>
         <input type="text" id="footer" placeholder="اتركها فارغة لظهور: جميع الحقوق محفوظة ✓">
+    </div>
+
+    <!-- 🎨 قائمة تخصيص الـ QR Code (رجعت من تاني!) -->
+    <div class="qr-custom-box">
+        <h3 style="font-size:16px; text-align:right; margin-bottom:12px;">🎨 تخصيص شكل الـ QR Code</h3>
+        
+        <div class="grid-2">
+            <div class="form-group">
+                <label>لون نقاط الـ QR</label>
+                <input type="color" id="qrDotColor" value="#111111">
+            </div>
+            <div class="form-group">
+                <label>لون الخلفية</label>
+                <input type="color" id="qrBgColor" value="#ffffff">
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label>شكل النقاط</label>
+                <select id="qrDotType">
+                    <option value="rounded">دائري (Rounded)</option>
+                    <option value="dots">نقاط (Dots)</option>
+                    <option value="square">مربع (Square)</option>
+                    <option value="classy">كلاسيكي راقي (Classy)</option>
+                    <option value="extra-rounded">انحناء عالي (Extra Rounded)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>شكل زوايا الـ QR</label>
+                <select id="qrCornerType">
+                    <option value="dot">نقطة (Dot)</option>
+                    <option value="square">مربع (Square)</option>
+                    <option value="extra-rounded">دائري (Rounded)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>إضافة اللوجو وسط الـ QR؟</label>
+            <select id="qrEmbedLogo">
+                <option value="yes">نعم (استخدم اللوجو المرفوع)</option>
+                <option value="no">لا (بدون لوجو في المنتصف)</option>
+            </select>
+        </div>
     </div>
 
     <button class="btn btn-save" onclick="saveCustomer()">حفظ العميل</button>
@@ -259,7 +325,6 @@
 
     let qrCodeInstance = null;
 
-    // دوال الأمان للوصول لعناصر الـ DOM
     function SafeSetValue(id, val) {
         const el = document.getElementById(id);
         if (el) el.value = val || "";
@@ -286,7 +351,7 @@
         }
     }
 
-    // جلب قائمة العملاء في القائمة المنسدلة عند فتح الصفحة
+    // جلب قائمة العملاء
     function loadCustomerList() {
         db.ref("customers").on("value", function(snapshot) {
             const select = document.getElementById("customerSelect");
@@ -303,7 +368,6 @@
 
     loadCustomerList();
 
-    // تعبئة البيانات عند اختيار عميل من القائمة
     function loadSelectedCustomer() {
         const id = SafeGetValue("customerSelect");
         if (!id) return;
@@ -316,7 +380,6 @@
         });
     }
 
-    // البحث عن عميل برقم الكود
     function searchCustomerByCode() {
         const code = SafeGetValue("searchCode");
         if (!code) {
@@ -334,7 +397,6 @@
         });
     }
 
-    // ملء النموذج بالبيانات
     function populateForm(id, data) {
         SafeSetValue("code", id);
         SafeSetValue("name", data.name);
@@ -346,7 +408,7 @@
         SafeSetValue("website", data.website);
         SafeSetValue("instapay", data.instapay);
         SafeSetValue("vodafonecash", data.vodafonecash);
-        SafeSetValue("footer", data.footer); // تعبئة حقل الحقوق
+        SafeSetValue("footer", data.footer);
 
         const preview = document.getElementById("logoPreview");
         if (data.logo && preview) {
@@ -357,7 +419,6 @@
         }
     }
 
-    // حفظ / تحديث العميل
     function saveCustomer() {
         const code = SafeGetValue("code");
         if (!code) {
@@ -375,7 +436,7 @@
             website: SafeGetValue("website"),
             instapay: SafeGetValue("instapay"),
             vodafonecash: SafeGetValue("vodafonecash"),
-            footer: SafeGetValue("footer") // حفظ حقل الحقوق
+            footer: SafeGetValue("footer")
         };
 
         db.ref("customers/" + code).set(customerData)
@@ -387,7 +448,6 @@
             });
     }
 
-    // حذف العميل
     function deleteCustomer() {
         const code = SafeGetValue("code");
         if (!code) {
@@ -426,7 +486,7 @@
         document.getElementById("qrSection").style.display = "none";
     }
 
-    // إنشاء كود QR مع رابط العميل
+    // 🎯 إنشاء كود QR مع كامل التخصيصات المختارة
     function generateQR() {
         const code = SafeGetValue("code");
         if (!code) {
@@ -434,35 +494,55 @@
             return;
         }
 
-        // رابط صفحة العميل العامة
         const targetURL = window.location.origin + window.location.pathname.replace("admin.html", "qr.html") + "?id=" + encodeURIComponent(code);
+
+        const dotColor = SafeGetValue("qrDotColor") || "#111111";
+        const bgColor = SafeGetValue("qrBgColor") || "#ffffff";
+        const dotType = SafeGetValue("qrDotType") || "rounded";
+        const cornerType = SafeGetValue("qrCornerType") || "dot";
+        const embedLogo = SafeGetValue("qrEmbedLogo");
+        const logoUrl = SafeGetValue("logo");
 
         const qrContainer = document.getElementById("qrContainer");
         qrContainer.innerHTML = "";
 
-        qrCodeInstance = new QRCodeStyling({
-            width: 250,
-            height: 250,
+        const qrConfig = {
+            width: 280,
+            height: 280,
             type: "svg",
             data: targetURL,
             dotsOptions: {
-                color: "#111111",
-                type: "rounded"
+                color: dotColor,
+                type: dotType
             },
             backgroundOptions: {
-                color: "#ffffff"
+                color: bgColor
+            },
+            cornersSquareOptions: {
+                type: cornerType,
+                color: dotColor
+            },
+            cornersDotOptions: {
+                type: cornerType,
+                color: dotColor
             },
             imageOptions: {
                 crossOrigin: "anonymous",
-                margin: 5
+                margin: 6,
+                imageSize: 0.3
             }
-        });
+        };
 
+        // إضافة اللوجو في منتصف الـ QR إذا اختار المستخدم "نعم" وكان هناك صورة
+        if (embedLogo === "yes" && logoUrl) {
+            qrConfig.image = logoUrl;
+        }
+
+        qrCodeInstance = new QRCodeStyling(qrConfig);
         qrCodeInstance.append(qrContainer);
         document.getElementById("qrSection").style.display = "block";
     }
 
-    // تحميل الـ QR بصيغة صورة PNG
     function downloadQR() {
         const code = SafeGetValue("code") || "QR_Code";
         if (qrCodeInstance) {
