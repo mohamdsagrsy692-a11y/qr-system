@@ -250,14 +250,14 @@
         <input type="text" id="footer" placeholder="اتركها فارغة لظهور: جميع الحقوق محفوظة ✓">
     </div>
 
-    <!-- 📍 1. معاينة الـ QR في الأعلى -->
+    <!-- 📍 معاينة الـ QR في الأعلى -->
     <div class="qr-section" id="qrSection">
         <h3 style="font-size:18px; margin-bottom:5px;">معاينة الـ QR</h3>
         <div id="qrContainer"></div>
         <button class="btn btn-download" onclick="downloadQR()">تحميل QR PNG</button>
     </div>
 
-    <!-- 🎨 2. تخصيص الـ QR Code مع اختيار لوجو من المعرض -->
+    <!-- 🎨 تخصيص الـ QR Code مع اختيار لوجو من المعرض -->
     <div class="qr-custom-box">
         <h3 style="font-size:16px; text-align:right; margin-bottom:12px;">🎨 تخصيص شكل الـ QR Code</h3>
         
@@ -542,7 +542,7 @@
         const qrConfig = {
             width: 260,
             height: 260,
-            type: "svg",
+            type: "canvas", // تم التغيير لـ canvas لمنع ظهور خطوط التشريح إطلاقاً
             data: targetURL,
             dotsOptions: {
                 color: dotColor,
