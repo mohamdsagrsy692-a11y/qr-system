@@ -6,6 +6,11 @@
     <title>الورشة | Alwarsha</title>
     <!-- مكتبة الأيقونات Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- مكتبات Firebase الأساسية -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
     <style>
         * {
             box-sizing: border-box;
@@ -17,8 +22,6 @@
         body {
             /* خلفية متدرجة أساسية */
             background: linear-gradient(135deg, #0b2239 0%, #116888 50%, #1583a3 100%);
-            
-            /* لو حابب تستخدم صورة background.jpg من الفولدر الجديد فك التعليق عن السطر الجاي: */
             /* background: url('assets/background.jpg') no-repeat center center fixed; background-size: cover; */
             
             min-height: 100vh;
@@ -74,8 +77,6 @@
             align-items: center;
             justify-content: space-between;
             background: rgba(255, 255, 255, 0.88);
-            
-            /* لو حابب تستخدم صورة card-bg.jpg من الفولدر الجديد فك التعليق عن السطر الجاي: */
             /* background: url('assets/card-bg.jpg') rgba(255, 255, 255, 0.85); background-size: cover; */
             
             backdrop-filter: blur(10px);
@@ -126,6 +127,7 @@
         .fa-whatsapp { color: #25d366; }
         .fa-facebook { color: #1877f2; }
         .fa-instagram { color: #e4405f; }
+        .fa-globe { color: #0d6efd; }
 
         .footer {
             margin-top: 30px;
@@ -133,67 +135,127 @@
             font-weight: 600;
             opacity: 0.8;
         }
+
+        #loading-state {
+            font-size: 1.2rem;
+            margin-top: 50px;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- اللوجو (المسار الجديد) -->
-        <div class="logo-container">
-            <img class="logo" src="assets/logo.png" alt="Alwarsha Logo" onerror="this.src='https://via.placeholder.com/130'">
-        </div>
+        <div id="loading-state">جاري تحميل البيانات...</div>
 
-        <h1 class="title">الورشة</h1>
-        <div class="subtitle">Alwarsha</div>
+        <div id="main-content" style="display: none;">
+            <!-- اللوجو -->
+            <div class="logo-container">
+                <img id="cust-logo" class="logo" src="assets/logo.png" alt="Logo" onerror="this.src='assets/logo.png'">
+            </div>
 
-        <div class="btn-list">
-            
-            <!-- اتصال -->
-            <a href="tel:01095195829" class="btn-card">
-                <span class="btn-text phone-num">01095195829</span>
-                <span class="icon"><i class="fa-solid fa-phone"></i></span>
-            </a>
+            <!-- اسم العميل والوصف -->
+            <h1 id="cust-name" class="title">الورشة</h1>
+            <div id="cust-desc" class="subtitle">Alwarsha</div>
 
-            <!-- واتساب -->
-            <a href="https://wa.me/201095195829" target="_blank" class="btn-card">
-                <span class="btn-text">WhatsApp</span>
-                <span class="icon"><i class="fa-brands fa-whatsapp"></i></span>
-            </a>
+            <!-- قائمة الأزرار الديناميكية -->
+            <div id="cust-btns" class="btn-list"></div>
 
-            <!-- فيسبوك -->
-            <a href="#" target="_blank" class="btn-card">
-                <span class="btn-text">Facebook</span>
-                <span class="icon"><i class="fa-brands fa-facebook"></i></span>
-            </a>
-
-            <!-- إنستجرام -->
-            <a href="#" target="_blank" class="btn-card">
-                <span class="btn-text">Instagram</span>
-                <span class="icon"><i class="fa-brands fa-instagram"></i></span>
-            </a>
-
-            <!-- انستا باي (المسار الجديد) -->
-            <a href="#" class="btn-card">
-                <span class="btn-text">InstaPay</span>
-                <span class="icon">
-                    <img src="assets/instapay.png" alt="InstaPay" class="icon-img" onerror="this.style.display='none'">
-                </span>
-            </a>
-
-            <!-- فودافون كاش (المسار الجديد) -->
-            <a href="#" class="btn-card">
-                <span class="btn-text">Vodafone Cash</span>
-                <span class="icon">
-                    <img src="assets/vodafonecash.png" alt="Vodafone Cash" class="icon-img" onerror="this.style.display='none'">
-                </span>
-            </a>
-
-        </div>
-
-        <div class="footer">
-            Alwarsha ©
+            <div class="footer">
+                Alwarsha ©
+            </div>
         </div>
     </div>
 
+    <!-- استدعاء ملف تهيئة الفايربيز الخارجي -->
+    <script src="firebase.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // جلب كود العميل من رابط الصفحة (مثل ?code=CODE001 أو ?id=CODE001)
+            const urlParams = new URLSearchParams(window.location.search);
+            const customerId = urlParams.get('code') || urlParams.get('id') || "CODE001";
+
+            if (typeof db !== "undefined") {
+                db.ref("customers/" + customerId).once("value").then(snapshot => {
+                    const data = snapshot.val();
+                    
+                    document.getElementById("loading-state").style.display = "none";
+                    document.getElementById("main-content").style.display = "block";
+
+                    if (!data) {
+                        document.getElementById("cust-name").textContent = "العميل غير موجود";
+                        document.getElementById("cust-desc").textContent = "";
+                        return;
+                    }
+
+                    // 1. تحديث الاسم والوصف واللوجو
+                    document.getElementById("cust-name").textContent = data.name || "الورشة";
+                    document.getElementById("cust-desc").textContent = data.description || "Alwarsha";
+                    
+                    if (data.logo && data.logo.trim() !== "") {
+                        document.getElementById("cust-logo").src = data.logo;
+                    }
+
+                    // 2. تعبئة الأزرار حسب البيانات الموجودة للعميل
+                    const btnList = document.getElementById("cust-btns");
+                    btnList.innerHTML = "";
+
+                    // واتساب / اتصال
+                    if (data.whatsapp) {
+                        btnList.innerHTML += `
+                            <a href="https://wa.me/${data.whatsapp}" target="_blank" class="btn-card">
+                                <span class="btn-text phone-num">${data.whatsapp}</span>
+                                <span class="icon"><i class="fa-brands fa-whatsapp"></i></span>
+                            </a>`;
+                    }
+
+                    // فيسبوك
+                    if (data.facebook) {
+                        btnList.innerHTML += `
+                            <a href="${data.facebook}" target="_blank" class="btn-card">
+                                <span class="btn-text">Facebook</span>
+                                <span class="icon"><i class="fa-brands fa-facebook"></i></span>
+                            </a>`;
+                    }
+
+                    // إنستجرام
+                    if (data.instagram) {
+                        btnList.innerHTML += `
+                            <a href="${data.instagram}" target="_blank" class="btn-card">
+                                <span class="btn-text">Instagram</span>
+                                <span class="icon"><i class="fa-brands fa-instagram"></i></span>
+                            </a>`;
+                    }
+
+                    // الموقع
+                    if (data.website) {
+                        btnList.innerHTML += `
+                            <a href="${data.website}" target="_blank" class="btn-card">
+                                <span class="btn-text">الموقع الإلكتروني</span>
+                                <span class="icon"><i class="fa-solid fa-globe"></i></span>
+                            </a>`;
+                    }
+
+                    // طرق الدفع
+                    if (data.payment) {
+                        btnList.innerHTML += `
+                            <a href="${data.payment}" target="_blank" class="btn-card">
+                                <span class="btn-text">طرق الدفع</span>
+                                <span class="icon">
+                                    <img src="assets/instapay.png" alt="Payment" class="icon-img" onerror="this.src='assets/vodafonecash.png'">
+                                </span>
+                            </a>`;
+                    }
+
+                }).catch(err => {
+                    document.getElementById("loading-state").textContent = "تعذر تحميل بيانات العميل";
+                });
+            } else {
+                // عرض افتراضي لو الفايربيز مش متصل
+                document.getElementById("loading-state").style.display = "none";
+                document.getElementById("main-content").style.display = "block";
+            }
+        });
+    </script>
 </body>
 </html>
