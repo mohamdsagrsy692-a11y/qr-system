@@ -313,6 +313,12 @@
         <input type="text" id="code" placeholder="" oninput="updateQRLive()">
     </div>
 
+    <!-- 🔗 الخانة الجديدة للتحويل المباشر تحت كود العميل -->
+    <div class="form-group">
+        <label>رابط تحويل مباشر (اختياري)</label>
+        <input type="text" id="redirectUrl" placeholder="https://g.page/r/... (اتركه فارغاً لفتح الكارت الشخصي)">
+    </div>
+
     <div class="form-group">
         <label>اسم النشاط</label>
         <input type="text" id="name" placeholder="">
@@ -333,7 +339,6 @@
         <img id="logoPreview" class="preview-logo" alt="معاينة اللوجو">
     </div>
 
-    <!-- 📞 الحقل للاتصال -->
     <div class="form-group">
         <label>رقم الهاتف / الاتصال</label>
         <input type="text" id="phone" placeholder="">
@@ -626,6 +631,7 @@
 
     function populateForm(id, data) {
         SafeSetValue("code", id);
+        SafeSetValue("redirectUrl", data.redirectUrl); // تحميل رابط التحويل المباشر
         SafeSetValue("name", data.name);
         SafeSetValue("description", data.description);
         SafeSetValue("logo", data.logo);
@@ -657,6 +663,7 @@
         }
 
         const customerData = {
+            redirectUrl: SafeGetValue("redirectUrl"), // حفظ رابط التحويل المباشر
             name: SafeGetValue("name"),
             description: SafeGetValue("description"),
             logo: SafeGetValue("logo"),
@@ -702,6 +709,7 @@
     // 🧹 دالة تفريغ جميع الخانات وتجهيز كود جديد تلقائياً
     function clearForm() {
         SafeSetValue("searchCode", "");
+        SafeSetValue("redirectUrl", ""); // تفريغ خانة رابط التحويل المباشر
         SafeSetValue("name", "");
         SafeSetValue("description", "");
         SafeSetValue("logo", "");
