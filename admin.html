@@ -193,7 +193,7 @@
             border: 1px solid #ddd;
         }
 
-        /* --- تصميم واجهة تسجيل الدخول المحدثة بالملفات المحلية --- */
+        /* --- تصميم واجهة تسجيل الدخول --- */
         .login-overlay {
             position: fixed;
             top: 0;
@@ -261,7 +261,7 @@
             background: rgba(255, 255, 255, 0.12);
         }
 
-        /* أيقونة المستخدم على اليمين */
+        /* أيقونة المستخدم على اليمين في اللغة العربية */
         .login-body .input-icon-img {
             position: absolute;
             top: 50%;
@@ -270,10 +270,10 @@
             width: 20px;
             height: 20px;
             pointer-events: none;
-            opacity: 0.75;
+            opacity: 0.8;
         }
 
-        /* أيقونة العين على اليسار */
+        /* أيقونة العين على اليسار في اللغة العربية */
         .toggle-password-img {
             position: absolute;
             top: 50%;
@@ -282,7 +282,7 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
-            opacity: 0.75;
+            opacity: 0.8;
             transition: opacity 0.2s;
         }
 
@@ -329,7 +329,6 @@
             justify-content: center;
             align-items: center;
             z-index: 10000;
-            animation: fadeIn 0.2s ease;
         }
 
         .custom-modal-box {
@@ -340,8 +339,6 @@
             border-radius: 12px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            transform: scale(0.9);
-            animation: scaleUp 0.2s ease forwards;
         }
 
         .custom-modal-msg {
@@ -366,15 +363,10 @@
             font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            transition: opacity 0.2s;
         }
 
-        .custom-modal-btn:hover { opacity: 0.85; }
         .btn-modal-ok { background-color: #111; color: #fff; }
         .btn-modal-cancel { background-color: #e2e8f0; color: #4a5568; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes scaleUp { from { transform: scale(0.9); } to { transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -388,12 +380,12 @@
         <div class="login-body">
             <div class="input-box">
                 <input type="text" id="adminUsername" placeholder="اسم المستخدم" onkeypress="handleKeyPress(event)">
-                <img src="assets/user-icon.svg" class="input-icon-img" alt="مستخدم">
+                <img src="assets/user-icon.png" class="input-icon-img" alt="مستخدم">
             </div>
             
             <div class="input-box">
                 <input type="password" id="adminPassword" placeholder="كلمة المرور" onkeypress="handleKeyPress(event)">
-                <img src="assets/eye-closed.svg" id="toggleEyeIcon" class="toggle-password-img" alt="إظهار/إخفاء" onclick="togglePasswordVisibility()">
+                <img src="assets/eye-closed.png" id="toggleEyeIcon" class="toggle-password-img" alt="إظهار/إخفاء" onclick="togglePasswordVisibility()">
             </div>
             
             <p class="error-msg" id="loginError">اسم المستخدم أو كلمة المرور غير صحيحة!</p>
@@ -657,17 +649,16 @@
     const ADMIN_USERNAME = "abdallah.haroun";
     const ADMIN_PASSWORD = "CODE010951";
 
-    // دالة إظهار/إخفاء الباسورد وتبديل صورة العين
     function togglePasswordVisibility() {
         const passwordInput = document.getElementById("adminPassword");
         const toggleIcon = document.getElementById("toggleEyeIcon");
         
         if (passwordInput.type === "password") {
             passwordInput.type = "text";
-            toggleIcon.src = "assets/eye-open.svg"; // صورة العين المفتوحة
+            toggleIcon.src = "assets/eye-open.png";
         } else {
             passwordInput.type = "password";
-            toggleIcon.src = "assets/eye-closed.svg"; // صورة العين المقفولة
+            toggleIcon.src = "assets/eye-closed.png";
         }
     }
 
@@ -997,7 +988,7 @@
         const cornerDotColor = SafeGetValue("qrCornerDotColor") || dotColor;
 
         const embedLogo = SafeGetValue("qrEmbedLogo");
-        const finalLogo = SafeWorkspaceValue ? SafeGetValue("qrCustomLogo") || SafeGetValue("logo") : SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
+        const finalLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
 
         const qrVersionVal = parseInt(SafeGetValue("qrVersion")) || 0;
 
@@ -1059,7 +1050,7 @@
     function downloadQR() {
         const code = SafeGetValue("code") || "QR_Code";
         const selectedFormat = SafeGetValue("downloadFormat") || "png";
-        const selectedSize = parseInt(SafeGetValue("downloadSize")) || 1000;
+        const selectedSize = parseInt(SafeGradeValue => parseInt(SafeGradeValue) || 1000)(SafeGetValue("downloadSize")) || 1000;
         const qrVersionVal = parseInt(SafeGetValue("qrVersion")) || 0;
 
         if (qrCodeInstance) {
