@@ -925,6 +925,9 @@
             return;
         }
 
+        const qrContainer = document.getElementById("qrContainer");
+        qrContainer.innerHTML = "";
+
         const targetURL = window.location.origin + window.location.pathname.replace("admin.html", "qr.html") + "?id=" + encodeURIComponent(code);
 
         const dotColor = SafeGetValue("qrDotColor") || "#000000";
@@ -940,7 +943,6 @@
         const embedLogo = SafeGetValue("qrEmbedLogo");
         const finalLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
 
-        // قراءة حجم النسخة/المصفوفة المختار
         const qrVersionVal = parseInt(SafeGetValue("qrVersion")) || 0;
 
         const frameStyle = SafeGetValue("qrFrameStyle") || "none";
@@ -972,9 +974,6 @@
                 frameTextEl.style.display = "none";
             }
         }
-
-        const qrContainer = document.getElementById("qrContainer");
-        qrContainer.innerHTML = "";
 
         const qrConfig = {
             width: 260,
