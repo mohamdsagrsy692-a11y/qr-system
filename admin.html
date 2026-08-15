@@ -193,14 +193,14 @@
             border: 1px solid #ddd;
         }
 
-        /* --- تصميم واجهة تسجيل الدخول الجديدة المطابقة للصورة --- */
+        /* --- تصميم واجهة تسجيل الدخول المحدثة بالملفات المحلية --- */
         .login-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1920&auto=format&fit=crop') no-repeat center center;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('assets/login-bg.jpg') no-repeat center center;
             background-size: cover;
             display: flex;
             justify-content: center;
@@ -245,7 +245,7 @@
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
-            padding: 14px 45px 14px 15px;
+            padding: 14px 45px 14px 45px;
             font-size: 15px;
             color: #fff;
             outline: none;
@@ -261,24 +261,33 @@
             background: rgba(255, 255, 255, 0.12);
         }
 
-        .login-body .input-icon {
+        /* أيقونة المستخدم على اليمين */
+        .login-body .input-icon-img {
             position: absolute;
             top: 50%;
             right: 15px;
             transform: translateY(-50%);
-            color: #94a3b8;
-            font-size: 18px;
+            width: 20px;
+            height: 20px;
             pointer-events: none;
+            opacity: 0.75;
         }
 
-        .toggle-password {
+        /* أيقونة العين على اليسار */
+        .toggle-password-img {
             position: absolute;
             top: 50%;
             left: 15px;
             transform: translateY(-50%);
-            color: #94a3b8;
+            width: 20px;
+            height: 20px;
             cursor: pointer;
-            font-size: 18px;
+            opacity: 0.75;
+            transition: opacity 0.2s;
+        }
+
+        .toggle-password-img:hover {
+            opacity: 1;
         }
 
         .btn-login-submit {
@@ -379,12 +388,12 @@
         <div class="login-body">
             <div class="input-box">
                 <input type="text" id="adminUsername" placeholder="اسم المستخدم" onkeypress="handleKeyPress(event)">
-                <span class="input-icon">👤</span>
+                <img src="assets/user-icon.svg" class="input-icon-img" alt="مستخدم">
             </div>
             
             <div class="input-box">
                 <input type="password" id="adminPassword" placeholder="كلمة المرور" onkeypress="handleKeyPress(event)">
-                <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
+                <img src="assets/eye-closed.svg" id="toggleEyeIcon" class="toggle-password-img" alt="إظهار/إخفاء" onclick="togglePasswordVisibility()">
             </div>
             
             <p class="error-msg" id="loginError">اسم المستخدم أو كلمة المرور غير صحيحة!</p>
@@ -554,7 +563,6 @@
 
         <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
 
-        <!-- تحكم في عدد ونطاق نقاط المصفوفة (QR Version / Grid Density) -->
         <div class="form-group">
             <label>حجم ومستوى مصفوفة النقاط (QR Version / Grid Density)</label>
             <select id="qrVersion" onchange="updateQRLive()">
@@ -649,16 +657,17 @@
     const ADMIN_USERNAME = "abdallah.haroun";
     const ADMIN_PASSWORD = "CODE010951";
 
-    // دالة إظهار/إخفاء الباسورد
+    // دالة إظهار/إخفاء الباسورد وتبديل صورة العين
     function togglePasswordVisibility() {
         const passwordInput = document.getElementById("adminPassword");
-        const toggleBtn = document.querySelector(".toggle-password");
+        const toggleIcon = document.getElementById("toggleEyeIcon");
+        
         if (passwordInput.type === "password") {
             passwordInput.type = "text";
-            toggleBtn.textContent = "🙈";
+            toggleIcon.src = "assets/eye-open.svg"; // صورة العين المفتوحة
         } else {
             passwordInput.type = "password";
-            toggleBtn.textContent = "👁️";
+            toggleIcon.src = "assets/eye-closed.svg"; // صورة العين المقفولة
         }
     }
 
@@ -988,7 +997,7 @@
         const cornerDotColor = SafeGetValue("qrCornerDotColor") || dotColor;
 
         const embedLogo = SafeGetValue("qrEmbedLogo");
-        const finalLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
+        const finalLogo = SafeWorkspaceValue ? SafeGetValue("qrCustomLogo") || SafeGetValue("logo") : SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
 
         const qrVersionVal = parseInt(SafeGetValue("qrVersion")) || 0;
 
