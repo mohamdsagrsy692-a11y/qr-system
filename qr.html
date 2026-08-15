@@ -216,6 +216,30 @@ text-shadow:0 2px 5px rgba(0,0,0,.5);
 <span>Pinterest</span>
 </a>
 
+<!-- يوتيوب -->
+<a id="youtube" class="btn" target="_blank" style="display:none;">
+<img src="assets/youtube.png" class="custom-icon">
+<span>YouTube</span>
+</a>
+
+<!-- لينكد إن -->
+<a id="linkedin" class="btn" target="_blank" style="display:none;">
+<img src="assets/linkedin.png" class="custom-icon">
+<span>LinkedIn</span>
+</a>
+
+<!-- الموقع الإلكتروني -->
+<a id="website" class="btn" target="_blank" style="display:none;">
+<img src="assets/website.png" class="custom-icon">
+<span>Website</span>
+</a>
+
+<!-- الكتالوج -->
+<a id="catalog" class="btn" target="_blank" style="display:none;">
+<img src="assets/catalog.png" class="custom-icon">
+<span>Catalog</span>
+</a>
+
 <!-- الجيميل -->
 <a id="gmail" class="btn" target="_blank" style="display:none;">
 <img src="assets/gmail.png" class="custom-icon">
@@ -229,7 +253,7 @@ text-shadow:0 2px 5px rgba(0,0,0,.5);
 </a>
 
 <!-- ⭐ زر المراجعات -->
-<a id="website" class="btn" target="_blank" style="display:none;">
+<a id="review" class="btn" target="_blank" style="display:none;">
 <img src="assets/review.png" class="custom-icon">
 <span>Review</span>
 </a>
@@ -398,6 +422,30 @@ if (data.pinterest && data.pinterest.trim() !== "") {
     el.style.display = "flex";
 }
 
+if (data.youtube && data.youtube.trim() !== "") {
+    const el = document.getElementById("youtube");
+    el.href = data.youtube.trim();
+    el.style.display = "flex";
+}
+
+if (data.linkedin && data.linkedin.trim() !== "") {
+    const el = document.getElementById("linkedin");
+    el.href = data.linkedin.trim();
+    el.style.display = "flex";
+}
+
+if (data.website && data.website.trim() !== "") {
+    const el = document.getElementById("website");
+    el.href = data.website.trim();
+    el.style.display = "flex";
+}
+
+if (data.catalog && data.catalog.trim() !== "") {
+    const el = document.getElementById("catalog");
+    el.href = data.catalog.trim();
+    el.style.display = "flex";
+}
+
 if (data.gmail && data.gmail.trim() !== "") {
     const el = document.getElementById("gmail");
     el.href = "mailto:" + data.gmail.trim();
@@ -410,9 +458,9 @@ if (data.location && data.location.trim() !== "") {
     el.style.display = "flex";
 }
 
-if (data.website && data.website.trim() !== "") {
-    const el = document.getElementById("website");
-    el.href = data.website.trim();
+if (data.review && data.review.trim() !== "") {
+    const el = document.getElementById("review");
+    el.href = data.review.trim();
     el.style.display = "flex";
 }
 
