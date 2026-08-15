@@ -134,22 +134,18 @@ z-index:2;
 font-size:34px;
 }
 
-/* أيقونة الاتصال باللون الأزرق */
-.phone-icon{
-color:#0d6efd;
-}
-
-.whatsapp-icon{
-color:#25D366;
-}
-
-.facebook-icon{
-color:#1877F2;
-}
-
-.instagram-icon{
-color:#E4405F;
-}
+/* ألوان الأيقونات */
+.phone-icon{ color:#0d6efd; }
+.whatsapp-icon{ color:#25D366; }
+.facebook-icon{ color:#1877F2; }
+.instagram-icon{ color:#E4405F; }
+.tiktok-icon{ color:#000000; }
+.snapchat-icon{ color:#FFFC00; text-shadow: 0 0 2px #000; }
+.pinterest-icon{ color:#E60023; }
+.messenger-icon{ color:#0068FF; }
+.gmail-icon{ color:#EA4335; }
+.telegram-icon{ color:#229ED9; }
+.location-icon{ color:#FF3B30; }
 
 
 .custom-icon{
@@ -194,40 +190,80 @@ text-shadow:0 2px 5px rgba(0,0,0,.5);
 <span>Call me</span>
 </a>
 
-<a id="whatsapp" class="btn" target="_blank">
+<!-- واتساب -->
+<a id="whatsapp" class="btn" target="_blank" style="display:none;">
 <i class="fab fa-whatsapp whatsapp-icon"></i>
 <span>WhatsApp</span>
 </a>
 
-
-<a id="facebook" class="btn" target="_blank">
+<!-- فيسبوك -->
+<a id="facebook" class="btn" target="_blank" style="display:none;">
 <i class="fab fa-facebook facebook-icon"></i>
 <span>Facebook</span>
 </a>
 
-
-<a id="instagram" class="btn" target="_blank">
+<!-- انستجرام -->
+<a id="instagram" class="btn" target="_blank" style="display:none;">
 <i class="fab fa-instagram instagram-icon"></i>
 <span>Instagram</span>
 </a>
 
+<!-- تيك توك -->
+<a id="tiktok" class="btn" target="_blank" style="display:none;">
+<i class="fab fa-tiktok tiktok-icon"></i>
+<span>TikTok</span>
+</a>
 
-<!-- ⭐ زر المراجعات باستخدام صورة review.png المخصصة -->
-<a id="website" class="btn" target="_blank">
+<!-- سناب شات -->
+<a id="snapchat" class="btn" target="_blank" style="display:none;">
+<i class="fab fa-snapchat snapchat-icon"></i>
+<span>Snapchat</span>
+</a>
+
+<!-- بنترست -->
+<a id="pinterest" class="btn" target="_blank" style="display:none;">
+<i class="fab fa-pinterest pinterest-icon"></i>
+<span>Pinterest</span>
+</a>
+
+<!-- مسنجر -->
+<a id="messenger" class="btn" target="_blank" style="display:none;">
+<i class="fab fa-facebook-messenger messenger-icon"></i>
+<span>Messenger</span>
+</a>
+
+<!-- الجيميل -->
+<a id="gmail" class="btn" target="_blank" style="display:none;">
+<i class="fas fa-envelope gmail-icon"></i>
+<span>Email</span>
+</a>
+
+<!-- تليجرام -->
+<a id="telegram" class="btn" target="_blank" style="display:none;">
+<i class="fab fa-telegram telegram-icon"></i>
+<span>Telegram</span>
+</a>
+
+<!-- الموقع الجغرافي -->
+<a id="location" class="btn" target="_blank" style="display:none;">
+<i class="fas fa-map-marker-alt location-icon"></i>
+<span>Location</span>
+</a>
+
+<!-- ⭐ زر المراجعات -->
+<a id="website" class="btn" target="_blank" style="display:none;">
 <img src="assets/review.png" class="custom-icon">
 <span>Review</span>
 </a>
 
-
-
-<a id="instapay" class="btn" target="_blank">
+<!-- InstaPay -->
+<a id="instapay" class="btn" target="_blank" style="display:none;">
 <img src="assets/instapay.png" class="custom-icon">
 <span>InstaPay</span>
 </a>
 
-
-
-<a id="vodafonecash" class="btn" target="_blank">
+<!-- Vodafone Cash -->
+<a id="vodafonecash" class="btn" target="_blank" style="display:none;">
 <img src="assets/vodafonecash.png" class="custom-icon">
 <span>Vodafone Cash</span>
 </a>
@@ -300,18 +336,18 @@ return;
 
 }
 
-// [إضافة التوجيه]:
+// التوجيه المباشر لو موجود
 if (data.redirectUrl && data.redirectUrl.trim() !== "") {
     window.location.replace(data.redirectUrl.trim());
     return;
 }
 
 
-// إظهار الصفحة في حال عدم وجود توجيه مباشر
+// إظهار الصفحة
 document.body.style.opacity = "1";
 
 
-// معالجة عرض إطار اللوجو بأسلوب الأزرار
+// معالجة عرض إطار اللوجو
 const logoElem = document.getElementById("logo");
 const logoWrapper = document.getElementById("logoWrapper");
 
@@ -323,76 +359,101 @@ if (data.logo && data.logo.trim() !== "") {
 }
 
 
-document.getElementById("name").textContent =
-data.name || "";
+document.getElementById("name").textContent = data.name || "";
+document.getElementById("description").textContent = data.description || "";
 
 
-document.getElementById("description").textContent =
-data.description || "";
+// ربط وإظهار الأزرار بناءً على البيانات المتوفرة
 
-
-// 📞 معالجة زر الاتصال المباشر
 if (data.phone && data.phone.trim() !== "") {
     const phoneBtn = document.getElementById("phone");
     phoneBtn.href = "tel:" + data.phone.trim();
     phoneBtn.style.display = "flex";
 }
 
+if (data.whatsapp && data.whatsapp.trim() !== "") {
+    const el = document.getElementById("whatsapp");
+    let waNum = data.whatsapp.replace(/\D/g, '');
+    el.href = "https://wa.me/" + waNum;
+    el.style.display = "flex";
+}
 
-document.getElementById("whatsapp").href =
-data.whatsapp || "#";
+if (data.facebook && data.facebook.trim() !== "") {
+    const el = document.getElementById("facebook");
+    el.href = data.facebook.trim();
+    el.style.display = "flex";
+}
 
+if (data.instagram && data.instagram.trim() !== "") {
+    const el = document.getElementById("instagram");
+    el.href = data.instagram.trim();
+    el.style.display = "flex";
+}
 
-document.getElementById("facebook").href =
-data.facebook || "#";
+if (data.tiktok && data.tiktok.trim() !== "") {
+    const el = document.getElementById("tiktok");
+    el.href = data.tiktok.trim();
+    el.style.display = "flex";
+}
 
+if (data.snapchat && data.snapchat.trim() !== "") {
+    const el = document.getElementById("snapchat");
+    el.href = data.snapchat.trim();
+    el.style.display = "flex";
+}
 
-document.getElementById("instagram").href =
-data.instagram || "#";
+if (data.pinterest && data.pinterest.trim() !== "") {
+    const el = document.getElementById("pinterest");
+    el.href = data.pinterest.trim();
+    el.style.display = "flex";
+}
 
+if (data.messenger && data.messenger.trim() !== "") {
+    const el = document.getElementById("messenger");
+    el.href = data.messenger.trim();
+    el.style.display = "flex";
+}
 
-document.getElementById("website").href =
-data.website || "#";
+if (data.gmail && data.gmail.trim() !== "") {
+    const el = document.getElementById("gmail");
+    el.href = "mailto:" + data.gmail.trim();
+    el.style.display = "flex";
+}
 
+if (data.telegram && data.telegram.trim() !== "") {
+    const el = document.getElementById("telegram");
+    el.href = data.telegram.trim();
+    el.style.display = "flex";
+}
 
-document.getElementById("instapay").href =
-data.instapay || "#";
+if (data.location && data.location.trim() !== "") {
+    const el = document.getElementById("location");
+    el.href = data.location.trim();
+    el.style.display = "flex";
+}
 
+if (data.website && data.website.trim() !== "") {
+    const el = document.getElementById("website");
+    el.href = data.website.trim();
+    el.style.display = "flex";
+}
 
-document.getElementById("vodafonecash").href =
-data.vodafonecash || "#";
+if (data.instapay && data.instapay.trim() !== "") {
+    const el = document.getElementById("instapay");
+    el.href = "https://ipn.eg/" + data.instapay.trim();
+    el.style.display = "flex";
+}
+
+if (data.vodafonecash && data.vodafonecash.trim() !== "") {
+    const el = document.getElementById("vodafonecash");
+    el.href = "tel:*9*7*" + data.vodafonecash.trim() + "%23";
+    el.style.display = "flex";
+}
 
 
 // معالجة عرض نص الحقوق (الفوتر)
 document.getElementById("footerText").textContent = 
     (data.footer && data.footer.trim() !== "") ? data.footer : "جميع الحقوق محفوظة ✓";
-
-
-// إخفاء الروابط الفاضية
-
-if(!data.whatsapp)
-document.getElementById("whatsapp").style.display="none";
-
-
-if(!data.facebook)
-document.getElementById("facebook").style.display="none";
-
-
-if(!data.instagram)
-document.getElementById("instagram").style.display="none";
-
-
-if(!data.website)
-document.getElementById("website").style.display="none";
-
-
-if(!data.instapay)
-document.getElementById("instapay").style.display="none";
-
-
-if(!data.vodafonecash)
-document.getElementById("vodafonecash").style.display="none";
-
 
 });
 
