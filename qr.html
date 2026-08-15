@@ -174,6 +174,18 @@ text-shadow:0 2px 5px rgba(0,0,0,.5);
 <span>WhatsApp</span>
 </a>
 
+<!-- تليجرام -->
+<a id="telegram" class="btn" target="_blank" style="display:none;">
+<img src="assets/telegram.png" class="custom-icon">
+<span>Telegram</span>
+</a>
+
+<!-- مسنجر -->
+<a id="messenger" class="btn" target="_blank" style="display:none;">
+<img src="assets/messenger.png" class="custom-icon">
+<span>Messenger</span>
+</a>
+
 <!-- فيسبوك -->
 <a id="facebook" class="btn" target="_blank" style="display:none;">
 <img src="assets/facebook.png" class="custom-icon">
@@ -204,22 +216,10 @@ text-shadow:0 2px 5px rgba(0,0,0,.5);
 <span>Pinterest</span>
 </a>
 
-<!-- مسنجر -->
-<a id="messenger" class="btn" target="_blank" style="display:none;">
-<img src="assets/messenger.png" class="custom-icon">
-<span>Messenger</span>
-</a>
-
 <!-- الجيميل -->
 <a id="gmail" class="btn" target="_blank" style="display:none;">
 <img src="assets/gmail.png" class="custom-icon">
 <span>Email</span>
-</a>
-
-<!-- تليجرام -->
-<a id="telegram" class="btn" target="_blank" style="display:none;">
-<img src="assets/telegram.png" class="custom-icon">
-<span>Telegram</span>
 </a>
 
 <!-- الموقع الجغرافي -->
@@ -356,6 +356,18 @@ if (data.whatsapp && data.whatsapp.trim() !== "") {
     el.style.display = "flex";
 }
 
+if (data.telegram && data.telegram.trim() !== "") {
+    const el = document.getElementById("telegram");
+    el.href = data.telegram.trim();
+    el.style.display = "flex";
+}
+
+if (data.messenger && data.messenger.trim() !== "") {
+    const el = document.getElementById("messenger");
+    el.href = data.messenger.trim();
+    el.style.display = "flex";
+}
+
 if (data.facebook && data.facebook.trim() !== "") {
     const el = document.getElementById("facebook");
     el.href = data.facebook.trim();
@@ -386,28 +398,15 @@ if (data.pinterest && data.pinterest.trim() !== "") {
     el.style.display = "flex";
 }
 
-if (data.messenger && data.messenger.trim() !== "") {
-    const el = document.getElementById("messenger");
-    el.href = data.messenger.trim();
-    el.style.display = "flex";
-}
-
 if (data.gmail && data.gmail.trim() !== "") {
     const el = document.getElementById("gmail");
     el.href = "mailto:" + data.gmail.trim();
     el.style.display = "flex";
 }
 
-if (data.telegram && data.telegram.trim() !== "") {
-    const el = document.getElementById("telegram");
-    el.href = data.telegram.trim();
-    el.style.display = "flex";
-}
-
 if (data.location && data.location.trim() !== "") {
     const el = document.getElementById("location");
     el.href = data.location.trim();
-    el.style.display = "files" || data.location.trim(); // تم التصحيح للرابط
     el.style.display = "flex";
 }
 
