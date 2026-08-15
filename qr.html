@@ -7,8 +7,6 @@
 
 <title>QR Profile</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
 <style>
 
 /* إخفاء الصفحة مؤقتاً في البداية لمنع ظهور أي ومض قبل التحويل المباشر */
@@ -122,31 +120,11 @@ z-index:2;
 }
 
 
-.btn i,
 .btn img{
 position:absolute;
 right:20px;
 z-index:2;
 }
-
-
-.btn i{
-font-size:34px;
-}
-
-/* ألوان الأيقونات */
-.phone-icon{ color:#0d6efd; }
-.whatsapp-icon{ color:#25D366; }
-.facebook-icon{ color:#1877F2; }
-.instagram-icon{ color:#E4405F; }
-.tiktok-icon{ color:#000000; }
-.snapchat-icon{ color:#FFFC00; text-shadow: 0 0 2px #000; }
-.pinterest-icon{ color:#E60023; }
-.messenger-icon{ color:#0068FF; }
-.gmail-icon{ color:#EA4335; }
-.telegram-icon{ color:#229ED9; }
-.location-icon{ color:#FF3B30; }
-
 
 .custom-icon{
 width:38px;
@@ -186,67 +164,67 @@ text-shadow:0 2px 5px rgba(0,0,0,.5);
 
 <!-- 📞 زر الاتصال المباشر -->
 <a id="phone" class="btn" style="display:none;">
-<i class="fas fa-phone phone-icon"></i>
+<img src="assets/call.png" class="custom-icon">
 <span>Call me</span>
 </a>
 
 <!-- واتساب -->
 <a id="whatsapp" class="btn" target="_blank" style="display:none;">
-<i class="fab fa-whatsapp whatsapp-icon"></i>
+<img src="assets/whatsapp.png" class="custom-icon">
 <span>WhatsApp</span>
 </a>
 
 <!-- فيسبوك -->
 <a id="facebook" class="btn" target="_blank" style="display:none;">
-<i class="fab fa-facebook facebook-icon"></i>
+<img src="assets/facebook.png" class="custom-icon">
 <span>Facebook</span>
 </a>
 
 <!-- انستجرام -->
 <a id="instagram" class="btn" target="_blank" style="display:none;">
-<i class="fab fa-instagram instagram-icon"></i>
+<img src="assets/instagram.png" class="custom-icon">
 <span>Instagram</span>
 </a>
 
 <!-- تيك توك -->
 <a id="tiktok" class="btn" target="_blank" style="display:none;">
-<i class="fab fa-tiktok tiktok-icon"></i>
+<img src="assets/tiktok.png" class="custom-icon">
 <span>TikTok</span>
 </a>
 
 <!-- سناب شات -->
 <a id="snapchat" class="btn" target="_blank" style="display:none;">
-<i class="fab fa-snapchat snapchat-icon"></i>
+<img src="assets/snapchat.png" class="custom-icon">
 <span>Snapchat</span>
 </a>
 
 <!-- بنترست -->
 <a id="pinterest" class="btn" target="_blank" style="display:none;">
-<i class="fab fa-pinterest pinterest-icon"></i>
+<img src="assets/pinterest.png" class="custom-icon">
 <span>Pinterest</span>
 </a>
 
 <!-- مسنجر -->
 <a id="messenger" class="btn" target="_blank" style="display:none;">
-<i class="fab fa-facebook-messenger messenger-icon"></i>
+<img src="assets/messenger.png" class="custom-icon">
 <span>Messenger</span>
 </a>
 
 <!-- الجيميل -->
 <a id="gmail" class="btn" target="_blank" style="display:none;">
-<i class="fas fa-envelope gmail-icon"></i>
+<img src="assets/gmail.png" class="custom-icon">
 <span>Email</span>
 </a>
 
 <!-- تليجرام -->
 <a id="telegram" class="btn" target="_blank" style="display:none;">
-<i class="fab fa-telegram telegram-icon"></i>
+<img src="assets/telegram.png" class="custom-icon">
 <span>Telegram</span>
 </a>
 
 <!-- الموقع الجغرافي -->
 <a id="location" class="btn" target="_blank" style="display:none;">
-<i class="fas fa-map-marker-alt location-icon"></i>
+<img src="assets/location.png" class="custom-icon">
 <span>Location</span>
 </a>
 
@@ -265,7 +243,7 @@ text-shadow:0 2px 5px rgba(0,0,0,.5);
 <!-- Cash -->
 <a id="vodafonecash" class="btn" target="_blank" style="display:none;">
 <img src="assets/cash.png" class="custom-icon">
-<span>كاش</span>
+<span>Cash</span>
 </a>
 
 
@@ -429,6 +407,7 @@ if (data.telegram && data.telegram.trim() !== "") {
 if (data.location && data.location.trim() !== "") {
     const el = document.getElementById("location");
     el.href = data.location.trim();
+    el.style.display = "files" || data.location.trim(); // تم التصحيح للرابط
     el.style.display = "flex";
 }
 
