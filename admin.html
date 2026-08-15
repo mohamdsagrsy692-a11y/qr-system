@@ -193,13 +193,15 @@
             border: 1px solid #ddd;
         }
 
+        /* --- تصميم واجهة تسجيل الدخول الجديدة المطابقة للصورة --- */
         .login-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: #e9ecef;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1920&auto=format&fit=crop') no-repeat center center;
+            background-size: cover;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -207,71 +209,102 @@
         }
 
         .login-card {
-            background: white;
+            background: rgba(30, 35, 45, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             width: 90%;
-            max-width: 380px;
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 420px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
             overflow: hidden;
-            border: 1px solid #ddd;
-        }
-
-        .login-header {
-            background-color: #f8f9fa;
-            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 30px;
             text-align: center;
-            border-bottom: 1px solid #eee;
         }
 
         .login-header h2 {
-            color: #8b0000;
-            font-size: 22px;
-            font-weight: bold;
-            margin: 0;
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
         }
 
-        .login-body {
-            padding: 20px 25px 25px 25px;
-        }
-
-        .login-body .form-group {
-            margin-bottom: 15px;
-            text-align: right;
-        }
-
-        .login-body label {
+        .login-subtitle {
+            color: #cbd5e1;
             font-size: 13px;
-            color: #333;
-            font-weight: bold;
-            margin-bottom: 4px;
+            margin-bottom: 30px;
+        }
+
+        .login-body .input-box {
+            position: relative;
+            margin-bottom: 20px;
         }
 
         .login-body input {
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            padding: 8px 10px;
-            font-size: 14px;
             width: 100%;
-            background-color: #fafafa;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 14px 45px 14px 15px;
+            font-size: 15px;
+            color: #fff;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .login-body input::placeholder {
+            color: #94a3b8;
+        }
+
+        .login-body input:focus {
+            border-color: #3b82f6;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .login-body .input-icon {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 18px;
+            pointer-events: none;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 18px;
         }
 
         .btn-login-submit {
-            background-color: #48bb78;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
             color: white;
             border: none;
-            padding: 8px 22px;
-            border-radius: 4px;
-            font-size: 14px;
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            display: block;
-            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-login-submit:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
         }
 
         .error-msg {
-            color: #e53e3e;
-            font-size: 12px;
-            margin-top: 8px;
+            color: #f87171;
+            font-size: 13px;
+            margin-top: 12px;
             display: none;
             text-align: center;
         }
@@ -341,16 +374,17 @@
     <div class="login-card">
         <div class="login-header">
             <h2>تسجيل الدخول</h2>
+            <p class="login-subtitle">مرحباً بك مجدداً، يرجى تسجيل الدخول إلى حسابك</p>
         </div>
         <div class="login-body">
-            <div class="form-group">
-                <label>اسم المستخدم</label>
+            <div class="input-box">
                 <input type="text" id="adminUsername" placeholder="اسم المستخدم" onkeypress="handleKeyPress(event)">
+                <span class="input-icon">👤</span>
             </div>
             
-            <div class="form-group">
-                <label>كلمة المرور</label>
+            <div class="input-box">
                 <input type="password" id="adminPassword" placeholder="كلمة المرور" onkeypress="handleKeyPress(event)">
+                <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
             </div>
             
             <p class="error-msg" id="loginError">اسم المستخدم أو كلمة المرور غير صحيحة!</p>
@@ -364,7 +398,7 @@
     <div class="custom-modal-box">
         <div class="custom-modal-msg" id="customModalMsg">رسالة التنبيه هنا</div>
         <div class="custom-modal-buttons" id="customModalButtons">
-            <button class="custom-modal-btn btn-modal-ok" id="customModalOkBtn">حسناً</button>
+            <button class="custom-modal-btn btn-modal-ok" id="modalOkBtn">حسناً</button>
         </div>
     </div>
 </div>
@@ -614,6 +648,19 @@
 <script>
     const ADMIN_USERNAME = "abdallah.haroun";
     const ADMIN_PASSWORD = "CODE010951";
+
+    // دالة إظهار/إخفاء الباسورد
+    function togglePasswordVisibility() {
+        const passwordInput = document.getElementById("adminPassword");
+        const toggleBtn = document.querySelector(".toggle-password");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleBtn.textContent = "🙈";
+        } else {
+            passwordInput.type = "password";
+            toggleBtn.textContent = "👁️";
+        }
+    }
 
     function showCustomAlert(message, callback) {
         const modal = document.getElementById("customModal");
