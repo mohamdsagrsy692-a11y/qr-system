@@ -495,23 +495,17 @@
     </div>
 
     <div class="qr-custom-box">
-        <h3 style="font-size:16px; text-align:right; margin-bottom:12px;">🎨 تخصيص الإطارات وشكل النقاط</h3>
+        <h3 style="font-size:16px; text-align:right; margin-bottom:12px;">🎨 تخصيص شكل الإطار والـ QR Code</h3>
         
-        <!-- إعدادات الفريمات والنصوص -->
-        <div class="form-group">
-            <label>شكل الإطار الخارجي (Frames)</label>
-            <select id="qrFrameStyle" onchange="updateQRLive()">
-                <option value="none" selected>بدون إطار (None)</option>
-                <option value="square">إطار مربع بزوايا حادة</option>
-                <option value="rounded">إطار مربع بانحناء ناعم</option>
-                <option value="pill">إطار دائري الأطراف (Pill)</option>
-            </select>
-        </div>
-
         <div class="grid-2">
             <div class="form-group">
-                <label>نص العبارة داخل الإطار (Frame Phrase)</label>
-                <input type="text" id="qrFramePhrase" value="SCAN ME" placeholder="مثال: SCAN ME" oninput="updateQRLive()">
+                <label>شكل الإطار الخارجي (Frame)</label>
+                <select id="qrFrameStyle" onchange="updateQRLive()">
+                    <option value="none" selected>بدون إطار (None)</option>
+                    <option value="square">إطار مربع بزوايا حادة</option>
+                    <option value="rounded">إطار مربع بانحناء ناعم</option>
+                    <option value="pill">إطار دائري الأطراف</option>
+                </select>
             </div>
             <div class="form-group">
                 <label>لون الإطار والنص</label>
@@ -519,11 +513,16 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <label>نص العبارة داخل الإطار (Frame Phrase)</label>
+            <input type="text" id="qrFramePhrase" value="SCAN ME" placeholder="مثال: SCAN ME أو امسح الكود" oninput="updateQRLive()">
+        </div>
+
         <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
 
-        <!-- التحكم في عدد نقاط الماتريكس (QR Version) -->
+        <!-- تحكم في عدد ونطاق نقاط المصفوفة (QR Version / Grid Density) -->
         <div class="form-group">
-            <label>عدد وكثافة نقاط المصفوفة (QR Version / Grid Density)</label>
+            <label>حجم ومستوى مصفوفة النقاط (QR Version / Grid Density)</label>
             <select id="qrVersion" onchange="updateQRLive()">
                 <option value="0" selected>تلقائي (حسب طول الرابط)</option>
                 <option value="3">نسخة صغيرة (نقاط أقل وأكبر حجماً)</option>
@@ -940,9 +939,10 @@
 
         const embedLogo = SafeGetValue("qrEmbedLogo");
         const finalLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
+
+        // قراءة حجم النسخة/المصفوفة المختار
         const qrVersionVal = parseInt(SafeGetValue("qrVersion")) || 0;
 
-        // إعدادات الفريم
         const frameStyle = SafeGetValue("qrFrameStyle") || "none";
         const frameColor = SafeGetValue("qrFrameColor") || "#000000";
         const framePhrase = SafeGetValue("qrFramePhrase") || "SCAN ME";
