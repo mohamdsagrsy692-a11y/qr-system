@@ -903,7 +903,7 @@
         return el ? el.value.trim() : "";
     }
 
-    // --- توليد الكود: أول 7 رموز ثابتة / متغيرة، وآخر 5 أرقام متسلسلة تلقائياً ---
+    // --- توليد الكود: CODE: + 7 أرقام + آخر 5 أرقام متسلسلة تلقائياً ---
     function generateNextCustomerCode() {
         db.ref("customers").once("value").then(snapshot => {
             const data = snapshot.val();
@@ -911,7 +911,6 @@
 
             if (data) {
                 Object.keys(data).forEach(key => {
-                    // استخراج آخر 5 أرقام للمقارنة وتحديد التسلسل الصحيح
                     if (key.length >= 5) {
                         const lastFive = key.slice(-5);
                         const num = parseInt(lastFive, 10);
@@ -924,13 +923,12 @@
 
             const nextSeq = maxSeq + 1;
             
-            // أول 7 رموز (يمكنك تعديلها حسب رغبتك) + آخر 5 أرقام متسلسلة تلقائياً
-            const prefixCode = "CODE010"; 
+            const prefixCode = "CODE:0458456"; 
             const nextCode = prefixCode + String(nextSeq).padStart(5, "0");
             
             SafeSetValue("code", nextCode);
         }).catch(err => {
-            SafeSetValue("code", "CODE01000001");
+            SafeSetValue("code", "CODE:045845600001");
         });
     }
 
