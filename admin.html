@@ -22,14 +22,15 @@
             background-color: #f2f2f2;
             padding: 20px;
             direction: rtl;
+            padding-bottom: 90px; /* مساحة للـ Sticky Footer */
         }
 
         .container {
-            max-width: 650px;
+            max-width: 750px;
             margin: 0 auto;
             background: #fff;
             padding: 25px;
-            border-radius: 10px;
+            border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             display: none;
         }
@@ -58,6 +59,64 @@
             font-size: 13px;
         }
 
+        /* --- تصميم التبويبات (Tabs) --- */
+        .tabs-nav {
+            display: flex;
+            background: #edf2f7;
+            border-radius: 8px;
+            padding: 5px;
+            margin-bottom: 20px;
+            gap: 5px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #4a5568;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            background: #ffffff;
+            color: #111;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* --- شريط الأزرار الثابت في الأسفل --- */
+        .sticky-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #ffffff;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
+            padding: 12px 20px;
+            display: none;
+            justify-content: center;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .sticky-footer .btn {
+            max-width: 200px;
+            margin-top: 0;
+        }
+
         .form-group {
             margin-bottom: 15px;
         }
@@ -74,7 +133,7 @@
             width: 100%;
             padding: 10px 12px;
             border: 1px solid #dcdcdc;
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 14px;
             outline: none;
             background-color: #fff;
@@ -88,7 +147,7 @@
         }
 
         input[type="text"]:focus, input[type="password"]:focus, select:focus, textarea:focus {
-            border-color: #888;
+            border-color: #3b82f6;
         }
 
         .file-input-wrapper {
@@ -116,7 +175,7 @@
             padding: 12px;
             border: none;
             border-radius: 6px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
             margin-top: 10px;
@@ -139,7 +198,6 @@
             border: 1px solid #e2e8f0;
             border-radius: 10px;
             text-align: center;
-            display: none;
         }
 
         .qr-frame-wrapper {
@@ -261,7 +319,6 @@
             background: rgba(255, 255, 255, 0.12);
         }
 
-        /* أيقونة المستخدم على اليمين */
         .login-body .input-icon-img {
             position: absolute;
             top: 50%;
@@ -273,7 +330,6 @@
             opacity: 0.8;
         }
 
-        /* أيقونة العين على اليمين أيضاً تحت أيقونة المستخدم */
         .toggle-password-img {
             position: absolute;
             top: 50%;
@@ -318,6 +374,7 @@
             text-align: center;
         }
 
+        /* --- Modal المخصص --- */
         .custom-modal-overlay {
             position: fixed;
             top: 0;
@@ -406,297 +463,314 @@
 
 <div class="container" id="adminContainer">
     <div class="header-bar">
-        <h2>إدارة العملاء</h2>
+        <h2>إدارة العملاء والـ QR</h2>
         <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
     </div>
 
-    <div class="form-group">
-        <label>اختيار عميل</label>
-        <select id="customerSelect" onchange="loadSelectedCustomer()">
-            <option value="">اختر العميل</option>
-        </select>
+    <!-- شريط التبويبات (Tabs Navigation) -->
+    <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab('tab-profile')">1. بيانات العميل</button>
+        <button class="tab-btn" onclick="switchTab('tab-contacts')">2. التواصل والروابط</button>
+        <button class="tab-btn" onclick="switchTab('tab-qr')">3. تصميم وتوليد الـ QR</button>
     </div>
 
-    <div class="form-group">
-        <label>كود العميل للبحث</label>
-        <input type="text" id="searchCode" placeholder="ابحث بكود العميل">
-    </div>
-
-    <button class="btn btn-save" onclick="searchCustomerByCode()">تحميل بيانات العميل</button>
-
-    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-
-    <div class="form-group">
-        <label>كود العميل (تلقائي)</label>
-        <input type="text" id="code" placeholder="" oninput="updateQRLive()">
-    </div>
-
-    <div class="form-group">
-        <label>رابط تحويل مباشر (اختياري)</label>
-        <input type="text" id="redirectUrl" placeholder="https://g.page/r/... (اتركه فارغاً لفتح الكارت الشخصي)">
-    </div>
-
-    <div class="form-group">
-        <label>اسم النشاط</label>
-        <input type="text" id="name" placeholder="">
-    </div>
-
-    <div class="form-group">
-        <label>وصف النشاط</label>
-        <textarea id="description" rows="2" placeholder=""></textarea>
-    </div>
-
-    <div class="form-group">
-        <label>صورة اللوجو الأساسية للنشاط</label>
-        <div class="file-input-wrapper">
-            <input type="text" id="logo" placeholder="" onchange="updateQRLive()">
-            <label class="btn-upload" for="logoFileInput">اختر صورة من المعرض</label>
-            <input type="file" id="logoFileInput" accept="image/*" onchange="handleMainLogoUpload(this)">
-        </div>
-        <img id="logoPreview" class="preview-logo" alt="معاينة اللوجو">
-    </div>
-
-    <div class="form-group">
-        <label>رقم الهاتف / الاتصال</label>
-        <input type="text" id="phone" placeholder="">
-    </div>
-
-    <div class="form-group">
-        <label>واتساب</label>
-        <input type="text" id="whatsapp" placeholder="">
-    </div>
-
-    <div class="form-group">
-        <label>تليجرام</label>
-        <input type="text" id="telegram" placeholder="">
-    </div>
-
-    <div class="form-group">
-        <label>مسنجر</label>
-        <input type="text" id="messenger" placeholder="">
-    </div>
-
-    <div class="form-group">
-        <label>فيسبوك</label>
-        <input type="text" id="facebook" placeholder="">
-    </div>
-
-    <div class="form-group">
-        <label>انستجرام</label>
-        <input type="text" id="instagram" placeholder="">
-    </div>
-
-    <div class="form-group">
-        <label>تيك توك</label>
-        <input type="text" id="tiktok" placeholder="">
-    </div>
-
-    <div class="form-group">
-        <label>سناب شات</label>
-        <input type="text" id="snapchat" placeholder="">
-    </div>
-
-    <div class="form-group">
-        <label>بنترست</label>
-        <input type="text" id="pinterest" placeholder="">
-    </div>
-
-    <!-- الخانات الجديدة بنفس الترتيب -->
-    <div class="form-group">
-        <label>يوتيوب (YouTube)</label>
-        <input type="text" id="youtube" placeholder="">
-    </div>
-
-    <div class="form-group">
-        <label>لينكد إن (LinkedIn)</label>
-        <input type="text" id="linkedin" placeholder="">
-    </div>
-
-    <div class="form-group">
-        <label>الموقع الإلكتروني (Website)</label>
-        <input type="text" id="website" placeholder="">
-    </div>
-
-    <div class="form-group">
-        <label>الكتالوج (Catalog)</label>
-        <input type="text" id="catalog" placeholder="">
-    </div>
-    <!-- نهاية الخانات الجديدة -->
-
-    <div class="form-group">
-        <label>البريد الإلكتروني (Gmail)</label>
-        <input type="text" id="gmail" placeholder="">
-    </div>
-
-    <div class="form-group">
-        <label>الموقع الجغرافي (Location)</label>
-        <input type="text" id="location" placeholder="">
-    </div>
-
-    <div class="form-group">
-        <label>المراجعات (Review)</label>
-        <input type="text" id="review" placeholder="">
-    </div>
-
-    <div class="form-group">
-        <label>InstaPay</label>
-        <input type="text" id="instapay" placeholder="">
-    </div>
-
-    <div class="form-group">
-        <label>Vodafone Cash</label>
-        <input type="text" id="vodafonecash" placeholder="">
-    </div>
-
-    <div class="form-group">
-        <label>الحقوق (الفوتر)</label>
-        <input type="text" id="footer" placeholder="اتركها فارغة لظهور: جميع الحقوق محفوظة ✓">
-    </div>
-
-    <div class="qr-section" id="qrSection">
-        <h3 style="font-size:18px; margin-bottom:5px;">معاينة الـ QR</h3>
-        
-        <div id="qrFrameWrapper" class="qr-frame-wrapper" style="border: 3px solid #000000; border-radius: 10px;">
-            <div id="qrContainer"></div>
-            <div id="qrFrameText" class="qr-frame-text" style="color: #000000; display: none;">SCAN ME</div>
-        </div>
-
-        <div class="download-box">
-            <div class="grid-2">
-                <div class="form-group" style="margin-bottom:5px;">
-                    <label style="text-align:right;">صيغة الحفظ</label>
-                    <select id="downloadFormat">
-                        <option value="png" selected>PNG (صورة عالية الوضوح)</option>
-                        <option value="jpeg">JPEG / JPG</option>
-                        <option value="svg">SVG (فيكتور للطباعة/الفيبر)</option>
-                        <option value="webp">WEBP</option>
-                    </select>
-                </div>
-                <div class="form-group" style="margin-bottom:5px;">
-                    <label style="text-align:right;">أبعاد المقاس (Size)</label>
-                    <select id="downloadSize">
-                        <option value="300">300x300 px (صغير للموبايل)</option>
-                        <option value="1000" selected>1000x1000 px (قياسي للطباعة)</option>
-                        <option value="2000">2000x2000 px (عالي الدقة HQ)</option>
-                        <option value="4000">4000x4000 px (Ultra HD للوحة كبيرة)</option>
-                    </select>
+    <!-- ================= التبويب الأول: بيانات العميل ================= -->
+    <div id="tab-profile" class="tab-content active">
+        <div class="grid-2" style="margin-bottom: 15px;">
+            <div class="form-group" style="margin-bottom:0;">
+                <label>اختيار عميل سابق</label>
+                <select id="customerSelect" onchange="loadSelectedCustomer()">
+                    <option value="">اختر العميل</option>
+                </select>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+                <label>أو بحث بكود العميل</label>
+                <div style="display: flex; gap: 5px;">
+                    <input type="text" id="searchCode" placeholder="أدخل الكود...">
+                    <button class="btn btn-save" style="margin-top:0; width: auto; padding: 0 15px;" onclick="searchCustomerByCode()">بحث</button>
                 </div>
             </div>
-            <button class="btn btn-download" onclick="downloadQR()">تحميل الـ QR بالخيارات المحددة</button>
         </div>
-    </div>
 
-    <div class="qr-custom-box">
-        <h3 style="font-size:16px; text-align:right; margin-bottom:12px;">🎨 تخصيص شكل الإطار والـ QR Code</h3>
-        
-        <div class="grid-2">
-            <div class="form-group">
-                <label>شكل الإطار الخارجي (Frame)</label>
-                <select id="qrFrameStyle" onchange="updateQRLive()">
-                    <option value="none" selected>بدون إطار (None)</option>
-                    <option value="square">إطار مربع بزوايا حادة</option>
-                    <option value="rounded">إطار مربع بانحناء ناعم</option>
-                    <option value="pill">إطار دائري الأطراف</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>لون الإطار والنص</label>
-                <input type="color" id="qrFrameColor" value="#000000" oninput="updateQRLive()">
-            </div>
+        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+
+        <div class="form-group">
+            <label>كود العميل (فريد وغير قابل للتكرار)</label>
+            <input type="text" id="code" readonly style="background-color: #edf2f7; font-weight: bold; color: #2d3748;">
         </div>
 
         <div class="form-group">
-            <label>نص العبارة داخل الإطار (Frame Phrase)</label>
-            <input type="text" id="qrFramePhrase" value="SCAN ME" placeholder="مثال: SCAN ME أو امسح الكود" oninput="updateQRLive()">
-        </div>
-
-        <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
-
-        <div class="form-group">
-            <label>حجم ومستوى مصفوفة النقاط (QR Version / Grid Density)</label>
-            <select id="qrVersion" onchange="updateQRLive()">
-                <option value="0" selected>تلقائي (حسب طول الرابط)</option>
-                <option value="3">نسخة صغيرة (نقاط أقل وأكبر حجماً)</option>
-                <option value="5">نسخة متوسطة</option>
-                <option value="8">نسخة كثيفة (نقاط أكتر وبدقة أعلى)</option>
-                <option value="12">نسخة مكثفة جداً (Ultra Dense)</option>
-            </select>
-        </div>
-
-        <div class="grid-2">
-            <div class="form-group">
-                <label>لون نقاط الـ QR</label>
-                <input type="color" id="qrDotColor" value="#000000" oninput="updateQRLive()">
-            </div>
-            <div class="form-group">
-                <label>لون خلفية الـ QR</label>
-                <input type="color" id="qrBgColor" value="#ffffff" oninput="updateQRLive()">
-            </div>
-        </div>
-
-        <div class="grid-2">
-            <div class="form-group">
-                <label>شكل النقاط (Dots)</label>
-                <select id="qrDotType" onchange="updateQRLive()">
-                    <option value="square" selected>مربعات صريحة (Square)</option>
-                    <option value="dots">نقاط دائرية (Dots)</option>
-                    <option value="rounded">انحناء ناعم (Rounded)</option>
-                    <option value="classy">كلاسيكي (Classy)</option>
-                    <option value="classy-rounded">كلاسيكي دائري (Classy Rounded)</option>
-                    <option value="extra-rounded">انحناء إضافي (Extra Rounded)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>شكل إطار الزوايا (Marker Border)</label>
-                <select id="qrCornerType" onchange="updateQRLive()">
-                    <option value="square" selected>مربع (Square)</option>
-                    <option value="dot">دائري (Dot)</option>
-                    <option value="extra-rounded">انحناء ناعم (Extra Rounded)</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="grid-2">
-            <div class="form-group">
-                <label>لون إطار الزوايا</label>
-                <input type="color" id="qrCornerColor" value="#000000" oninput="updateQRLive()">
-            </div>
-            <div class="form-group">
-                <label>شكل مركز الزوايا (Marker Center)</label>
-                <select id="qrCornerDotType" onchange="updateQRLive()">
-                    <option value="square" selected>مربع (Square)</option>
-                    <option value="dot">دائري (Dot)</option>
-                </select>
-            </div>
+            <label>رابط تحويل مباشر (اختياري)</label>
+            <input type="text" id="redirectUrl" placeholder="https://g.page/r/... (اتركه فارغاً لفتح الكارت الشخصي)">
         </div>
 
         <div class="form-group">
-            <label>لون مركز الزوايا</label>
-            <input type="color" id="qrCornerDotColor" value="#000000" oninput="updateQRLive()">
+            <label>اسم النشاط</label>
+            <input type="text" id="name" placeholder="اسم العميل أو الشركة">
         </div>
 
         <div class="form-group">
-            <label>صورة اللوجو لمنتصف الـ QR (اختياري من المعرض)</label>
+            <label>وصف النشاط</label>
+            <textarea id="description" rows="2" placeholder="نبذة مختصرة عن الخدمات"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>صورة اللوجو الأساسية للنشاط</label>
             <div class="file-input-wrapper">
-                <input type="text" id="qrCustomLogo" placeholder="" onchange="updateQRLive()">
-                <label class="btn-upload" for="qrLogoFileInput">من المعرض</label>
-                <input type="file" id="qrLogoFileInput" accept="image/*" onchange="handleQRLogoUpload(this)">
+                <input type="text" id="logo" placeholder="رابط الصورة أو اختر من المعرض" onchange="updateQRLive()">
+                <label class="btn-upload" for="logoFileInput">اختر صورة</label>
+                <input type="file" id="logoFileInput" accept="image/*" onchange="handleMainLogoUpload(this)">
             </div>
+            <img id="logoPreview" class="preview-logo" alt="معاينة اللوجو">
         </div>
 
         <div class="form-group">
-            <label>إظهار اللوجو وسط الـ QR؟</label>
-            <select id="qrEmbedLogo" onchange="updateQRLive()">
-                <option value="yes" selected>نعم</option>
-                <option value="no">لا (بدون لوجو في المنتصف)</option>
-            </select>
+            <label>الحقوق (الفوتر)</label>
+            <input type="text" id="footer" placeholder="اتركها فارغة لظهور: جميع الحقوق محفوظة ✓">
         </div>
     </div>
 
-    <button class="btn btn-save" onclick="saveCustomer()">حفظ العميل</button>
-    <button class="btn btn-delete" onclick="deleteCustomer()">حذف العميل</button>
-    <button class="btn btn-qr" onclick="generateQR()">إنشاء / تحديث QR</button>
+    <!-- ================= التبويب الثاني: التواصل والروابط ================= -->
+    <div id="tab-contacts" class="tab-content">
+        <div class="grid-2">
+            <div class="form-group">
+                <label>رقم الهاتف / الاتصال</label>
+                <input type="text" id="phone" placeholder="01xxxxxxxxx">
+            </div>
+            <div class="form-group">
+                <label>واتساب (WhatsApp)</label>
+                <input type="text" id="whatsapp" placeholder="رقم الواتساب">
+            </div>
+        </div>
 
+        <div class="grid-2">
+            <div class="form-group">
+                <label>تليجرام (Telegram)</label>
+                <input type="text" id="telegram" placeholder="معرف تليجرام">
+            </div>
+            <div class="form-group">
+                <label>مسنجر (Messenger)</label>
+                <input type="text" id="messenger" placeholder="رابط المسنجر">
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label>فيسبوك (Facebook)</label>
+                <input type="text" id="facebook" placeholder="رابط صفحة الفيسبوك">
+            </div>
+            <div class="form-group">
+                <label>انستجرام (Instagram)</label>
+                <input type="text" id="instagram" placeholder="رابط الانستجرام">
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label>تيك توك (TikTok)</label>
+                <input type="text" id="tiktok" placeholder="رابط التيك توك">
+            </div>
+            <div class="form-group">
+                <label>سناب شات (Snapchat)</label>
+                <input type="text" id="snapchat" placeholder="حساب السناب شات">
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label>بنترست (Pinterest)</label>
+                <input type="text" id="pinterest" placeholder="رابط بنترست">
+            </div>
+            <div class="form-group">
+                <label>يوتيوب (YouTube)</label>
+                <input type="text" id="youtube" placeholder="رابط القناة">
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label>لينكد إن (LinkedIn)</label>
+                <input type="text" id="linkedin" placeholder="رابط لينكد إن">
+            </div>
+            <div class="form-group">
+                <label>الموقع الإلكتروني (Website)</label>
+                <input type="text" id="website" placeholder="https://...">
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label>الكتالوج (Catalog)</label>
+                <input type="text" id="catalog" placeholder="رابط الكتالوج">
+            </div>
+            <div class="form-group">
+                <label>البريد الإلكتروني (Gmail)</label>
+                <input type="text" id="gmail" placeholder="name@gmail.com">
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label>الموقع الجغرافي (Location)</label>
+                <input type="text" id="location" placeholder="رابط خرائط جوجل">
+            </div>
+            <div class="form-group">
+                <label>المراجعات (Review)</label>
+                <input type="text" id="review" placeholder="رابط تقييم جوجل">
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label>InstaPay</label>
+                <input type="text" id="instapay" placeholder="اسم الحساب / العنوان">
+            </div>
+            <div class="form-group">
+                <label>Vodafone Cash</label>
+                <input type="text" id="vodafonecash" placeholder="رقم المحفظة">
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= التبويب الثالث: تصميم وتوليد الـ QR ================= -->
+    <div id="tab-qr" class="tab-content">
+        <div class="qr-section" id="qrSection">
+            <h3 style="font-size:18px; margin-bottom:5px;">معاينة الـ QR</h3>
+            
+            <div id="qrFrameWrapper" class="qr-frame-wrapper" style="border: 3px solid #000000; border-radius: 10px;">
+                <div id="qrContainer"></div>
+                <div id="qrFrameText" class="qr-frame-text" style="color: #000000; display: none;">SCAN ME</div>
+            </div>
+
+            <div class="download-box">
+                <div class="grid-2">
+                    <div class="form-group" style="margin-bottom:5px;">
+                        <label style="text-align:right;">صيغة الحفظ</label>
+                        <select id="downloadFormat">
+                            <option value="png" selected>PNG (صورة عالية الوضوح)</option>
+                            <option value="jpeg">JPEG / JPG</option>
+                            <option value="svg">SVG (فيكتور للطباعة/الفيبر)</option>
+                            <option value="webp">WEBP</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom:5px;">
+                        <label style="text-align:right;">أبعاد المقاس (Size)</label>
+                        <select id="downloadSize">
+                            <option value="300">300x300 px</option>
+                            <option value="1000" selected>1000x1000 px (قياسي للطباعة)</option>
+                            <option value="2000">2000x2000 px (HQ)</option>
+                            <option value="4000">4000x4000 px (Ultra HD)</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-download" onclick="downloadQR()">تحميل ملف الـ QR</button>
+            </div>
+        </div>
+
+        <div class="qr-custom-box">
+            <h3 style="font-size:16px; text-align:right; margin-bottom:12px;">🎨 إعدادات التخصيص والمظهر</h3>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>شكل الإطار الخارجي (Frame)</label>
+                    <select id="qrFrameStyle" onchange="updateQRLive()">
+                        <option value="none" selected>بدون إطار (None)</option>
+                        <option value="square">إطار مربع بزوايا حادة</option>
+                        <option value="rounded">إطار بانحناء ناعم</option>
+                        <option value="pill">إطار دائري الأطراف</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>لون الإطار والنص</label>
+                    <input type="color" id="qrFrameColor" value="#000000" oninput="updateQRLive()">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>نص العبارة داخل الإطار</label>
+                <input type="text" id="qrFramePhrase" value="SCAN ME" placeholder="مثال: SCAN ME" oninput="updateQRLive()">
+            </div>
+
+            <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>لون نقاط الـ QR</label>
+                    <input type="color" id="qrDotColor" value="#000000" oninput="updateQRLive()">
+                </div>
+                <div class="form-group">
+                    <label>لون خلفية الـ QR</label>
+                    <input type="color" id="qrBgColor" value="#ffffff" oninput="updateQRLive()">
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>شكل النقاط (Dots)</label>
+                    <select id="qrDotType" onchange="updateQRLive()">
+                        <option value="square" selected>مربعات صريحة</option>
+                        <option value="dots">نقاط دائرية</option>
+                        <option value="rounded">انحناء ناعم</option>
+                        <option value="classy">كلاسيكي</option>
+                        <option value="classy-rounded">كلاسيكي دائري</option>
+                        <option value="extra-rounded">انحناء إضافي</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>شكل إطار الزوايا</label>
+                    <select id="qrCornerType" onchange="updateQRLive()">
+                        <option value="square" selected>مربع</option>
+                        <option value="dot">دائري</option>
+                        <option value="extra-rounded">انحناء ناعم</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>لون إطار الزوايا</label>
+                    <input type="color" id="qrCornerColor" value="#000000" oninput="updateQRLive()">
+                </div>
+                <div class="form-group">
+                    <label>شكل مركز الزوايا</label>
+                    <select id="qrCornerDotType" onchange="updateQRLive()">
+                        <option value="square" selected>مربع</option>
+                        <option value="dot">دائري</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>لون مركز الزوايا</label>
+                <input type="color" id="qrCornerDotColor" value="#000000" oninput="updateQRLive()">
+            </div>
+
+            <div class="form-group">
+                <label>صورة اللوجو وسط الـ QR (اختياري)</label>
+                <div class="file-input-wrapper">
+                    <input type="text" id="qrCustomLogo" placeholder="" onchange="updateQRLive()">
+                    <label class="btn-upload" for="qrLogoFileInput">من المعرض</label>
+                    <input type="file" id="qrLogoFileInput" accept="image/*" onchange="handleQRLogoUpload(this)">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>إظهار اللوجو وسط الـ QR؟</label>
+                <select id="qrEmbedLogo" onchange="updateQRLive()">
+                    <option value="yes" selected>نعم</option>
+                    <option value="no">لا</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- شريط الأزرار الثابت في أسفل الشاشة -->
+<div class="sticky-footer" id="stickyFooter">
+    <button class="btn btn-save" onclick="saveCustomer()">حفظ العميل</button>
+    <button class="btn btn-qr" onclick="generateQR()">توليد / تحديث QR</button>
+    <button class="btn btn-delete" onclick="deleteCustomer()">حذف العميل</button>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -705,6 +779,15 @@
 <script>
     const ADMIN_USERNAME = "abdallah.haroun";
     const ADMIN_PASSWORD = "CODE010951";
+
+    // نظام التنقل بين التبويبات
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
 
     function togglePasswordVisibility() {
         const passwordInput = document.getElementById("adminPassword");
@@ -760,6 +843,7 @@
         if (sessionStorage.getItem("adminLoggedIn") === "true") {
             document.getElementById("loginModal").style.display = "none";
             document.getElementById("adminContainer").style.display = "block";
+            document.getElementById("stickyFooter").style.display = "flex";
             loadCustomerList();
             generateNextCustomerCode();
         }
@@ -774,6 +858,7 @@
             sessionStorage.setItem("adminLoggedIn", "true");
             document.getElementById("loginModal").style.display = "none";
             document.getElementById("adminContainer").style.display = "block";
+            document.getElementById("stickyFooter").style.display = "flex";
             errorMsg.style.display = "none";
             loadCustomerList();
             generateNextCustomerCode();
@@ -818,28 +903,34 @@
         return el ? el.value.trim() : "";
     }
 
+    // --- توليد الكود: أول 7 رموز ثابتة / متغيرة، وآخر 5 أرقام متسلسلة تلقائياً ---
     function generateNextCustomerCode() {
         db.ref("customers").once("value").then(snapshot => {
             const data = snapshot.val();
-            let maxNum = 0;
+            let maxSeq = 0;
 
             if (data) {
                 Object.keys(data).forEach(key => {
-                    const numMatch = key.match(/\d+/);
-                    if (numMatch) {
-                        const num = parseInt(numMatch[0], 10);
-                        if (num > maxNum) {
-                            maxNum = num;
+                    // استخراج آخر 5 أرقام للمقارنة وتحديد التسلسل الصحيح
+                    if (key.length >= 5) {
+                        const lastFive = key.slice(-5);
+                        const num = parseInt(lastFive, 10);
+                        if (!isNaN(num) && num > maxSeq) {
+                            maxSeq = num;
                         }
                     }
                 });
             }
 
-            const nextNum = maxNum + 1;
-            const nextCode = "CODE" + String(nextNum).padStart(3, "0");
+            const nextSeq = maxSeq + 1;
+            
+            // أول 7 رموز (يمكنك تعديلها حسب رغبتك) + آخر 5 أرقام متسلسلة تلقائياً
+            const prefixCode = "CODE010"; 
+            const nextCode = prefixCode + String(nextSeq).padStart(5, "0");
+            
             SafeSetValue("code", nextCode);
         }).catch(err => {
-            SafeSetValue("code", "CODE001");
+            SafeSetValue("code", "CODE01000001");
         });
     }
 
@@ -878,7 +969,7 @@
                 const data = child.val();
                 const option = document.createElement("option");
                 option.value = child.key;
-                option.textContent = (data.name || "عميل بدون اسم") + " (" + child.key + ")";
+                option.textContent = (data.name || "بدون اسم") + " (" + child.key + ")";
                 select.appendChild(option);
             });
         });
@@ -899,7 +990,7 @@
     function searchCustomerByCode() {
         const code = SafeGetValue("searchCode");
         if (!code) {
-            showCustomAlert("يرجى إدخال كود العميل أولاً");
+            showCustomAlert("يرجى إدخال كود العميل للبحث");
             return;
         }
 
@@ -953,7 +1044,7 @@
     function saveCustomer() {
         const code = SafeGetValue("code");
         if (!code) {
-            showCustomAlert("يرجى إدخال كود العميل أولاً");
+            showCustomAlert("كود العميل غير موجود");
             return;
         }
 
@@ -990,7 +1081,7 @@
                 });
             })
             .catch(function(error) {
-                showCustomAlert("حدث خطأ أثناء الحفظ: " + error.message);
+                showCustomAlert("خطأ أثناء الحفظ: " + error.message);
             });
     }
 
@@ -1043,24 +1134,20 @@
         document.getElementById("customerSelect").value = "";
         const preview = document.getElementById("logoPreview");
         if (preview) preview.style.display = "none";
-        document.getElementById("qrSection").style.display = "none";
         
         generateNextCustomerCode();
     }
 
     function updateQRLive() {
         const code = SafeGetValue("code");
-        if (code && document.getElementById("qrSection").style.display === "block") {
+        if (code) {
             generateQR();
         }
     }
 
     function generateQR() {
         const code = SafeGetValue("code");
-        if (!code) {
-            showCustomAlert("يرجى إدخال كود العميل أولاً");
-            return;
-        }
+        if (!code) return;
 
         const qrContainer = document.getElementById("qrContainer");
         qrContainer.innerHTML = "";
@@ -1079,8 +1166,6 @@
 
         const embedLogo = SafeGetValue("qrEmbedLogo");
         const finalLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
-
-        const qrVersionVal = parseInt(SafeGetValue("qrVersion")) || 0;
 
         const frameStyle = SafeGetValue("qrFrameStyle") || "none";
         const frameColor = SafeGetValue("qrFrameColor") || "#000000";
@@ -1124,24 +1209,18 @@
             imageOptions: { crossOrigin: "anonymous", margin: 4, imageSize: 0.26 }
         };
 
-        if (qrVersionVal > 0) {
-            qrConfig.qrOptions = { version: qrVersionVal };
-        }
-
         if (embedLogo === "yes" && finalLogo) {
             qrConfig.image = finalLogo;
         }
 
         qrCodeInstance = new QRCodeStyling(qrConfig);
         qrCodeInstance.append(qrContainer);
-        document.getElementById("qrSection").style.display = "block";
     }
 
     function downloadQR() {
         const code = SafeGetValue("code") || "QR_Code";
         const selectedFormat = SafeGetValue("downloadFormat") || "png";
         const selectedSize = parseInt(SafeGetValue("downloadSize")) || 1000;
-        const qrVersionVal = parseInt(SafeGetValue("qrVersion")) || 0;
 
         if (qrCodeInstance) {
             const targetURL = window.location.origin + window.location.pathname.replace("admin.html", "qr.html") + "?id=" + encodeURIComponent(code);
@@ -1169,10 +1248,6 @@
                 cornersDotOptions: { type: cornerDotType, color: cornerDotColor },
                 imageOptions: { crossOrigin: "anonymous", margin: selectedSize * 0.015, imageSize: 0.26 }
             };
-
-            if (qrVersionVal > 0) {
-                exportConfig.qrOptions = { version: qrVersionVal };
-            }
 
             if (embedLogo === "yes" && finalLogo) {
                 exportConfig.image = finalLogo;
