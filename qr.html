@@ -264,28 +264,10 @@ text-shadow:0 2px 5px rgba(0,0,0,.5);
 <span>InstaPay</span>
 </a>
 
-<!-- Vodafone Cash -->
+<!-- Cash -->
 <a id="vodafonecash" class="btn" target="_blank" style="display:none;">
 <img src="assets/cash.png" class="custom-icon">
-<span>Vodafone Cash</span>
-</a>
-
-<!-- Orange Cash -->
-<a id="orangecash" class="btn" target="_blank" style="display:none;">
-<img src="assets/orange.png" class="custom-icon">
-<span>Orange Cash</span>
-</a>
-
-<!-- Etisalat Cash -->
-<a id="etisalatcash" class="btn" target="_blank" style="display:none;">
-<img src="assets/etisalat.png" class="custom-icon">
-<span>Etisalat Cash</span>
-</a>
-
-<!-- WE Cash -->
-<a id="wecash" class="btn" target="_blank" style="display:none;">
-<img src="assets/we.png" class="custom-icon">
-<span>WE Cash</span>
+<span>Cash</span>
 </a>
 
 
@@ -391,7 +373,6 @@ if (data.phone && data.phone.trim() !== "") {
     phoneBtn.style.display = "flex";
 }
 
-// واتساب (تحويل مباشر للشات)
 if (data.whatsapp && data.whatsapp.trim() !== "") {
     const el = document.getElementById("whatsapp");
     let waNum = data.whatsapp.replace(/\D/g, '');
@@ -489,35 +470,9 @@ if (data.instapay && data.instapay.trim() !== "") {
     el.style.display = "flex";
 }
 
-// فودافون كاش
 if (data.vodafonecash && data.vodafonecash.trim() !== "") {
     const el = document.getElementById("vodafonecash");
-    let cashNum = data.vodafonecash.replace(/\D/g, '');
-    el.href = "tel:*9*7*" + cashNum + "%23";
-    el.style.display = "flex";
-}
-
-// أورنج كاش (مثال لكود التحويل السريع لأورنج - يرجى مراجعة الكود المختصر لو اختلف)
-if (data.orangecash && data.orangecash.trim() !== "") {
-    const el = document.getElementById("orangecash");
-    let cashNum = data.orangecash.replace(/\D/g, '');
-    el.href = "tel:*115#" + cashNum; // يتم تعديل الكود المختصر حسب أكواد أورنج كاش الرسمية
-    el.style.display = "flex";
-}
-
-// اتصالات كاش
-if (data.etisalatcash && data.etisalatcash.trim() !== "") {
-    const el = document.getElementById("etisalatcash");
-    let cashNum = data.etisalatcash.replace(/\D/g, '');
-    el.href = "tel:*711#" + cashNum; // يتم تعديل الكود المختصر حسب أكواد اتصالات كاش الرسمية
-    el.style.display = "flex";
-}
-
-// وي كاش
-if (data.wecash && data.wecash.trim() !== "") {
-    const el = document.getElementById("wecash");
-    let cashNum = data.wecash.replace(/\D/g, '');
-    el.href = "tel:*322#" + cashNum; // يتم تعديل الكود المختصر حسب أكواد وي كاش الرسمية
+    el.href = "tel:*9*7*" + data.vodafonecash.trim() + "%23";
     el.style.display = "flex";
 }
 
