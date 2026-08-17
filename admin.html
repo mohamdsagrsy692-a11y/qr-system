@@ -148,6 +148,47 @@
             border-color: #3b82f6;
         }
 
+        /* شبكة الأزرار المرئية بدلاً من القوائم المنسدلة */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .option-box {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .option-box:hover {
+            border-color: #cbd5e0;
+            background: #f8fafc;
+        }
+
+        .option-box.active {
+            border-color: #3b82f6;
+            background: #eff6ff;
+            box-shadow: 0 0 0 1px #3b82f6;
+        }
+
+        /* رسومات مصغرة داخل الأزرار توضح الشكل */
+        .opt-preview-square { width: 22px; height: 22px; background: #2d3748; border-radius: 2px; }
+        .opt-preview-dots { width: 22px; height: 22px; background: radial-gradient(circle, #2d3748 40%, transparent 45%); }
+        .opt-preview-rounded { width: 22px; height: 22px; background: #2d3748; border-radius: 6px; }
+        .opt-preview-extra-rounded { width: 22px; height: 22px; background: #2d3748; border-radius: 10px; }
+        .opt-preview-classy { width: 22px; height: 22px; background: #2d3748; border-radius: 2px 10px 2px 10px; }
+        .opt-preview-classy-rounded { width: 22px; height: 22px; background: #2d3748; border-radius: 6px 14px 6px 14px; }
+        .opt-preview-dot-corner { width: 22px; height: 22px; background: #2d3748; border-radius: 50%; }
+
         .file-input-wrapper {
             display: flex;
             gap: 10px;
@@ -638,30 +679,32 @@
                 </div>
             </div>
 
-            <!-- خيارات النقط المتقدمة -->
+            <!-- شكل نقاط الـ QR (أزرار ظاهرة مباشرة كـ QR.io) -->
             <div class="form-group">
-                <label>شكل نقاط الـ QR (Dots Style - خيارات متعددة)</label>
-                <select id="qrDotType" onchange="updateQRLive()">
-                    <option value="square" selected>مربعات صريحة (Square)</option>
-                    <option value="dots">نقاط دائرية (Dots)</option>
-                    <option value="rounded">انحناء ناعم (Rounded)</option>
-                    <option value="classy">كلاسيكي (Classy)</option>
-                    <option value="classy-rounded">كلاسيكي دائري (Classy Rounded)</option>
-                    <option value="extra-rounded">انحناء إضافي (Extra Rounded)</option>
-                </select>
+                <label>شكل نقاط الـ QR (Dots Style)</label>
+                <input type="hidden" id="qrDotType" value="square">
+                <div class="options-grid">
+                    <div class="option-box active" onclick="selectOption('qrDotType', 'square', this)" title="مربعات أساسية"><div class="opt-preview-square"></div></div>
+                    <div class="option-box" onclick="selectOption('qrDotType', 'dots', this)" title="نقاط دائرية"><div class="opt-preview-dots"></div></div>
+                    <div class="option-box" onclick="selectOption('qrDotType', 'rounded', this)" title="انحناء ناعم"><div class="opt-preview-rounded"></div></div>
+                    <div class="option-box" onclick="selectOption('qrDotType', 'extra-rounded', this)" title="انحناء إضافي"><div class="opt-preview-extra-rounded"></div></div>
+                    <div class="option-box" onclick="selectOption('qrDotType', 'classy', this)" title="كلاسيكي"><div class="opt-preview-classy"></div></div>
+                    <div class="option-box" onclick="selectOption('qrDotType', 'classy-rounded', this)" title="كلاسيكي دائري"><div class="opt-preview-classy-rounded"></div></div>
+                </div>
             </div>
 
             <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
 
-            <!-- إطار الزوايا (Marker Border / Corners Square) -->
+            <!-- إطار الزوايا (Marker border) -->
             <div class="grid-2">
                 <div class="form-group">
                     <label>شكل إطار الزوايا (Marker border)</label>
-                    <select id="qrCornerType" onchange="updateQRLive()">
-                        <option value="square" selected>مربع (Square)</option>
-                        <option value="dot">دائري (Dot)</option>
-                        <option value="extra-rounded">انحناء ناعم (Extra Rounded)</option>
-                    </select>
+                    <input type="hidden" id="qrCornerType" value="square">
+                    <div class="options-grid">
+                        <div class="option-box active" onclick="selectOption('qrCornerType', 'square', this)" title="مربع"><div class="opt-preview-square"></div></div>
+                        <div class="option-box" onclick="selectOption('qrCornerType', 'dot', this)" title="دائري"><div class="opt-preview-dot-corner"></div></div>
+                        <div class="option-box" onclick="selectOption('qrCornerType', 'extra-rounded', this)" title="انحناء ناعم"><div class="opt-preview-rounded"></div></div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>لون إطار الزوايا</label>
@@ -669,14 +712,15 @@
                 </div>
             </div>
 
-            <!-- مركز الزوايا (Marker Center / Corners Dot) -->
+            <!-- مركز الزوايا (Marker center) -->
             <div class="grid-2">
                 <div class="form-group">
                     <label>شكل مركز الزوايا (Marker center)</label>
-                    <select id="qrCornerDotType" onchange="updateQRLive()">
-                        <option value="square" selected>مربع (Square)</option>
-                        <option value="dot" selected>دائري (Dot)</option>
-                    </select>
+                    <input type="hidden" id="qrCornerDotType" value="square">
+                    <div class="options-grid">
+                        <div class="option-box active" onclick="selectOption('qrCornerDotType', 'square', this)" title="مربع"><div class="opt-preview-square"></div></div>
+                        <div class="option-box" onclick="selectOption('qrCornerDotType', 'dot', this)" title="دائري"><div class="opt-preview-dot-corner"></div></div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>لون مركز الزوايا</label>
@@ -727,6 +771,15 @@
         
         document.getElementById(tabId).classList.add('active');
         event.currentTarget.classList.add('active');
+    }
+
+    /* دالة لتحديد الأزرار المرئية للـ QR */
+    function selectOption(hiddenInputId, value, element) {
+        document.getElementById(hiddenInputId).value = value;
+        const parentGrid = element.parentElement;
+        parentGrid.querySelectorAll('.option-box').forEach(box => box.classList.remove('active'));
+        element.classList.add('active');
+        updateQRLive();
     }
 
     function togglePasswordVisibility() {
