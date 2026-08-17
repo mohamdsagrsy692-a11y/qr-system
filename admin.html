@@ -8,7 +8,8 @@
     <link rel="icon" type="image/png" href="assets/icon.png">
     <link rel="apple-touch-icon" href="assets/icon.png">
 
-    <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <!-- مكتبة توليد المصفوفة الأساسية للـ QR -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
     
     <style>
         * {
@@ -182,9 +183,11 @@
         .p-square { border-radius: 1px; }
         .p-dots { border-radius: 50%; }
         .p-rounded { border-radius: 4px; }
-        .p-extra-rounded { border-radius: 8px; }
-        .p-classy { border-radius: 2px 6px 2px 6px; }
-        .p-classy-rounded { border-radius: 5px 10px 5px 10px; }
+        .p-smooth { border-radius: 6px; }
+        .p-leaf { border-radius: 0 12px 12px 12px; }
+        .p-star { clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); background: #2d3748; }
+        .p-heart { clip-path: polygon(50% 80%, 100% 30%, 80% 0%, 50% 30%, 20% 0%, 0% 30%); background: #2d3748; }
+        .p-diamond { transform: rotate(45deg); width: 12px; height: 12px; }
 
         .file-input-wrapper {
             display: flex;
@@ -218,9 +221,7 @@
             transition: opacity 0.2s;
         }
 
-        .btn:hover {
-            opacity: 0.9;
-        }
+        .btn:hover { opacity: 0.9; }
 
         .btn-save { background-color: #111; color: #fff; }
         .btn-delete { background-color: #c53030; color: #fff; }
@@ -247,6 +248,11 @@
         #qrContainer {
             display: flex;
             justify-content: center;
+        }
+
+        #qrContainer canvas {
+            max-width: 100%;
+            height: auto;
         }
 
         .qr-frame-text {
@@ -571,7 +577,7 @@
     <!-- التبويب الثالث: تصميم وتوليد الـ QR -->
     <div id="tab-qr" class="tab-content">
         <div class="qr-section" id="qrSection">
-            <h3 style="font-size:18px; margin-bottom:5px;">معاينة الـ QR</h3>
+            <h3 style="font-size:18px; margin-bottom:5px;">معاينة الـ QR المخصص</h3>
             
             <div id="qrFrameWrapper" class="qr-frame-wrapper" style="border: 3px solid #000000; border-radius: 10px;">
                 <div id="qrContainer"></div>
@@ -585,8 +591,6 @@
                         <select id="downloadFormat">
                             <option value="png" selected>PNG (صورة عالية الوضوح)</option>
                             <option value="jpeg">JPEG / JPG</option>
-                            <option value="svg">SVG (فيكتور للطباعة/الفيبر)</option>
-                            <option value="webp">WEBP</option>
                         </select>
                     </div>
                     <div class="form-group" style="margin-bottom:5px;">
@@ -595,7 +599,6 @@
                             <option value="300">300x300 px</option>
                             <option value="1000" selected>1000x1000 px (قياسي للطباعة)</option>
                             <option value="2000">2000x2000 px (HQ)</option>
-                            <option value="4000">4000x4000 px (Ultra HD)</option>
                         </select>
                     </div>
                 </div>
@@ -604,7 +607,7 @@
         </div>
 
         <div class="qr-custom-box">
-            <h3 style="font-size:16px; text-align:right; margin-bottom:12px;">🎨 إعدادات التخصيص والمظهر</h3>
+            <h3 style="font-size:16px; text-align:right; margin-bottom:12px;">🎨 إعدادات التخصيص والمظهر المتقدم</h3>
             
             <div class="grid-2">
                 <div class="form-group">
@@ -640,7 +643,7 @@
                 </div>
             </div>
 
-            <!-- شكل نقاط الـ QR (متوافقة تماماً مع المكتبة) -->
+            <!-- شكل نقاط الـ QR -->
             <div class="form-group">
                 <label>شكل نقاط الـ QR (Dots Style)</label>
                 <input type="hidden" id="qrDotType" value="square">
@@ -648,44 +651,51 @@
                     <div class="option-box active" onclick="selectOption('qrDotType', 'square', this)" title="مربعات حادة"><div class="opt-preview p-square"></div></div>
                     <div class="option-box" onclick="selectOption('qrDotType', 'dots', this)" title="نقاط دائرية"><div class="opt-preview p-dots"></div></div>
                     <div class="option-box" onclick="selectOption('qrDotType', 'rounded', this)" title="انحناء ناعم"><div class="opt-preview p-rounded"></div></div>
-                    <div class="option-box" onclick="selectOption('qrDotType', 'classy', this)" title="كلاسيكي حاد"><div class="opt-preview p-classy"></div></div>
-                    <div class="option-box" onclick="selectOption('qrDotType', 'classy-rounded', this)" title="كلاسيكي دائري"><div class="opt-preview p-classy-rounded"></div></div>
                 </div>
             </div>
 
             <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
 
-            <!-- إطار الزوايا -->
-            <div class="grid-2">
-                <div class="form-group">
-                    <label>شكل إطار الزوايا (Marker border)</label>
-                    <input type="hidden" id="qrCornerType" value="square">
-                    <div class="options-grid">
-                        <div class="option-box active" onclick="selectOption('qrCornerType', 'square', this)" title="مربع"><div class="opt-preview p-square"></div></div>
-                        <div class="option-box" onclick="selectOption('qrCornerType', 'dot', this)" title="دائري"><div class="opt-preview p-dots"></div></div>
-                        <div class="option-box" onclick="selectOption('qrCornerType', 'extra-rounded', this)" title="انحناء ناعم"><div class="opt-preview p-extra-rounded"></div></div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>لون إطار الزوايا</label>
-                    <input type="color" id="qrCornerColor" value="#000000" oninput="updateQRLive()">
+            <!-- إطار الزوايا (Marker border) المتقدم المطابق للصورة -->
+            <div class="form-group">
+                <label>شكل إطار الزوايا (Marker border)</label>
+                <input type="hidden" id="qrCornerType" value="square">
+                <div class="options-grid" style="grid-template-columns: repeat(7, 1fr);">
+                    <div class="option-box active" onclick="selectOption('qrCornerType', 'square', this)" title="مربع حاد"><div class="opt-preview p-square"></div></div>
+                    <div class="option-box" onclick="selectOption('qrCornerType', 'rounded', this)" title="مربع منحني"><div class="opt-preview p-rounded"></div></div>
+                    <div class="option-box" onclick="selectOption('qrCornerType', 'circle', this)" title="دائري"><div class="opt-preview p-dots"></div></div>
+                    <div class="option-box" onclick="selectOption('qrCornerType', 'smooth', this)" title="ناعم"><div class="opt-preview p-smooth"></div></div>
+                    <div class="option-box" onclick="selectOption('qrCornerType', 'leaf1', this)" title="ورقة شجر 1"><div class="opt-preview p-leaf" style="border-radius: 12px 0 0 0;"></div></div>
+                    <div class="option-box" onclick="selectOption('qrCornerType', 'leaf2', this)" title="ورقة شجر 2"><div class="opt-preview p-leaf" style="border-radius: 0 12px 0 0;"></div></div>
+                    <div class="option-box" onclick="selectOption('qrCornerType', 'leaf3', this)" title="ورقة شجر 3"><div class="opt-preview p-leaf" style="border-radius: 0 0 12px 0;"></div></div>
                 </div>
             </div>
 
-            <!-- مركز الزوايا -->
-            <div class="grid-2">
-                <div class="form-group">
-                    <label>شكل مركز الزوايا (Marker center)</label>
-                    <input type="hidden" id="qrCornerDotType" value="square">
-                    <div class="options-grid">
-                        <div class="option-box active" onclick="selectOption('qrCornerDotType', 'square', this)" title="مربع"><div class="opt-preview p-square"></div></div>
-                        <div class="option-box" onclick="selectOption('qrCornerDotType', 'dot', this)" title="دائري"><div class="opt-preview p-dots"></div></div>
-                    </div>
+            <div class="form-group">
+                <label>لون إطار الزوايا</label>
+                <input type="color" id="qrCornerColor" value="#000000" oninput="updateQRLive()">
+            </div>
+
+            <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
+
+            <!-- مركز الزوايا (Marker center) المتقدم المطابق للصورة (نجوم، قلوب، دوائر، إلخ) -->
+            <div class="form-group">
+                <label>شكل مركز الزوايا المتقدم (Marker center)</label>
+                <input type="hidden" id="qrCornerDotType" value="square">
+                <div class="options-grid" style="grid-template-columns: repeat(7, 1fr);">
+                    <div class="option-box active" onclick="selectOption('qrCornerDotType', 'square', this)" title="مربع"><div class="opt-preview p-square"></div></div>
+                    <div class="option-box" onclick="selectOption('qrCornerDotType', 'rounded', this)" title="منحني"><div class="opt-preview p-rounded"></div></div>
+                    <div class="option-box" onclick="selectOption('qrCornerDotType', 'circle', this)" title="دائرة"><div class="opt-preview p-dots"></div></div>
+                    <div class="option-box" onclick="selectOption('qrCornerDotType', 'diamond', this)" title="معين"><div class="opt-preview p-diamond" style="background:#2d3748;"></div></div>
+                    <div class="option-box" onclick="selectOption('qrCornerDotType', 'star', this)" title="نجمة"><div class="opt-preview p-star" style="width:16px; height:16px;"></div></div>
+                    <div class="option-box" onclick="selectOption('qrCornerDotType', 'heart', this)" title="قلب"><div class="opt-preview p-heart" style="width:16px; height:16px;"></div></div>
+                    <div class="option-box" onclick="selectOption('qrCornerDotType', 'cross', this)" title="صليب"><div class="opt-preview" style="background:#2d3748; clip-path: polygon(30% 0%, 70% 0%, 70% 30%, 100% 30%, 100% 70%, 70% 70%, 70% 100%, 30% 100%, 30% 70%, 0% 70%, 0% 30%, 30% 30%);"></div></div>
                 </div>
-                <div class="form-group">
-                    <label>لون مركز الزوايا</label>
-                    <input type="color" id="qrCornerDotColor" value="#000000" oninput="updateQRLive()">
-                </div>
+            </div>
+
+            <div class="form-group">
+                <label>لون مركز الزوايا</label>
+                <input type="color" id="qrCornerDotColor" value="#000000" oninput="updateQRLive()">
             </div>
 
             <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
@@ -842,8 +852,6 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-
-    let qrCodeInstance = null;
 
     function SafeSetValue(id, val) {
         const el = document.getElementById(id);
@@ -1093,7 +1101,171 @@
         }
     }
 
-    // [الدالة المحدثة بالكامل لتوليد وتخصيص الـ QR وربط الإطارات والأنماط بشكل دقيق وسليم]
+    // [محرك الرسم المخصص بالكامل للـ QR على الـ Canvas لدعم أشكال النجوم والقلوب والماركر المتقدمة]
+    function renderCustomQRCode(canvas, url, options, targetSize = 280) {
+        const ctx = canvas.getContext("2d");
+        
+        // توليد مصفوفة QR باستخدام مكتبة qrcode-generator
+        const qr = qrcode(0, 'H');
+        qr.addData(url);
+        qr.make();
+        const count = qr.getModuleCount();
+        
+        canvas.width = targetSize;
+        canvas.height = targetSize;
+        const cellSize = targetSize / count;
+
+        // 1. رسم الخلفية
+        ctx.fillStyle = options.bgColor;
+        ctx.fillRect(0, 0, targetSize, targetSize);
+
+        // مساعدة لرسم نقطة فردية بالشكل المطلوب
+        function drawCustomModule(x, y, type, color, sizeMultiplier = 1) {
+            ctx.fillStyle = color;
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1.5;
+            
+            const px = x * cellSize;
+            const py = y * cellSize;
+            const size = cellSize * sizeMultiplier;
+
+            ctx.beginPath();
+            if (type === 'dots' || type === 'circle') {
+                ctx.arc(px + size / 2, py + size / 2, size / 2, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (type === 'rounded') {
+                if (ctx.roundRect) {
+                    ctx.roundRect(px, py, size, size, size * 0.35);
+                } else {
+                    ctx.rect(px, py, size, size);
+                }
+                ctx.fill();
+            } else if (type === 'diamond') {
+                ctx.save();
+                ctx.translate(px + size / 2, py + size / 2);
+                ctx.rotate(Math.PI / 4);
+                ctx.fillRect(-size / 2.2, -size / 2.2, size / 1.1, size / 1.1);
+                ctx.restore();
+            } else if (type === 'star') {
+                ctx.save();
+                ctx.translate(px + size / 2, py + size / 2);
+                ctx.beginPath();
+                for (let i = 0; i < 5; i++) {
+                    ctx.lineTo(Math.cos((18 + i * 72) * Math.PI / 180) * (size / 2), -Math.sin((18 + i * 72) * Math.PI / 180) * (size / 2));
+                    ctx.lineTo(Math.cos((54 + i * 72) * Math.PI / 180) * (size / 4), -Math.sin((54 + i * 72) * Math.PI / 180) * (size / 4));
+                }
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            } else if (type === 'heart') {
+                ctx.save();
+                ctx.translate(px, py + size * 0.2);
+                const hs = size / 20;
+                ctx.beginPath();
+                ctx.moveTo(10 * hs, 15 * hs);
+                ctx.bezierCurveTo(10 * hs, 12 * hs, 4 * hs, 8 * hs, 2 * hs, 5 * hs);
+                ctx.bezierCurveTo(-1 * hs, 1 * hs, 4 * hs, -3 * hs, 7 * hs, 1 * hs);
+                ctx.bezierCurveTo(9 * hs, 3 * hs, 10 * hs, 5 * hs, 10 * hs, 5 * hs);
+                ctx.bezierCurveTo(10 * hs, 5 * hs, 11 * hs, 3 * hs, 13 * hs, 1 * hs);
+                ctx.bezierCurveTo(16 * hs, -3 * hs, 21 * hs, 1 * hs, 18 * hs, 5 * hs);
+                ctx.bezierCurveTo(16 * hs, 8 * hs, 10 * hs, 12 * hs, 10 * hs, 15 * hs);
+                ctx.fill();
+                ctx.restore();
+            } else if (type === 'cross') {
+                ctx.fillRect(px + size * 0.3, py, size * 0.4, size);
+                ctx.fillRect(px, py + size * 0.3, size, size * 0.4);
+            } else {
+                // square افتراضي
+                ctx.fillRect(px, py, size, size);
+            }
+        }
+
+        // تحديد أماكن الـ Finder Patterns (الزوايا الثلاث الكبرى)
+        const isFinderPattern = (r, c) => {
+            return (r <= 6 && c <= 6) || (r <= 6 && c >= count - 7) || (r >= count - 7 && c <= 6);
+        };
+
+        // 2. رسم النقاط العادية (Data Dots)
+        for (let r = 0; r < count; r++) {
+            for (let c = 0; c < count; c++) {
+                if (!isFinderPattern(r, c) && qr.isDark(r, c)) {
+                    drawCustomModule(c, r, options.dotType, options.dotColor);
+                }
+            }
+        }
+
+        // 3. رسم زوايا الـ QR المتقدمة (Marker Border & Center)
+        const drawAdvancedFinder = (startRow, startCol) => {
+            ctx.save();
+            const x = startCol * cellSize;
+            const y = startRow * cellSize;
+            const boxSize = 7 * cellSize;
+
+            // أ. رسم إطار الزاوية (Marker Border)
+            ctx.fillStyle = options.cornerColor;
+            ctx.beginPath();
+            const bType = options.cornerType;
+            
+            if (bType === 'circle') {
+                ctx.roundRect(x, y, boxSize, boxSize, boxSize / 2);
+            } else if (bType === 'rounded') {
+                ctx.roundRect(x, y, boxSize, boxSize, boxSize * 0.25);
+            } else if (bType === 'smooth') {
+                ctx.roundRect(x, y, boxSize, boxSize, boxSize * 0.35);
+            } else if (bType === 'leaf1') {
+                ctx.roundRect(x, y, boxSize, boxSize, [boxSize * 0.4, 0, 0, 0]);
+            } else if (bType === 'leaf2') {
+                ctx.roundRect(x, y, boxSize, boxSize, [0, boxSize * 0.4, 0, 0]);
+            } else if (bType === 'leaf3') {
+                ctx.roundRect(x, y, boxSize, boxSize, [0, 0, boxSize * 0.4, 0]);
+            } else {
+                ctx.rect(x, y, boxSize, boxSize);
+            }
+            
+            // تفريغ الداخل للإطار الخارجي
+            let innerOffset = cellSize;
+            let innerSize = 5 * cellSize;
+            if (ctx.roundRect) {
+                ctx.rect(x + innerOffset + innerSize, y + innerOffset, -innerSize, innerSize);
+            }
+            ctx.fill('evenodd');
+
+            // ب. رسم مركز الزاوية الداخلي (Marker Center)
+            const cx = startCol + 2;
+            const cy = startRow + 2;
+            for (let dr = 0; dr < 3; dr++) {
+                for (let dc = 0; dc < 3; dc++) {
+                    drawCustomModule(cx + dc, cy + dr, options.cornerDotType, options.cornerDotColor);
+                }
+            }
+
+            ctx.restore();
+        };
+
+        drawAdvancedFinder(0, 0);                 // الزاوية العلوية اليسرى
+        drawAdvancedFinder(0, count - 7);         // الزاوية العلوية اليمنى
+        drawAdvancedFinder(count - 7, 0);         // الزاوية السفلية اليسرى
+
+        // 4. دمج اللوجو في المنتصف إذا كان مفعلاً
+        if (options.embedLogo === "yes" && options.logoUrl) {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = function() {
+                const lw = targetSize * 0.22;
+                const lh = targetSize * 0.22;
+                const lx = (targetSize - lw) / 2;
+                const ly = (targetSize - lh) / 2;
+
+                ctx.fillStyle = options.bgColor;
+                ctx.fillRect(lx - 4, ly - 4, lw + 8, lh + 8);
+                ctx.drawImage(img, lx, ly, lw, lh);
+            };
+            img.src = options.logoUrl;
+        }
+    }
+
+    let currentCanvasElement = null;
+
     function generateQR() {
         const code = SafeGetValue("code");
         if (!code) return;
@@ -1103,125 +1275,13 @@
 
         const targetURL = window.location.origin + window.location.pathname.replace("admin.html", "qr.html") + "?id=" + encodeURIComponent(code);
 
-        const dotColor = SafeGetValue("qrDotColor") || "#000000";
-        const bgColor = SafeGetValue("qrBgColor") || "#ffffff";
-        const dotType = SafeGetValue("qrDotType") || "square";
-        
-        const cornerType = SafeGetValue("qrCornerType") || "square";
-        const cornerColor = SafeGetValue("qrCornerColor") || dotColor;
-        
-        const cornerDotType = SafeGetValue("qrCornerDotType") || "square";
-        const cornerDotColor = SafeGetValue("qrCornerDotColor") || dotColor;
-
-        const embedLogo = SafeGetValue("qrEmbedLogo");
-        const finalLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
-
-        const frameStyle = SafeGetValue("qrFrameStyle") || "none";
-        const frameColor = SafeGetValue("qrFrameColor") || "#000000";
-        const framePhrase = SafeGetValue("qrFramePhrase") || "SCAN ME";
-
-        const frameWrapper = document.getElementById("qrFrameWrapper");
-        const frameTextEl = document.getElementById("qrFrameText");
-
-        if (frameStyle === "none") {
-            frameWrapper.style.border = "none";
-            frameWrapper.style.borderRadius = "0px";
-            frameTextEl.style.display = "none";
-        } else {
-            frameWrapper.style.border = "4px solid " + frameColor;
-            if (frameStyle === "square") {
-                frameWrapper.style.borderRadius = "4px";
-            } else if (frameStyle === "rounded") {
-                frameWrapper.style.borderRadius = "12px";
-            } else if (frameStyle === "pill") {
-                frameWrapper.style.borderRadius = "24px";
-            }
-            
-            if (framePhrase.trim() !== "") {
-                frameTextEl.textContent = framePhrase;
-                frameTextEl.style.color = frameColor;
-                frameTextEl.style.display = "block";
-            } else {
-                frameTextEl.style.display = "none";
-            }
-        }
-
-        const qrConfig = {
-            width: 260,
-            height: 260,
-            type: "canvas",
-            data: targetURL,
-            dotsOptions: { 
-                color: dotColor, 
-                type: dotType 
-            },
-            backgroundOptions: { 
-                color: bgColor 
-            },
-            cornersSquareOptions: { 
-                type: cornerType, 
-                color: cornerColor 
-            },
-            cornersDotOptions: { 
-                type: cornerDotType, 
-                color: cornerDotColor 
-            },
-            imageOptions: { 
-                crossOrigin: "anonymous", 
-                margin: 4, 
-                imageSize: 0.26 
-            }
-        };
-
-        if (embedLogo === "yes" && finalLogo) {
-            qrConfig.image = finalLogo;
-        }
-
-        qrCodeInstance = new QRCodeStyling(qrConfig);
-        qrCodeInstance.append(qrContainer);
-    }
-
-    function downloadQR() {
-        const code = SafeGetValue("code") || "QR_Code";
-        const selectedFormat = SafeGetValue("downloadFormat") || "png";
-        const selectedSize = parseInt(SafeGetValue("downloadSize")) || 1000;
-
-        if (qrCodeInstance) {
-            const targetURL = window.location.origin + window.location.pathname.replace("admin.html", "qr.html") + "?id=" + encodeURIComponent(code);
-            const dotColor = SafeGetValue("qrDotColor") || "#000000";
-            const bgColor = SafeGetValue("qrBgColor") || "#ffffff";
-            const dotType = SafeGetValue("qrDotType") || "square";
-            
-            const cornerType = SafeGetValue("qrCornerType") || "square";
-            const cornerColor = SafeGetValue("qrCornerColor") || dotColor;
-            
-            const cornerDotType = SafeGetValue("qrCornerDotType") || "square";
-            const cornerDotColor = SafeGetValue("qrCornerDotColor") || dotColor;
-
-            const embedLogo = SafeGetValue("qrEmbedLogo");
-            const finalLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
-
-            const exportConfig = {
-                width: selectedSize,
-                height: selectedSize,
-                type: selectedFormat === "svg" ? "svg" : "canvas",
-                data: targetURL,
-                dotsOptions: { color: dotColor, type: dotType },
-                backgroundOptions: { color: bgColor },
-                cornersSquareOptions: { type: cornerType, color: cornerColor },
-                cornersDotOptions: { type: cornerDotType, color: cornerDotColor },
-                imageOptions: { crossOrigin: "anonymous", margin: selectedSize * 0.015, imageSize: 0.26 }
-            };
-
-            if (embedLogo === "yes" && finalLogo) {
-                exportConfig.image = finalLogo;
-            }
-
-            const exportQR = new QRCodeStyling(exportConfig);
-            exportQR.download({ name: code + "_" + selectedSize + "px", extension: selectedFormat });
-        }
-    }
-</script>
-
-</body>
-</html>
+        const options = {
+            dotColor: SafeGetValue("qrDotColor") || "#000000",
+            bgColor: SafeGetValue("qrBgColor") || "#ffffff",
+            dotType: SafeGetValue("qrDotType") || "square",
+            cornerType: SafeGetValue("qrCornerType") || "square",
+            cornerColor: SafeGetValue("qrCornerColor") || "#000000",
+            cornerDotType: SafeGetValue("qrCornerDotType") || "square",
+            cornerDotColor: SafeGetValue("qrCornerDotColor") || "#000000",
+            embedLogo: SafeGetValue("qrEmbedLogo"),
+            logoUrl: SafeGetValue("qrCustomLogo") || S
