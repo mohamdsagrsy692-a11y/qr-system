@@ -264,10 +264,10 @@ text-shadow:0 2px 5px rgba(0,0,0,.5);
 <span>InstaPay</span>
 </a>
 
-<!-- Vodafone Cash -->
+<!-- Vodafone Cash (Cash) -->
 <a id="vodafonecash" class="btn" target="_blank" style="display:none;">
 <img src="assets/cash.png" class="custom-icon">
-<span>Vodafone Cash</span>
+<span>Cash</span>
 </a>
 
 <!-- Orange Cash -->
@@ -489,35 +489,31 @@ if (data.instapay && data.instapay.trim() !== "") {
     el.style.display = "flex";
 }
 
-// فودافون كاش
+// فودافون كاش (تم تعديلها لتأخذ اللينك المباشر مباشرة وتفتح تطبيق التحويل)
 if (data.vodafonecash && data.vodafonecash.trim() !== "") {
     const el = document.getElementById("vodafonecash");
-    let cashNum = data.vodafonecash.replace(/\D/g, '');
-    el.href = "tel:*9*7*" + cashNum + "%23";
+    el.href = data.vodafonecash.trim();
     el.style.display = "flex";
 }
 
-// أورنج كاش (مثال لكود التحويل السريع لأورنج - يرجى مراجعة الكود المختصر لو اختلف)
+// أورنج كاش 
 if (data.orangecash && data.orangecash.trim() !== "") {
     const el = document.getElementById("orangecash");
-    let cashNum = data.orangecash.replace(/\D/g, '');
-    el.href = "tel:*115#" + cashNum; // يتم تعديل الكود المختصر حسب أكواد أورنج كاش الرسمية
+    el.href = data.orangecash.trim(); 
     el.style.display = "flex";
 }
 
-// اتصالات كاش
+// اتصالات كاش 
 if (data.etisalatcash && data.etisalatcash.trim() !== "") {
     const el = document.getElementById("etisalatcash");
-    let cashNum = data.etisalatcash.replace(/\D/g, '');
-    el.href = "tel:*711#" + cashNum; // يتم تعديل الكود المختصر حسب أكواد اتصالات كاش الرسمية
+    el.href = data.etisalatcash.trim(); 
     el.style.display = "flex";
 }
 
-// وي كاش
+// وي كاش 
 if (data.wecash && data.wecash.trim() !== "") {
     const el = document.getElementById("wecash");
-    let cashNum = data.wecash.replace(/\D/g, '');
-    el.href = "tel:*322#" + cashNum; // يتم تعديل الكود المختصر حسب أكواد وي كاش الرسمية
+    el.href = data.wecash.trim(); 
     el.style.display = "flex";
 }
 
