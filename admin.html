@@ -148,7 +148,6 @@
             border-color: #3b82f6;
         }
 
-        /* شبكة الأزرار الشاملة والمطابقة لـ QR.io */
         .options-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
@@ -186,10 +185,6 @@
         .p-extra-rounded { border-radius: 8px; }
         .p-classy { border-radius: 2px 6px 2px 6px; }
         .p-classy-rounded { border-radius: 5px 10px 5px 10px; }
-        .p-vertical { width: 6px; height: 16px; border-radius: 1px; }
-        .p-horizontal { width: 16px; height: 6px; border-radius: 1px; }
-        .p-star { clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); background: #2d3748; width: 18px; height: 18px; }
-        .p-heart { clip-path: polygon(50% 80%, 100% 30%, 80% 0%, 50% 25%, 20% 0%, 0% 30%); background: #2d3748; width: 18px; height: 18px; }
 
         .file-input-wrapper {
             display: flex;
@@ -609,7 +604,7 @@
         </div>
 
         <div class="qr-custom-box">
-            <h3 style="font-size:16px; text-align:right; margin-bottom:12px;">🎨 إعدادات التخصيص والمظهر الشاملة (مطابق تماماً لـ QR.io)</h3>
+            <h3 style="font-size:16px; text-align:right; margin-bottom:12px;">🎨 إعدادات التخصيص والمظهر</h3>
             
             <div class="grid-2">
                 <div class="form-group">
@@ -645,25 +640,22 @@
                 </div>
             </div>
 
-            <!-- شكل نقاط الـ QR الشامل (Dots Style) -->
+            <!-- شكل نقاط الـ QR (متوافقة تماماً مع المكتبة) -->
             <div class="form-group">
-                <label>شكل نقاط الـ QR (Dots Style - جميع الأشكال)</label>
+                <label>شكل نقاط الـ QR (Dots Style)</label>
                 <input type="hidden" id="qrDotType" value="square">
                 <div class="options-grid">
                     <div class="option-box active" onclick="selectOption('qrDotType', 'square', this)" title="مربعات حادة"><div class="opt-preview p-square"></div></div>
                     <div class="option-box" onclick="selectOption('qrDotType', 'dots', this)" title="نقاط دائرية"><div class="opt-preview p-dots"></div></div>
                     <div class="option-box" onclick="selectOption('qrDotType', 'rounded', this)" title="انحناء ناعم"><div class="opt-preview p-rounded"></div></div>
-                    <div class="option-box" onclick="selectOption('qrDotType', 'extra-rounded', this)" title="انحناء إضافي"><div class="opt-preview p-extra-rounded"></div></div>
                     <div class="option-box" onclick="selectOption('qrDotType', 'classy', this)" title="كلاسيكي حاد"><div class="opt-preview p-classy"></div></div>
                     <div class="option-box" onclick="selectOption('qrDotType', 'classy-rounded', this)" title="كلاسيكي دائري"><div class="opt-preview p-classy-rounded"></div></div>
-                    <div class="option-box" onclick="selectOption('qrDotType', 'vertical-lines', this)" title="خطوط رأسي"><div class="opt-preview p-vertical"></div></div>
-                    <div class="option-box" onclick="selectOption('qrDotType', 'horizontal-lines', this)" title="خطوط أفقي"><div class="opt-preview p-horizontal"></div></div>
                 </div>
             </div>
 
             <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
 
-            <!-- إطار الزوايا الشامل (Marker border) -->
+            <!-- إطار الزوايا -->
             <div class="grid-2">
                 <div class="form-group">
                     <label>شكل إطار الزوايا (Marker border)</label>
@@ -672,7 +664,6 @@
                         <div class="option-box active" onclick="selectOption('qrCornerType', 'square', this)" title="مربع"><div class="opt-preview p-square"></div></div>
                         <div class="option-box" onclick="selectOption('qrCornerType', 'dot', this)" title="دائري"><div class="opt-preview p-dots"></div></div>
                         <div class="option-box" onclick="selectOption('qrCornerType', 'extra-rounded', this)" title="انحناء ناعم"><div class="opt-preview p-extra-rounded"></div></div>
-                        <div class="option-box" onclick="selectOption('qrCornerType', 'classy', this)" title="كلاسيكي"><div class="opt-preview p-classy"></div></div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -681,7 +672,7 @@
                 </div>
             </div>
 
-            <!-- مركز الزوايا الشامل (Marker center) -->
+            <!-- مركز الزوايا -->
             <div class="grid-2">
                 <div class="form-group">
                     <label>شكل مركز الزوايا (Marker center)</label>
@@ -689,7 +680,6 @@
                     <div class="options-grid">
                         <div class="option-box active" onclick="selectOption('qrCornerDotType', 'square', this)" title="مربع"><div class="opt-preview p-square"></div></div>
                         <div class="option-box" onclick="selectOption('qrCornerDotType', 'dot', this)" title="دائري"><div class="opt-preview p-dots"></div></div>
-                        <div class="option-box" onclick="selectOption('qrCornerDotType', 'classy', this)" title="كلاسيكي"><div class="opt-preview p-classy"></div></div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -1103,6 +1093,7 @@
         }
     }
 
+    // [الدالة المحدثة بالكامل لتوليد وتخصيص الـ QR وربط الإطارات والأنماط بشكل دقيق وسليم]
     function generateQR() {
         const code = SafeGetValue("code");
         if (!code) return;
@@ -1160,11 +1151,26 @@
             height: 260,
             type: "canvas",
             data: targetURL,
-            dotsOptions: { color: dotColor, type: dotType },
-            backgroundOptions: { color: bgColor },
-            cornersSquareOptions: { type: cornerType, color: cornerColor },
-            cornersDotOptions: { type: cornerDotType, color: cornerDotColor },
-            imageOptions: { crossOrigin: "anonymous", margin: 4, imageSize: 0.26 }
+            dotsOptions: { 
+                color: dotColor, 
+                type: dotType 
+            },
+            backgroundOptions: { 
+                color: bgColor 
+            },
+            cornersSquareOptions: { 
+                type: cornerType, 
+                color: cornerColor 
+            },
+            cornersDotOptions: { 
+                type: cornerDotType, 
+                color: cornerDotColor 
+            },
+            imageOptions: { 
+                crossOrigin: "anonymous", 
+                margin: 4, 
+                imageSize: 0.26 
+            }
         };
 
         if (embedLogo === "yes" && finalLogo) {
