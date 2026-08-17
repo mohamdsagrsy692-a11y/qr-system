@@ -22,7 +22,7 @@
             background-color: #f2f2f2;
             padding: 20px;
             direction: rtl;
-            padding-bottom: 90px; /* مساحة للـ Sticky Footer */
+            padding-bottom: 90px;
         }
 
         .container {
@@ -59,7 +59,6 @@
             font-size: 13px;
         }
 
-        /* --- تصميم التبويبات (Tabs) --- */
         .tabs-nav {
             display: flex;
             background: #edf2f7;
@@ -97,7 +96,6 @@
             display: block;
         }
 
-        /* --- شريط الأزرار الثابت في الأسفل --- */
         .sticky-footer {
             position: fixed;
             bottom: 0;
@@ -251,7 +249,6 @@
             border: 1px solid #ddd;
         }
 
-        /* --- تصميم واجهة تسجيل الدخول --- */
         .login-overlay {
             position: fixed;
             top: 0;
@@ -374,7 +371,6 @@
             text-align: center;
         }
 
-        /* --- Modal المخصص --- */
         .custom-modal-overlay {
             position: fixed;
             top: 0;
@@ -467,14 +463,14 @@
         <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
     </div>
 
-    <!-- شريط التبويبات (Tabs Navigation) -->
+    <!-- شريط التبويبات -->
     <div class="tabs-nav">
         <button class="tab-btn active" onclick="switchTab('tab-profile')">1. بيانات العميل</button>
         <button class="tab-btn" onclick="switchTab('tab-contacts')">2. التواصل والروابط</button>
         <button class="tab-btn" onclick="switchTab('tab-qr')">3. تصميم وتوليد الـ QR</button>
     </div>
 
-    <!-- ================= التبويب الأول: بيانات العميل ================= -->
+    <!-- التبويب الأول: بيانات العميل -->
     <div id="tab-profile" class="tab-content active">
         <div class="grid-2" style="margin-bottom: 15px;">
             <div class="form-group" style="margin-bottom:0;">
@@ -530,109 +526,47 @@
         </div>
     </div>
 
-    <!-- ================= التبويب الثاني: التواصل والروابط ================= -->
+    <!-- التبويب الثاني: التواصل والروابط -->
     <div id="tab-contacts" class="tab-content">
         <div class="grid-2">
-            <div class="form-group">
-                <label>رقم الهاتف / الاتصال</label>
-                <input type="text" id="phone" placeholder="01xxxxxxxxx">
-            </div>
-            <div class="form-group">
-                <label>واتساب (WhatsApp)</label>
-                <input type="text" id="whatsapp" placeholder="رقم الواتساب">
-            </div>
+            <div class="form-group"><label>رقم الهاتف / الاتصال</label><input type="text" id="phone" placeholder="01xxxxxxxxx"></div>
+            <div class="form-group"><label>واتساب (WhatsApp)</label><input type="text" id="whatsapp" placeholder="رقم الواتساب"></div>
         </div>
-
         <div class="grid-2">
-            <div class="form-group">
-                <label>تليجرام (Telegram)</label>
-                <input type="text" id="telegram" placeholder="معرف تليجرام">
-            </div>
-            <div class="form-group">
-                <label>مسنجر (Messenger)</label>
-                <input type="text" id="messenger" placeholder="رابط المسنجر">
-            </div>
+            <div class="form-group"><label>تليجرام (Telegram)</label><input type="text" id="telegram" placeholder="معرف تليجرام"></div>
+            <div class="form-group"><label>مسنجر (Messenger)</label><input type="text" id="messenger" placeholder="رابط المسنجر"></div>
         </div>
-
         <div class="grid-2">
-            <div class="form-group">
-                <label>فيسبوك (Facebook)</label>
-                <input type="text" id="facebook" placeholder="رابط صفحة الفيسبوك">
-            </div>
-            <div class="form-group">
-                <label>انستجرام (Instagram)</label>
-                <input type="text" id="instagram" placeholder="رابط الانستجرام">
-            </div>
+            <div class="form-group"><label>فيسبوك (Facebook)</label><input type="text" id="facebook" placeholder="رابط صفحة الفيسبوك"></div>
+            <div class="form-group"><label>انستجرام (Instagram)</label><input type="text" id="instagram" placeholder="رابط الانستجرام"></div>
         </div>
-
         <div class="grid-2">
-            <div class="form-group">
-                <label>تيك توك (TikTok)</label>
-                <input type="text" id="tiktok" placeholder="رابط التيك توك">
-            </div>
-            <div class="form-group">
-                <label>سناب شات (Snapchat)</label>
-                <input type="text" id="snapchat" placeholder="حساب السناب شات">
-            </div>
+            <div class="form-group"><label>تيك توك (TikTok)</label><input type="text" id="tiktok" placeholder="رابط التيك توك"></div>
+            <div class="form-group"><label>سناب شات (Snapchat)</label><input type="text" id="snapchat" placeholder="حساب السناب شات"></div>
         </div>
-
         <div class="grid-2">
-            <div class="form-group">
-                <label>بنترست (Pinterest)</label>
-                <input type="text" id="pinterest" placeholder="رابط بنترست">
-            </div>
-            <div class="form-group">
-                <label>يوتيوب (YouTube)</label>
-                <input type="text" id="youtube" placeholder="رابط القناة">
-            </div>
+            <div class="form-group"><label>بنترست (Pinterest)</label><input type="text" id="pinterest" placeholder="رابط بنترست"></div>
+            <div class="form-group"><label>يوتيوب (YouTube)</label><input type="text" id="youtube" placeholder="رابط القناة"></div>
         </div>
-
         <div class="grid-2">
-            <div class="form-group">
-                <label>لينكد إن (LinkedIn)</label>
-                <input type="text" id="linkedin" placeholder="رابط لينكد إن">
-            </div>
-            <div class="form-group">
-                <label>الموقع الإلكتروني (Website)</label>
-                <input type="text" id="website" placeholder="https://...">
-            </div>
+            <div class="form-group"><label>لينكد إن (LinkedIn)</label><input type="text" id="linkedin" placeholder="رابط لينكد إن"></div>
+            <div class="form-group"><label>الموقع الإلكتروني (Website)</label><input type="text" id="website" placeholder="https://..."></div>
         </div>
-
         <div class="grid-2">
-            <div class="form-group">
-                <label>الكتالوج (Catalog)</label>
-                <input type="text" id="catalog" placeholder="رابط الكتالوج">
-            </div>
-            <div class="form-group">
-                <label>البريد الإلكتروني (Gmail)</label>
-                <input type="text" id="gmail" placeholder="name@gmail.com">
-            </div>
+            <div class="form-group"><label>الكتالوج (Catalog)</label><input type="text" id="catalog" placeholder="رابط الكتالوج"></div>
+            <div class="form-group"><label>البريد الإلكتروني (Gmail)</label><input type="text" id="gmail" placeholder="name@gmail.com"></div>
         </div>
-
         <div class="grid-2">
-            <div class="form-group">
-                <label>الموقع الجغرافي (Location)</label>
-                <input type="text" id="location" placeholder="رابط خرائط جوجل">
-            </div>
-            <div class="form-group">
-                <label>المراجعات (Review)</label>
-                <input type="text" id="review" placeholder="رابط تقييم جوجل">
-            </div>
+            <div class="form-group"><label>الموقع الجغرافي (Location)</label><input type="text" id="location" placeholder="رابط خرائط جوجل"></div>
+            <div class="form-group"><label>المراجعات (Review)</label><input type="text" id="review" placeholder="رابط تقييم جوجل"></div>
         </div>
-
         <div class="grid-2">
-            <div class="form-group">
-                <label>InstaPay</label>
-                <input type="text" id="instapay" placeholder="اسم الحساب / العنوان">
-            </div>
-            <div class="form-group">
-                <label>Vodafone Cash</label>
-                <input type="text" id="vodafonecash" placeholder="رقم المحفظة">
-            </div>
+            <div class="form-group"><label>InstaPay</label><input type="text" id="instapay" placeholder="اسم الحساب / العنوان"></div>
+            <div class="form-group"><label>Vodafone Cash</label><input type="text" id="vodafonecash" placeholder="رقم المحفظة"></div>
         </div>
     </div>
 
-    <!-- ================= التبويب الثالث: تصميم وتوليد الـ QR ================= -->
+    <!-- التبويب الثالث: تصميم وتوليد الـ QR -->
     <div id="tab-qr" class="tab-content">
         <div class="qr-section" id="qrSection">
             <h3 style="font-size:18px; margin-bottom:5px;">معاينة الـ QR</h3>
@@ -668,7 +602,7 @@
         </div>
 
         <div class="qr-custom-box">
-            <h3 style="font-size:16px; text-align:right; margin-bottom:12px;">🎨 إعدادات التخصيص والمظهر</h3>
+            <h3 style="font-size:16px; text-align:right; margin-bottom:12px;">🎨 إعدادات التخصيص والمظهر المتقدمة</h3>
             
             <div class="grid-2">
                 <div class="form-group">
@@ -704,46 +638,53 @@
                 </div>
             </div>
 
-            <div class="grid-2">
-                <div class="form-group">
-                    <label>شكل النقاط (Dots)</label>
-                    <select id="qrDotType" onchange="updateQRLive()">
-                        <option value="square" selected>مربعات صريحة</option>
-                        <option value="dots">نقاط دائرية</option>
-                        <option value="rounded">انحناء ناعم</option>
-                        <option value="classy">كلاسيكي</option>
-                        <option value="classy-rounded">كلاسيكي دائري</option>
-                        <option value="extra-rounded">انحناء إضافي</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>شكل إطار الزوايا</label>
-                    <select id="qrCornerType" onchange="updateQRLive()">
-                        <option value="square" selected>مربع</option>
-                        <option value="dot">دائري</option>
-                        <option value="extra-rounded">انحناء ناعم</option>
-                    </select>
-                </div>
+            <!-- خيارات النقط المتقدمة -->
+            <div class="form-group">
+                <label>شكل نقاط الـ QR (Dots Style - خيارات متعددة)</label>
+                <select id="qrDotType" onchange="updateQRLive()">
+                    <option value="square" selected>مربعات صريحة (Square)</option>
+                    <option value="dots">نقاط دائرية (Dots)</option>
+                    <option value="rounded">انحناء ناعم (Rounded)</option>
+                    <option value="classy">كلاسيكي (Classy)</option>
+                    <option value="classy-rounded">كلاسيكي دائري (Classy Rounded)</option>
+                    <option value="extra-rounded">انحناء إضافي (Extra Rounded)</option>
+                </select>
             </div>
 
+            <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
+
+            <!-- إطار الزوايا (Marker Border / Corners Square) -->
             <div class="grid-2">
+                <div class="form-group">
+                    <label>شكل إطار الزوايا (Marker border)</label>
+                    <select id="qrCornerType" onchange="updateQRLive()">
+                        <option value="square" selected>مربع (Square)</option>
+                        <option value="dot">دائري (Dot)</option>
+                        <option value="extra-rounded">انحناء ناعم (Extra Rounded)</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label>لون إطار الزوايا</label>
                     <input type="color" id="qrCornerColor" value="#000000" oninput="updateQRLive()">
                 </div>
+            </div>
+
+            <!-- مركز الزوايا (Marker Center / Corners Dot) -->
+            <div class="grid-2">
                 <div class="form-group">
-                    <label>شكل مركز الزوايا</label>
+                    <label>شكل مركز الزوايا (Marker center)</label>
                     <select id="qrCornerDotType" onchange="updateQRLive()">
-                        <option value="square" selected>مربع</option>
-                        <option value="dot">دائري</option>
+                        <option value="square" selected>مربع (Square)</option>
+                        <option value="dot" selected>دائري (Dot)</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label>لون مركز الزوايا</label>
+                    <input type="color" id="qrCornerDotColor" value="#000000" oninput="updateQRLive()">
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>لون مركز الزوايا</label>
-                <input type="color" id="qrCornerDotColor" value="#000000" oninput="updateQRLive()">
-            </div>
+            <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
 
             <div class="form-group">
                 <label>صورة اللوجو وسط الـ QR (اختياري)</label>
@@ -780,7 +721,6 @@
     const ADMIN_USERNAME = "abdallah.haroun";
     const ADMIN_PASSWORD = "CODE010951";
 
-    // نظام التنقل بين التبويبات
     function switchTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -903,7 +843,6 @@
         return el ? el.value.trim() : "";
     }
 
-    // --- توليد الكود: CODE: + 7 أرقام + آخر 5 أرقام متسلسلة تلقائياً ---
     function generateNextCustomerCode() {
         db.ref("customers").once("value").then(snapshot => {
             const data = snapshot.val();
@@ -922,7 +861,6 @@
             }
 
             const nextSeq = maxSeq + 1;
-            
             const prefixCode = "CODE:0458456"; 
             const nextCode = prefixCode + String(nextSeq).padStart(5, "0");
             
