@@ -9,6 +9,7 @@
     <link rel="apple-touch-icon" href="assets/icon.png">
 
     <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     
     <style>
         * {
@@ -57,6 +58,14 @@
             border-radius: 6px;
             cursor: pointer;
             font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-logout lottie-player {
+            width: 28px;
+            height: 28px;
         }
 
         .tabs-nav {
@@ -80,6 +89,17 @@
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .tab-btn lottie-player {
+            width: 40px;
+            height: 40px;
+            pointer-events: none;
         }
 
         .tab-btn.active {
@@ -113,6 +133,16 @@
         .sticky-footer .btn {
             max-width: 200px;
             margin-top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .sticky-footer .btn lottie-player {
+            width: 30px;
+            height: 30px;
+            pointer-events: none;
         }
 
         .form-group {
@@ -148,7 +178,6 @@
             border-color: #3b82f6;
         }
 
-        /* شبكة الأزرار المرئية بدلاً من القوائم المنسدلة */
         .options-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
@@ -180,7 +209,6 @@
             box-shadow: 0 0 0 1px #3b82f6;
         }
 
-        /* رسومات مصغرة داخل الأزرار توضح الشكل */
         .opt-preview-square { width: 22px; height: 22px; background: #2d3748; border-radius: 2px; }
         .opt-preview-dots { width: 22px; height: 22px; background: radial-gradient(circle, #2d3748 40%, transparent 45%); }
         .opt-preview-rounded { width: 22px; height: 22px; background: #2d3748; border-radius: 6px; }
@@ -501,17 +529,29 @@
 <div class="container" id="adminContainer">
     <div class="header-bar">
         <h2>إدارة العملاء والـ QR</h2>
-        <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
+        <button class="btn-logout" onclick="logout()">
+            <lottie-player src="assets/Icons/logout-icon.json" background="transparent" speed="1" loop autoplay></lottie-player>
+            <span>تسجيل الخروج</span>
+        </button>
     </div>
 
-    <!-- شريط التبويبات -->
     <div class="tabs-nav">
-        <button class="tab-btn active" onclick="switchTab('tab-profile')">1. بيانات العميل</button>
-        <button class="tab-btn" onclick="switchTab('tab-contacts')">2. التواصل والروابط</button>
-        <button class="tab-btn" onclick="switchTab('tab-qr')">3. تصميم وتوليد الـ QR</button>
+        <button class="tab-btn active" onclick="switchTab('tab-profile')">
+            <lottie-player src="assets/Icons/client-data-icon.json" background="transparent" speed="1" loop autoplay></lottie-player>
+            <span>بيانات العميل</span>
+        </button>
+
+        <button class="tab-btn" onclick="switchTab('tab-contacts')">
+            <lottie-player src="assets/Icons/social-links-icon.json" background="transparent" speed="1" loop autoplay></lottie-player>
+            <span>التواصل والروابط</span>
+        </button>
+
+        <button class="tab-btn" onclick="switchTab('tab-qr')">
+            <lottie-player src="assets/Icons/qr-design-icon.json" background="transparent" speed="1" loop autoplay></lottie-player>
+            <span>تصميم QR</span>
+        </button>
     </div>
 
-    <!-- التبويب الأول: بيانات العميل -->
     <div id="tab-profile" class="tab-content active">
         <div class="grid-2" style="margin-bottom: 15px;">
             <div class="form-group" style="margin-bottom:0;">
@@ -567,7 +607,6 @@
         </div>
     </div>
 
-    <!-- التبويب الثاني: التواصل والروابط -->
     <div id="tab-contacts" class="tab-content">
         <div class="grid-2">
             <div class="form-group"><label>رقم الهاتف / الاتصال</label><input type="text" id="phone" placeholder="01xxxxxxxxx"></div>
@@ -607,7 +646,6 @@
         </div>
     </div>
 
-    <!-- التبويب الثالث: تصميم وتوليد الـ QR -->
     <div id="tab-qr" class="tab-content">
         <div class="qr-section" id="qrSection">
             <h3 style="font-size:18px; margin-bottom:5px;">معاينة الـ QR</h3>
@@ -679,7 +717,6 @@
                 </div>
             </div>
 
-            <!-- شكل نقاط الـ QR (أزرار ظاهرة مباشرة كـ QR.io) -->
             <div class="form-group">
                 <label>شكل نقاط الـ QR (Dots Style)</label>
                 <input type="hidden" id="qrDotType" value="square">
@@ -695,7 +732,6 @@
 
             <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
 
-            <!-- إطار الزوايا (Marker border) -->
             <div class="grid-2">
                 <div class="form-group">
                     <label>شكل إطار الزوايا (Marker border)</label>
@@ -712,7 +748,6 @@
                 </div>
             </div>
 
-            <!-- مركز الزوايا (Marker center) -->
             <div class="grid-2">
                 <div class="form-group">
                     <label>شكل مركز الزوايا (Marker center)</label>
@@ -748,14 +783,23 @@
             </div>
         </div>
     </div>
-
 </div>
 
-<!-- شريط الأزرار الثابت في أسفل الشاشة -->
 <div class="sticky-footer" id="stickyFooter">
-    <button class="btn btn-save" onclick="saveCustomer()">حفظ العميل</button>
-    <button class="btn btn-qr" onclick="generateQR()">توليد / تحديث QR</button>
-    <button class="btn btn-delete" onclick="deleteCustomer()">حذف العميل</button>
+    <button class="btn btn-save" onclick="saveCustomer()">
+        <lottie-player src="assets/Icons/save-client-icon.json" background="transparent" speed="1" loop autoplay></lottie-player>
+        <span>حفظ العميل</span>
+    </button>
+
+    <button class="btn btn-qr" onclick="generateQR()">
+        <lottie-player src="assets/Icons/generate-qr-icon.json" background="transparent" speed="1" loop autoplay></lottie-player>
+        <span>توليد QR</span>
+    </button>
+
+    <button class="btn btn-delete" onclick="deleteCustomer()">
+        <lottie-player src="assets/Icons/delete-client-icon.json" background="transparent" speed="1" loop autoplay></lottie-player>
+        <span>حذف العميل</span>
+    </button>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -773,7 +817,6 @@
         event.currentTarget.classList.add('active');
     }
 
-    /* دالة لتحديد الأزرار المرئية للـ QR */
     function selectOption(hiddenInputId, value, element) {
         document.getElementById(hiddenInputId).value = value;
         const parentGrid = element.parentElement;
@@ -1249,4 +1292,4 @@
 </script>
 
 </body>
-    </html>
+</html>
