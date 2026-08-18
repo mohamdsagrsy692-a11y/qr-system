@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول - لوحة التحكم</title>
     
-    <link rel="icon" type="image/png" href="images/icon.png">
-    <link rel="apple-touch-icon" href="images/icon.png">
+    <link rel="icon" type="image/png" href="assets/icon.png">
+    <link rel="apple-touch-icon" href="assets/icon.png">
 
     <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
-    <!-- مكتبة Lottie لتشغيل ملفات الأنيميشن JSON -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     
     <style>
@@ -55,25 +54,10 @@
             background-color: #e53e3e;
             color: white;
             border: none;
-            padding: 8px 14px;
+            padding: 6px 14px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* تنسيق حاوية أيقونات الـ Lottie */
-        .lottie-icon {
-            width: 20px;
-            height: 20px;
-            display: inline-block;
-        }
-
-        .btn-logout .lottie-icon {
-            width: 18px;
-            height: 18px;
         }
 
         .tabs-nav {
@@ -98,15 +82,9 @@
             transition: all 0.2s;
             text-align: center;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-        }
-
-        .tab-btn .lottie-icon {
-            width: 24px;
-            height: 24px;
+            gap: 8px;
         }
 
         .tab-btn.active {
@@ -141,14 +119,11 @@
             max-width: 200px;
             margin-top: 0;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-        }
-
-        .sticky-footer .btn .lottie-icon {
-            width: 18px;
-            height: 18px;
+            padding: 8px 12px;
+            height: auto;
         }
 
         .form-group {
@@ -330,7 +305,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('images/login-bg.jpg') no-repeat center center;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('assets/login-bg.jpg') no-repeat center center;
             background-size: cover;
             display: flex;
             justify-content: center;
@@ -508,12 +483,12 @@
         <div class="login-body">
             <div class="input-box">
                 <input type="text" id="adminUsername" placeholder="اسم المستخدم" onkeypress="handleKeyPress(event)">
-                <img src="images/user-icon.png" class="input-icon-img" alt="مستخدم">
+                <img src="assets/user-icon.png" class="input-icon-img" alt="مستخدم">
             </div>
             
             <div class="input-box">
                 <input type="password" id="adminPassword" placeholder="كلمة المرور" onkeypress="handleKeyPress(event)">
-                <img src="images/eye-closed.png" id="toggleEyeIcon" class="toggle-password-img" alt="إظهار/إخفاء" onclick="togglePasswordVisibility()">
+                <img src="assets/eye-closed.png" id="toggleEyeIcon" class="toggle-password-img" alt="إظهار/إخفاء" onclick="togglePasswordVisibility()">
             </div>
             
             <p class="error-msg" id="loginError">اسم المستخدم أو كلمة المرور غير صحيحة!</p>
@@ -535,29 +510,26 @@
 <div class="container" id="adminContainer">
     <div class="header-bar">
         <h2>إدارة العملاء والـ QR</h2>
-        <button class="btn-logout" onclick="logout()">
-            <span class="lottie-icon" id="lottieLogout"></span>
-            <span>تسجيل الخروج</span>
-        </button>
+        <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
     </div>
 
+    <!-- شريط التبويبات -->
     <div class="tabs-nav">
         <button class="tab-btn active" onclick="switchTab('tab-profile')">
-            <span class="lottie-icon" id="lottieProfile"></span>
-            <span>بيانات العميل</span>
+            <div id="clientDataIcon" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"></div>
+            1. بيانات العميل
         </button>
-
         <button class="tab-btn" onclick="switchTab('tab-contacts')">
-            <span class="lottie-icon" id="lottieContacts"></span>
-            <span>التواصل والروابط</span>
+            <div id="socialLinksIcon" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"></div>
+            2. التواصل والروابط
         </button>
-
         <button class="tab-btn" onclick="switchTab('tab-qr')">
-            <span class="lottie-icon" id="lottieQrNav"></span>
-            <span>تصميم QR</span>
+            <div id="qrDesignIcon" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"></div>
+            3. تصميم وتوليد الـ QR
         </button>
     </div>
 
+    <!-- التبويب الأول: بيانات العميل -->
     <div id="tab-profile" class="tab-content active">
         <div class="grid-2" style="margin-bottom: 15px;">
             <div class="form-group" style="margin-bottom:0;">
@@ -613,6 +585,7 @@
         </div>
     </div>
 
+    <!-- التبويب الثاني: التواصل والروابط -->
     <div id="tab-contacts" class="tab-content">
         <div class="grid-2">
             <div class="form-group"><label>رقم الهاتف / الاتصال</label><input type="text" id="phone" placeholder="01xxxxxxxxx"></div>
@@ -648,10 +621,11 @@
         </div>
         <div class="grid-2">
             <div class="form-group"><label>InstaPay</label><input type="text" id="instapay" placeholder="اسم الحساب / العنوان"></div>
-            <div class="form-group"><label>Cash</label><input type="text" id="vodafonecash" placeholder="رقم المحفظة"></div>
+            <div class="form-group"><label> Cash</label><input type="text" id="vodafonecash" placeholder="رقم المحفظة"></div>
         </div>
     </div>
 
+    <!-- التبويب الثالث: تصميم وتوليد الـ QR -->
     <div id="tab-qr" class="tab-content">
         <div class="qr-section" id="qrSection">
             <h3 style="font-size:18px; margin-bottom:5px;">معاينة الـ QR</h3>
@@ -723,6 +697,7 @@
                 </div>
             </div>
 
+            <!-- شكل نقاط الـ QR (أزرار ظاهرة مباشرة كـ QR.io) -->
             <div class="form-group">
                 <label>شكل نقاط الـ QR (Dots Style)</label>
                 <input type="hidden" id="qrDotType" value="square">
@@ -738,6 +713,7 @@
 
             <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
 
+            <!-- إطار الزوايا (Marker border) -->
             <div class="grid-2">
                 <div class="form-group">
                     <label>شكل إطار الزوايا (Marker border)</label>
@@ -754,6 +730,7 @@
                 </div>
             </div>
 
+            <!-- مركز الزوايا (Marker center) -->
             <div class="grid-2">
                 <div class="form-group">
                     <label>شكل مركز الزوايا (Marker center)</label>
@@ -789,22 +766,22 @@
             </div>
         </div>
     </div>
+
 </div>
 
+<!-- شريط الأزرار الثابت في أسفل الشاشة -->
 <div class="sticky-footer" id="stickyFooter">
     <button class="btn btn-save" onclick="saveCustomer()">
-        <span class="lottie-icon" id="lottieSave"></span>
-        <span>حفظ العميل</span>
+        <div id="saveIcon" style="width:40px;height:40px;margin:auto"></div>
+        حفظ العميل
     </button>
-
     <button class="btn btn-qr" onclick="generateQR()">
-        <span class="lottie-icon" id="lottieQrBtn"></span>
-        <span>توليد QR</span>
+        <div id="qrIcon" style="width:40px;height:40px;margin:auto"></div>
+        توليد QR
     </button>
-
     <button class="btn btn-delete" onclick="deleteCustomer()">
-        <span class="lottie-icon" id="lottieDelete"></span>
-        <span>حذف العميل</span>
+        <div id="deleteIcon" style="width:40px;height:40px;margin:auto"></div>
+        حذف العميل
     </button>
 </div>
 
@@ -815,65 +792,6 @@
     const ADMIN_USERNAME = "abdallah.haroun";
     const ADMIN_PASSWORD = "CODE010951";
 
-    // تهيئة وتشغيل ملفات الـ Lottie للأيقونات من مجلد images
-    document.addEventListener("DOMContentLoaded", function() {
-        lottie.loadAnimation({
-            container: document.getElementById('lottieLogout'),
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            path: 'images/logout.json'
-        });
-
-        lottie.loadAnimation({
-            container: document.getElementById('lottieProfile'),
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            path: 'images/profile.json'
-        });
-
-        lottie.loadAnimation({
-            container: document.getElementById('lottieContacts'),
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            path: 'images/contacts.json'
-        });
-
-        lottie.loadAnimation({
-            container: document.getElementById('lottieQrNav'),
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            path: 'images/qr.json'
-        });
-
-        lottie.loadAnimation({
-            container: document.getElementById('lottieSave'),
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            path: 'images/save.json'
-        });
-
-        lottie.loadAnimation({
-            container: document.getElementById('lottieQrBtn'),
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            path: 'images/qr-btn.json'
-        });
-
-        lottie.loadAnimation({
-            container: document.getElementById('lottieDelete'),
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            path: 'images/delete.json'
-        });
-    });
-
     function switchTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -882,6 +800,7 @@
         event.currentTarget.classList.add('active');
     }
 
+    /* دالة لتحديد الأزرار المرئية للـ QR */
     function selectOption(hiddenInputId, value, element) {
         document.getElementById(hiddenInputId).value = value;
         const parentGrid = element.parentElement;
@@ -896,10 +815,10 @@
         
         if (passwordInput.type === "password") {
             passwordInput.type = "text";
-            toggleIcon.src = "images/eye-open.png";
+            toggleIcon.src = "assets/eye-open.png";
         } else {
             passwordInput.type = "password";
-            toggleIcon.src = "images/eye-closed.png";
+            toggleIcon.src = "assets/eye-closed.png";
         }
     }
 
@@ -1354,6 +1273,56 @@
             exportQR.download({ name: code + "_" + selectedSize + "px", extension: selectedFormat });
         }
     }
+</script>
+
+<script>
+lottie.loadAnimation({
+    container: document.getElementById('saveIcon'),
+    renderer: 'svg',
+    loop: true,
+    autoplay: true,
+    path: 'images/save-client-icon.json'
+});
+
+lottie.loadAnimation({
+    container: document.getElementById('qrIcon'),
+    renderer: 'svg',
+    loop: true,
+    autoplay: true,
+    path: 'images/generate-qr-icon.json'
+});
+
+lottie.loadAnimation({
+    container: document.getElementById('deleteIcon'),
+    renderer: 'svg',
+    loop: true,
+    autoplay: true,
+    path: 'images/delete-client-icon.json'
+});
+
+lottie.loadAnimation({
+    container: document.getElementById('clientDataIcon'),
+    renderer: 'svg',
+    loop: true,
+    autoplay: true,
+    path: 'images/client-data-icon.json'
+});
+
+lottie.loadAnimation({
+    container: document.getElementById('socialLinksIcon'),
+    renderer: 'svg',
+    loop: true,
+    autoplay: true,
+    path: 'images/social-links-icon.json'
+});
+
+lottie.loadAnimation({
+    container: document.getElementById('qrDesignIcon'),
+    renderer: 'svg',
+    loop: true,
+    autoplay: true,
+    path: 'images/qr-design-icon.json'
+});
 </script>
 
 </body>
