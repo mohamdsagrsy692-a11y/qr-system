@@ -9,6 +9,8 @@
     <link rel="apple-touch-icon" href="assets/icon.png">
 
     <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <!-- مكتبة تشغيل الأيقونات المتحركة Lottie -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     
     <style>
         * {
@@ -239,10 +241,10 @@
         .btn-qr { background-color: #2d3748; color: #fff; }
         .btn-download { background-color: #111; color: #fff; margin-top: 10px; }
 
-        .btn-icon {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
+        /* حاوية الأيقونة المتحركة */
+        .lottie-icon {
+            width: 20px;
+            height: 20px;
             display: inline-block;
             vertical-align: middle;
         }
@@ -519,20 +521,20 @@
     <div class="header-bar">
         <h2>إدارة العملاء والـ QR</h2>
         <button class="btn-logout" onclick="logout()">
-            <svg class="btn-icon" viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>تسجيل الخروج
+            <span id="logout-icon" class="lottie-icon"></span> تسجيل الخروج
         </button>
     </div>
 
-    <!-- شريط التبويبات مع الأيقونات -->
+    <!-- شريط التبويبات مع الأيقونات المتحركة -->
     <div class="tabs-nav">
         <button class="tab-btn active" onclick="switchTab('tab-profile')">
-            <svg class="btn-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>1. بيانات العميل
+            <span id="client-data-icon" class="lottie-icon"></span> 1. بيانات العميل
         </button>
         <button class="tab-btn" onclick="switchTab('tab-contacts')">
-            <svg class="btn-icon" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>2. التواصل والروابط
+            <span id="social-links-icon" class="lottie-icon"></span> 2. التواصل والروابط
         </button>
         <button class="tab-btn" onclick="switchTab('tab-qr')">
-            <svg class="btn-icon" viewBox="0 0 24 24"><path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zm13-2h-2v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>3. تصميم وتوليد الـ QR
+            <span id="qr-design-icon" class="lottie-icon"></span> 3. تصميم وتوليد الـ QR
         </button>
     </div>
 
@@ -664,7 +666,7 @@
                     </div>
                 </div>
                 <button class="btn btn-download" onclick="downloadQR()">
-                    <svg class="btn-icon" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>تحميل ملف الـ QR
+                    <span id="download-qr-icon" class="lottie-icon"></span> تحميل ملف الـ QR
                 </button>
             </div>
         </div>
@@ -775,16 +777,16 @@
 
 </div>
 
-<!-- شريط الأزرار الثابت في أسفل الشاشة مع الأيقونات -->
+<!-- شريط الأزرار الثابت في أسفل الشاشة مع الأيقونات المتحركة -->
 <div class="sticky-footer" id="stickyFooter">
     <button class="btn btn-save" onclick="saveCustomer()">
-        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>حفظ العميل
+        <span id="save-client-icon" class="lottie-icon"></span> حفظ العميل
     </button>
     <button class="btn btn-qr" onclick="generateQR()">
-        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zm13-2h-2v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>توليد / تحديث QR
+        <span id="generate-qr-icon" class="lottie-icon"></span> توليد / تحديث QR
     </button>
     <button class="btn btn-delete" onclick="deleteCustomer()">
-        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>حذف العميل
+        <span id="delete-client-icon" class="lottie-icon"></span> حذف العميل
     </button>
 </div>
 
@@ -794,6 +796,33 @@
 <script>
     const ADMIN_USERNAME = "abdallah.haroun";
     const ADMIN_PASSWORD = "CODE010951";
+
+    // تشغيل الأيقونات المتحركة تلقائياً عبر ملفات JSON في مجلد Icons
+    function loadLottieIcons() {
+        const icons = {
+            "logout-icon": "assets/Icons/logout-icon.json",
+            "client-data-icon": "assets/Icons/client-data-icon.json",
+            "social-links-icon": "assets/Icons/social-links-icon.json",
+            "qr-design-icon": "assets/Icons/qr-design-icon.json",
+            "download-qr-icon": "assets/Icons/download-qr-icon.json",
+            "save-client-icon": "assets/Icons/save-client-icon.json",
+            "generate-qr-icon": "assets/Icons/generate-qr-icon.json",
+            "delete-client-icon": "assets/Icons/delete-client-icon.json"
+        };
+
+        for (const [id, path] of Object.entries(icons)) {
+            const container = document.getElementById(id);
+            if (container) {
+                lottie.loadAnimation({
+                    container: container,
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    path: path
+                });
+            }
+        }
+    }
 
     function switchTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -813,12 +842,7 @@
 
     function togglePasswordVisibility() {
         const passwordInput = document.getElementById("adminPassword");
-        
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text";
-        } else {
-            passwordInput.type = "password";
-        }
+        passwordInput.type = passwordInput.type === "password" ? "text" : "password";
     }
 
     function showCustomAlert(message, callback) {
@@ -859,6 +883,7 @@
     }
 
     window.onload = function() {
+        loadLottieIcons();
         if (sessionStorage.getItem("adminLoggedIn") === "true") {
             document.getElementById("loginModal").style.display = "none";
             document.getElementById("adminContainer").style.display = "block";
