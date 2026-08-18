@@ -9,6 +9,8 @@
     <link rel="apple-touch-icon" href="assets/icon.png">
 
     <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <!-- مكتبة تشغيل أيقونات الـ JSON المتحركة -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     
     <style>
         * {
@@ -57,6 +59,9 @@
             border-radius: 6px;
             cursor: pointer;
             font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .tabs-nav {
@@ -80,6 +85,10 @@
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
         }
 
         .tab-btn.active {
@@ -148,7 +157,6 @@
             border-color: #3b82f6;
         }
 
-        /* شبكة الأزرار المرئية بدلاً من القوائم المنسدلة */
         .options-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
@@ -180,7 +188,6 @@
             box-shadow: 0 0 0 1px #3b82f6;
         }
 
-        /* رسومات مصغرة داخل الأزرار توضح الشكل */
         .opt-preview-square { width: 22px; height: 22px; background: #2d3748; border-radius: 2px; }
         .opt-preview-dots { width: 22px; height: 22px; background: radial-gradient(circle, #2d3748 40%, transparent 45%); }
         .opt-preview-rounded { width: 22px; height: 22px; background: #2d3748; border-radius: 6px; }
@@ -219,6 +226,10 @@
             cursor: pointer;
             margin-top: 10px;
             transition: opacity 0.2s;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn:hover {
@@ -229,6 +240,12 @@
         .btn-delete { background-color: #c53030; color: #fff; }
         .btn-qr { background-color: #2d3748; color: #fff; }
         .btn-download { background-color: #111; color: #fff; margin-top: 10px; }
+
+        .btn-icon {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+        }
 
         .qr-section {
             margin-bottom: 20px;
@@ -474,13 +491,11 @@
         <div class="login-body">
             <div class="input-box">
                 <input type="text" id="adminUsername" placeholder="اسم المستخدم" onkeypress="handleKeyPress(event)">
-                <!-- تم تحديث مسار أيقونة اسم المستخدم -->
                 <img src="assets/Icons/client-data-icon.json" class="input-icon-img" alt="مستخدم">
             </div>
             
             <div class="input-box">
                 <input type="password" id="adminPassword" placeholder="كلمة المرور" onkeypress="handleKeyPress(event)">
-                <!-- تم تحديث مسار أيقونة إخفاء كلمة المرور -->
                 <img src="assets/Icons/warning-delete-icon.png" id="toggleEyeIcon" class="toggle-password-img" alt="إظهار/إخفاء" onclick="togglePasswordVisibility()">
             </div>
             
@@ -503,15 +518,22 @@
 <div class="container" id="adminContainer">
     <div class="header-bar">
         <h2>إدارة العملاء والـ QR</h2>
-        <!-- تم تحديث مسار أيقونة تسجيل الخروج -->
-        <button class="btn-logout" onclick="logout()"><img src="assets/Icons/logout-icon.json" style="width:16px;vertical-align:middle;margin-left:4px;" alt="">تسجيل الخروج</button>
+        <button class="btn-logout" onclick="logout()">
+            <img src="assets/Icons/warning-delete-icon.png" class="btn-icon" alt="" style="filter: invert(1);">تسجيل الخروج
+        </button>
     </div>
 
-    <!-- شريط التبويبات -->
+    <!-- شريط التبويبات مع الأيقونات -->
     <div class="tabs-nav">
-        <button class="tab-btn active" onclick="switchTab('tab-profile')">1. بيانات العميل</button>
-        <button class="tab-btn" onclick="switchTab('tab-contacts')">2. التواصل والروابط</button>
-        <button class="tab-btn" onclick="switchTab('tab-qr')">3. تصميم وتوليد الـ QR</button>
+        <button class="tab-btn active" onclick="switchTab('tab-profile')">
+            <img src="assets/Icons/success-check-icon.png" class="btn-icon" alt="">1. بيانات العميل
+        </button>
+        <button class="tab-btn" onclick="switchTab('tab-contacts')">
+            <img src="assets/Icons/success-check-icon.png" class="btn-icon" alt="">2. التواصل والروابط
+        </button>
+        <button class="tab-btn" onclick="switchTab('tab-qr')">
+            <img src="assets/Icons/success-check-icon.png" class="btn-icon" alt="">3. تصميم وتوليد الـ QR
+        </button>
     </div>
 
     <!-- التبويب الأول: بيانات العميل -->
@@ -606,7 +628,7 @@
         </div>
         <div class="grid-2">
             <div class="form-group"><label>InstaPay</label><input type="text" id="instapay" placeholder="اسم الحساب / العنوان"></div>
-            <div class="form-group"><label> Cash</label><input type="text" id="vodafonecash" placeholder="رقم المحفظة"></div>
+            <div class="form-group"><label>فودافون كاش</label><input type="text" id="vodafonecash" placeholder="رقم المحفظة"></div>
         </div>
     </div>
 
@@ -641,8 +663,9 @@
                         </select>
                     </div>
                 </div>
-                <!-- تم تحديث دالة التحميل والأيقونة المساعدة -->
-                <button class="btn btn-download" onclick="downloadQR()"><img src="assets/Icons/download-qr-icon.json" style="width:16px;vertical-align:middle;margin-left:4px;" alt="">تحميل ملف الـ QR</button>
+                <button class="btn btn-download" onclick="downloadQR()">
+                    <img src="assets/Icons/success-check-icon.png" class="btn-icon" alt="">تحميل ملف الـ QR
+                </button>
             </div>
         </div>
 
@@ -683,7 +706,6 @@
                 </div>
             </div>
 
-            <!-- شكل نقاط الـ QR (أزرار ظاهرة مباشرة كـ QR.io) -->
             <div class="form-group">
                 <label>شكل نقاط الـ QR (Dots Style)</label>
                 <input type="hidden" id="qrDotType" value="square">
@@ -699,7 +721,6 @@
 
             <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
 
-            <!-- إطار الزوايا (Marker border) -->
             <div class="grid-2">
                 <div class="form-group">
                     <label>شكل إطار الزوايا (Marker border)</label>
@@ -716,7 +737,6 @@
                 </div>
             </div>
 
-            <!-- مركز الزوايا (Marker center) -->
             <div class="grid-2">
                 <div class="form-group">
                     <label>شكل مركز الزوايا (Marker center)</label>
@@ -755,11 +775,18 @@
 
 </div>
 
-<!-- شريط الأزرار الثابت في أسفل الشاشة -->
+<!-- شريط الأزرار الثابت في أسفل الشاشة مع الأيقونات المرتبطة -->
 <div class="sticky-footer" id="stickyFooter">
-    <button class="btn btn-save" onclick="saveCustomer()"><img src="assets/Icons/save-client-icon.json" style="width:16px;vertical-align:middle;margin-left:4px;" alt="">حفظ العميل</button>
-    <button class="btn btn-qr" onclick="generateQR()"><img src="assets/Icons/generate-qr-icon.json" style="width:16px;vertical-align:middle;margin-left:4px;" alt="">توليد / تحديث QR</button>
-    <button class="btn btn-delete" onclick="deleteCustomer()"><img src="assets/Icons/delete-client-icon.json" style="width:16px;vertical-align:middle;margin-left:4px;" alt="">حذف العميل</button>
+    <button class="btn btn-save" onclick="saveCustomer()">
+        <!-- استخدام ملف الـ GIF الحركي الخاص بالحفظ -->
+        <img src="assets/Icons/save-client-icon.gif" class="btn-icon" alt="">حفظ العميل
+    </button>
+    <button class="btn btn-qr" onclick="generateQR()">
+        <img src="assets/Icons/success-check-icon.png" class="btn-icon" alt="">توليد / تحديث QR
+    </button>
+    <button class="btn btn-delete" onclick="deleteCustomer()">
+        <img src="assets/Icons/warning-delete-icon.png" class="btn-icon" alt="">حذف العميل
+    </button>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -777,7 +804,6 @@
         event.currentTarget.classList.add('active');
     }
 
-    /* دالة لتحديد الأزرار المرئية للـ QR */
     function selectOption(hiddenInputId, value, element) {
         document.getElementById(hiddenInputId).value = value;
         const parentGrid = element.parentElement;
