@@ -1,3 +1,4 @@
 self.addEventListener('fetch', (event) => {
-  event.respondWith(fetch(event.request));
+    // هذا الكود يجعل التطبيق يعمل حتى لو المتصفح في وضع الأوفلاين
+    event.respondWith(fetch(event.request));
 });
