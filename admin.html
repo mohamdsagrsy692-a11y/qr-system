@@ -868,6 +868,28 @@
             loadCustomerList();
             generateNextCustomerCode();
         }
+        
+        // ربط أيقونات Lottie بالملف الموحد (lottieIcons أو الكائنات المعرفة في icons.js)
+        if (typeof lottieIcons !== 'undefined') {
+            if (document.getElementById('clientDataIcon') && lottieIcons.contacts) {
+                lottie.loadAnimation({ container: document.getElementById('clientDataIcon'), renderer: 'svg', loop: true, autoplay: true, animationData: lottieIcons.contacts });
+            }
+            if (document.getElementById('socialLinksIcon') && lottieIcons.share) {
+                lottie.loadAnimation({ container: document.getElementById('socialLinksIcon'), renderer: 'svg', loop: true, autoplay: true, animationData: lottieIcons.share });
+            }
+            if (document.getElementById('qrDesignIcon') && lottieIcons.refresh) {
+                lottie.loadAnimation({ container: document.getElementById('qrDesignIcon'), renderer: 'svg', loop: true, autoplay: true, animationData: lottieIcons.refresh });
+            }
+            if (document.getElementById('saveIcon') && lottieIcons.download) {
+                lottie.loadAnimation({ container: document.getElementById('saveIcon'), renderer: 'svg', loop: true, autoplay: true, animationData: lottieIcons.download });
+            }
+            if (document.getElementById('qrIcon') && lottieIcons.refresh) {
+                lottie.loadAnimation({ container: document.getElementById('qrIcon'), renderer: 'svg', loop: true, autoplay: true, animationData: lottieIcons.refresh });
+            }
+            if (document.getElementById('deleteIcon') && lottieIcons.trash) {
+                lottie.loadAnimation({ container: document.getElementById('deleteIcon'), renderer: 'svg', loop: true, autoplay: true, animationData: lottieIcons.trash });
+            }
+        }
     };
 
     function checkLogin() {
