@@ -30,6 +30,28 @@
             padding-bottom: 90px;
         }
 
+        /* PWA Install Button Style */
+        #installButton {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10001;
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: opacity 0.2s;
+        }
+        #installButton:hover {
+            opacity: 0.9;
+        }
+
         .container {
             max-width: 750px;
             margin: 0 auto;
@@ -468,6 +490,9 @@
 </head>
 <body>
 
+<!-- PWA Install Button -->
+<button id="installButton">📥 تثبيت التطبيق</button>
+
 <div class="login-overlay" id="loginModal">
     <div class="login-card">
         <div class="login-header">
@@ -769,6 +794,30 @@
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
+        });
+    }
+
+    // منطق زر التثبيت اليدوي (PWA Install Prompt)
+    let deferredPrompt;
+    const installBtn = document.getElementById('installButton');
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (installBtn) installBtn.style.display = 'block';
+    });
+
+    if (installBtn) {
+        installBtn.addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    }
+                    deferredPrompt = null;
+                    installBtn.style.display = 'none';
+                });
+            }
         });
     }
 
@@ -1150,7 +1199,6 @@
         const qrContainer = document.getElementById("qrContainer");
         qrContainer.innerHTML = "";
 
-        // تم التعديل هنا ليقرأ admin.html
         const targetURL = window.location.origin + window.location.pathname.replace("admin.html", "qr.html") + "?id=" + encodeURIComponent(code);
 
         const dotColor = SafeGetValue("qrDotColor") || "#000000";
@@ -1222,7 +1270,6 @@
         const selectedSize = parseInt(SafeGetValue("downloadSize")) || 1000;
 
         if (qrCodeInstance) {
-            // تم التعديل هنا أيضاً ليقرأ admin.html
             const targetURL = window.location.origin + window.location.pathname.replace("admin.html", "qr.html") + "?id=" + encodeURIComponent(code);
             const dotColor = SafeGetValue("qrDotColor") || "#000000";
             const bgColor = SafeGetValue("qrBgColor") || "#ffffff";
@@ -1234,31 +1281,4 @@
             const cornerDotType = SafeGetValue("qrCornerDotType") || "square";
             const cornerDotColor = SafeGetValue("qrCornerDotColor") || dotColor;
 
-            const embedLogo = SafeGetValue("qrEmbedLogo");
-            const finalLogo = SafeGetValue("qrCustomLogo") || SafeLogoInput();
-
-            const exportConfig = {
-                width: selectedSize,
-                height: selectedSize,
-                type: selectedFormat === "svg" ? "svg" : "canvas",
-                data: targetURL,
-                dotsOptions: { color: dotColor, type: dotType },
-                backgroundOptions: { color: bgColor },
-                cornersSquareOptions: { type: cornerType, color: cornerColor },
-                cornersDotOptions: { type: cornerDotType, color: cornerDotColor },
-                imageOptions: { crossOrigin: "anonymous", margin: selectedSize * 0.015, imageSize: 0.26 }
-            };
-
-            const actualLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
-            if (embedLogo === "yes" && actualLogo) {
-                exportConfig.image = actualLogo;
-            }
-
-            const exportQR = new QRCodeStyling(exportConfig);
-            exportQR.download({ name: code + "_" + selectedSize + "px", extension: selectedFormat });
-        }
-    }
-</script>
-
-</body>
-</html>
+    
