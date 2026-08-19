@@ -5,8 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول - لوحة التحكم</title>
     
-    <link rel="icon" type="image/png" href="assets/icon.png">
-    <link rel="apple-touch-icon" href="assets/icon.png">
+    <!-- إعدادات تطبيق الـ PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e293b">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <link rel="icon" type="image/png" href="assets/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
 
     <!-- مكتبة أيقونات FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -679,7 +686,7 @@
                 </div>
             </div>
 
-            <!-- شكل نقاط الـ QR (أزرار ظاهرة مباشرة كـ QR.io) -->
+            <!-- شكل نقاط الـ QR -->
             <div class="form-group">
                 <label><i class="fa-solid fa-shapes"></i> شكل نقاط الـ QR (Dots Style)</label>
                 <input type="hidden" id="qrDotType" value="square">
@@ -695,7 +702,7 @@
 
             <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
 
-            <!-- إطار الزوايا (Marker border) -->
+            <!-- إطار الزوايا -->
             <div class="grid-2">
                 <div class="form-group">
                     <label><i class="fa-solid fa-border-all"></i> شكل إطار الزوايا (Marker border)</label>
@@ -712,7 +719,7 @@
                 </div>
             </div>
 
-            <!-- مركز الزوايا (Marker center) -->
+            <!-- مركز الزوايا -->
             <div class="grid-2">
                 <div class="form-group">
                     <label><i class="fa-solid fa-bullseye"></i> شكل مركز الزوايا (Marker center)</label>
