@@ -8,8 +8,9 @@
     <link rel="icon" type="image/png" href="assets/icon.png">
     <link rel="apple-touch-icon" href="assets/icon.png">
 
+    <!-- مكتبة أيقونات FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     
     <style>
         * {
@@ -81,10 +82,6 @@
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
         }
 
         .tab-btn.active {
@@ -118,12 +115,6 @@
         .sticky-footer .btn {
             max-width: 200px;
             margin-top: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 8px 12px;
-            height: auto;
         }
 
         .form-group {
@@ -509,40 +500,31 @@
 
 <div class="container" id="adminContainer">
     <div class="header-bar">
-        <h2>إدارة العملاء والـ QR</h2>
-        <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
+        <h2><i class="fa-solid fa-qrcode ml-2"></i> إدارة العملاء والـ QR</h2>
+        <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج</button>
     </div>
 
     <!-- شريط التبويبات -->
     <div class="tabs-nav">
-        <button class="tab-btn active" onclick="switchTab('tab-profile')">
-            <div id="clientDataIcon" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"></div>
-            1. بيانات العميل
-        </button>
-        <button class="tab-btn" onclick="switchTab('tab-contacts')">
-            <div id="socialLinksIcon" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"></div>
-            2. التواصل والروابط
-        </button>
-        <button class="tab-btn" onclick="switchTab('tab-qr')">
-            <div id="qrDesignIcon" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"></div>
-            3. تصميم وتوليد الـ QR
-        </button>
+        <button class="tab-btn active" onclick="switchTab('tab-profile')"><i class="fa-solid fa-user-pen"></i> 1. بيانات العميل</button>
+        <button class="tab-btn" onclick="switchTab('tab-contacts')"><i class="fa-solid fa-address-book"></i> 2. التواصل والروابط</button>
+        <button class="tab-btn" onclick="switchTab('tab-qr')"><i class="fa-solid fa-wand-magic-sparkles"></i> 3. تصميم وتوليد الـ QR</button>
     </div>
 
     <!-- التبويب الأول: بيانات العميل -->
     <div id="tab-profile" class="tab-content active">
         <div class="grid-2" style="margin-bottom: 15px;">
             <div class="form-group" style="margin-bottom:0;">
-                <label>اختيار عميل سابق</label>
+                <label><i class="fa-solid fa-users"></i> اختيار عميل سابق</label>
                 <select id="customerSelect" onchange="loadSelectedCustomer()">
                     <option value="">اختر العميل</option>
                 </select>
             </div>
             <div class="form-group" style="margin-bottom:0;">
-                <label>أو بحث بكود العميل</label>
+                <label><i class="fa-solid fa-magnifying-glass"></i> أو بحث بكود العميل</label>
                 <div style="display: flex; gap: 5px;">
                     <input type="text" id="searchCode" placeholder="أدخل الكود...">
-                    <button class="btn btn-save" style="margin-top:0; width: auto; padding: 0 15px;" onclick="searchCustomerByCode()">بحث</button>
+                    <button class="btn btn-save" style="margin-top:0; width: auto; padding: 0 15px;" onclick="searchCustomerByCode()"><i class="fa-solid fa-search"></i> بحث</button>
                 </div>
             </div>
         </div>
@@ -550,37 +532,37 @@
         <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
 
         <div class="form-group">
-            <label>كود العميل (فريد وغير قابل للتكرار)</label>
+            <label><i class="fa-solid fa-fingerprint"></i> كود العميل (فريد وغير قابل للتكرار)</label>
             <input type="text" id="code" readonly style="background-color: #edf2f7; font-weight: bold; color: #2d3748;">
         </div>
 
         <div class="form-group">
-            <label>رابط تحويل مباشر (اختياري)</label>
+            <label><i class="fa-solid fa-link"></i> رابط تحويل مباشر (اختياري)</label>
             <input type="text" id="redirectUrl" placeholder="https://g.page/r/... (اتركه فارغاً لفتح الكارت الشخصي)">
         </div>
 
         <div class="form-group">
-            <label>اسم النشاط</label>
+            <label><i class="fa-solid fa-building"></i> اسم النشاط</label>
             <input type="text" id="name" placeholder="اسم العميل أو الشركة">
         </div>
 
         <div class="form-group">
-            <label>وصف النشاط</label>
+            <label><i class="fa-solid fa-align-right"></i> وصف النشاط</label>
             <textarea id="description" rows="2" placeholder="نبذة مختصرة عن الخدمات"></textarea>
         </div>
 
         <div class="form-group">
-            <label>صورة اللوجو الأساسية للنشاط</label>
+            <label><i class="fa-solid fa-image"></i> صورة اللوجو الأساسية للنشاط</label>
             <div class="file-input-wrapper">
                 <input type="text" id="logo" placeholder="رابط الصورة أو اختر من المعرض" onchange="updateQRLive()">
-                <label class="btn-upload" for="logoFileInput">اختر صورة</label>
+                <label class="btn-upload" for="logoFileInput"><i class="fa-solid fa-upload"></i> اختر صورة</label>
                 <input type="file" id="logoFileInput" accept="image/*" onchange="handleMainLogoUpload(this)">
             </div>
             <img id="logoPreview" class="preview-logo" alt="معاينة اللوجو">
         </div>
 
         <div class="form-group">
-            <label>الحقوق (الفوتر)</label>
+            <label><i class="fa-solid fa-copyright"></i> الحقوق (الفوتر)</label>
             <input type="text" id="footer" placeholder="اتركها فارغة لظهور: جميع الحقوق محفوظة ✓">
         </div>
     </div>
@@ -588,47 +570,47 @@
     <!-- التبويب الثاني: التواصل والروابط -->
     <div id="tab-contacts" class="tab-content">
         <div class="grid-2">
-            <div class="form-group"><label>رقم الهاتف / الاتصال</label><input type="text" id="phone" placeholder="01xxxxxxxxx"></div>
-            <div class="form-group"><label>واتساب (WhatsApp)</label><input type="text" id="whatsapp" placeholder="رقم الواتساب"></div>
+            <div class="form-group"><label><i class="fa-solid fa-phone"></i> رقم الهاتف / الاتصال</label><input type="text" id="phone" placeholder="01xxxxxxxxx"></div>
+            <div class="form-group"><label><i class="fa-brands fa-whatsapp"></i> واتساب (WhatsApp)</label><input type="text" id="whatsapp" placeholder="رقم الواتساب"></div>
         </div>
         <div class="grid-2">
-            <div class="form-group"><label>تليجرام (Telegram)</label><input type="text" id="telegram" placeholder="معرف تليجرام"></div>
-            <div class="form-group"><label>مسنجر (Messenger)</label><input type="text" id="messenger" placeholder="رابط المسنجر"></div>
+            <div class="form-group"><label><i class="fa-brands fa-telegram"></i> تليجرام (Telegram)</label><input type="text" id="telegram" placeholder="معرف تليجرام"></div>
+            <div class="form-group"><label><i class="fa-brands fa-facebook-messenger"></i> مسنجر (Messenger)</label><input type="text" id="messenger" placeholder="رابط المسنجر"></div>
         </div>
         <div class="grid-2">
-            <div class="form-group"><label>فيسبوك (Facebook)</label><input type="text" id="facebook" placeholder="رابط صفحة الفيسبوك"></div>
-            <div class="form-group"><label>انستجرام (Instagram)</label><input type="text" id="instagram" placeholder="رابط الانستجرام"></div>
+            <div class="form-group"><label><i class="fa-brands fa-facebook"></i> فيسبوك (Facebook)</label><input type="text" id="facebook" placeholder="رابط صفحة الفيسبوك"></div>
+            <div class="form-group"><label><i class="fa-brands fa-instagram"></i> انستجرام (Instagram)</label><input type="text" id="instagram" placeholder="رابط الانستجرام"></div>
         </div>
         <div class="grid-2">
-            <div class="form-group"><label>تيك توك (TikTok)</label><input type="text" id="tiktok" placeholder="رابط التيك توك"></div>
-            <div class="form-group"><label>سناب شات (Snapchat)</label><input type="text" id="snapchat" placeholder="حساب السناب شات"></div>
+            <div class="form-group"><label><i class="fa-brands fa-tiktok"></i> تيك توك (TikTok)</label><input type="text" id="tiktok" placeholder="رابط التيك توك"></div>
+            <div class="form-group"><label><i class="fa-brands fa-snapchat"></i> سناب شات (Snapchat)</label><input type="text" id="snapchat" placeholder="حساب السناب شات"></div>
         </div>
         <div class="grid-2">
-            <div class="form-group"><label>بنترست (Pinterest)</label><input type="text" id="pinterest" placeholder="رابط بنترست"></div>
-            <div class="form-group"><label>يوتيوب (YouTube)</label><input type="text" id="youtube" placeholder="رابط القناة"></div>
+            <div class="form-group"><label><i class="fa-brands fa-pinterest"></i> بنترست (Pinterest)</label><input type="text" id="pinterest" placeholder="رابط بنترست"></div>
+            <div class="form-group"><label><i class="fa-brands fa-youtube"></i> يوتيوب (YouTube)</label><input type="text" id="youtube" placeholder="رابط القناة"></div>
         </div>
         <div class="grid-2">
-            <div class="form-group"><label>لينكد إن (LinkedIn)</label><input type="text" id="linkedin" placeholder="رابط لينكد إن"></div>
-            <div class="form-group"><label>الموقع الإلكتروني (Website)</label><input type="text" id="website" placeholder="https://..."></div>
+            <div class="form-group"><label><i class="fa-brands fa-linkedin"></i> لينكد إن (LinkedIn)</label><input type="text" id="linkedin" placeholder="رابط لينكد إن"></div>
+            <div class="form-group"><label><i class="fa-solid fa-globe"></i> الموقع الإلكتروني (Website)</label><input type="text" id="website" placeholder="https://..."></div>
         </div>
         <div class="grid-2">
-            <div class="form-group"><label>الكتالوج (Catalog)</label><input type="text" id="catalog" placeholder="رابط الكتالوج"></div>
-            <div class="form-group"><label>البريد الإلكتروني (Gmail)</label><input type="text" id="gmail" placeholder="name@gmail.com"></div>
+            <div class="form-group"><label><i class="fa-solid fa-book-open"></i> الكتالوج (Catalog)</label><input type="text" id="catalog" placeholder="رابط الكتالوج"></div>
+            <div class="form-group"><label><i class="fa-solid fa-envelope"></i> البريد الإلكتروني (Gmail)</label><input type="text" id="gmail" placeholder="name@gmail.com"></div>
         </div>
         <div class="grid-2">
-            <div class="form-group"><label>الموقع الجغرافي (Location)</label><input type="text" id="location" placeholder="رابط خرائط جوجل"></div>
-            <div class="form-group"><label>المراجعات (Review)</label><input type="text" id="review" placeholder="رابط تقييم جوجل"></div>
+            <div class="form-group"><label><i class="fa-solid fa-location-dot"></i> الموقع الجغرافي (Location)</label><input type="text" id="location" placeholder="رابط خرائط جوجل"></div>
+            <div class="form-group"><label><i class="fa-solid fa-star"></i> المراجعات (Review)</label><input type="text" id="review" placeholder="رابط تقييم جوجل"></div>
         </div>
         <div class="grid-2">
-            <div class="form-group"><label>InstaPay</label><input type="text" id="instapay" placeholder="اسم الحساب / العنوان"></div>
-            <div class="form-group"><label> Cash</label><input type="text" id="vodafonecash" placeholder="رقم المحفظة"></div>
+            <div class="form-group"><label><i class="fa-solid fa-wallet"></i> InstaPay</label><input type="text" id="instapay" placeholder="اسم الحساب / العنوان"></div>
+            <div class="form-group"><label><i class="fa-solid fa-money-bill-transfer"></i> Cash</label><input type="text" id="vodafonecash" placeholder="رقم المحفظة"></div>
         </div>
     </div>
 
     <!-- التبويب الثالث: تصميم وتوليد الـ QR -->
     <div id="tab-qr" class="tab-content">
         <div class="qr-section" id="qrSection">
-            <h3 style="font-size:18px; margin-bottom:5px;">معاينة الـ QR</h3>
+            <h3 style="font-size:18px; margin-bottom:5px;"><i class="fa-solid fa-eye"></i> معاينة الـ QR</h3>
             
             <div id="qrFrameWrapper" class="qr-frame-wrapper" style="border: 3px solid #000000; border-radius: 10px;">
                 <div id="qrContainer"></div>
@@ -638,7 +620,7 @@
             <div class="download-box">
                 <div class="grid-2">
                     <div class="form-group" style="margin-bottom:5px;">
-                        <label style="text-align:right;">صيغة الحفظ</label>
+                        <label style="text-align:right;"><i class="fa-solid fa-file-arrow-down"></i> صيغة الحفظ</label>
                         <select id="downloadFormat">
                             <option value="png" selected>PNG (صورة عالية الوضوح)</option>
                             <option value="jpeg">JPEG / JPG</option>
@@ -647,7 +629,7 @@
                         </select>
                     </div>
                     <div class="form-group" style="margin-bottom:5px;">
-                        <label style="text-align:right;">أبعاد المقاس (Size)</label>
+                        <label style="text-align:right;"><i class="fa-solid fa-expand"></i> أبعاد المقاس (Size)</label>
                         <select id="downloadSize">
                             <option value="300">300x300 px</option>
                             <option value="1000" selected>1000x1000 px (قياسي للطباعة)</option>
@@ -656,16 +638,16 @@
                         </select>
                     </div>
                 </div>
-                <button class="btn btn-download" onclick="downloadQR()">تحميل ملف الـ QR</button>
+                <button class="btn btn-download" onclick="downloadQR()"><i class="fa-solid fa-download"></i> تحميل ملف الـ QR</button>
             </div>
         </div>
 
         <div class="qr-custom-box">
-            <h3 style="font-size:16px; text-align:right; margin-bottom:12px;">🎨 إعدادات التخصيص والمظهر المتقدمة</h3>
+            <h3 style="font-size:16px; text-align:right; margin-bottom:12px;"><i class="fa-solid fa-palette"></i> إعدادات التخصيص والمظهر المتقدمة</h3>
             
             <div class="grid-2">
                 <div class="form-group">
-                    <label>شكل الإطار الخارجي (Frame)</label>
+                    <label><i class="fa-regular fa-square"></i> شكل الإطار الخارجي (Frame)</label>
                     <select id="qrFrameStyle" onchange="updateQRLive()">
                         <option value="none" selected>بدون إطار (None)</option>
                         <option value="square">إطار مربع بزوايا حادة</option>
@@ -674,13 +656,13 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>لون الإطار والنص</label>
+                    <label><i class="fa-solid fa-droplet"></i> لون الإطار والنص</label>
                     <input type="color" id="qrFrameColor" value="#000000" oninput="updateQRLive()">
                 </div>
             </div>
 
             <div class="form-group">
-                <label>نص العبارة داخل الإطار</label>
+                <label><i class="fa-solid fa-font"></i> نص العبارة داخل الإطار</label>
                 <input type="text" id="qrFramePhrase" value="SCAN ME" placeholder="مثال: SCAN ME" oninput="updateQRLive()">
             </div>
 
@@ -688,18 +670,18 @@
 
             <div class="grid-2">
                 <div class="form-group">
-                    <label>لون نقاط الـ QR</label>
+                    <label><i class="fa-solid fa-paint-brush"></i> لون نقاط الـ QR</label>
                     <input type="color" id="qrDotColor" value="#000000" oninput="updateQRLive()">
                 </div>
                 <div class="form-group">
-                    <label>لون خلفية الـ QR</label>
+                    <label><i class="fa-solid fa-fill-drip"></i> لون خلفية الـ QR</label>
                     <input type="color" id="qrBgColor" value="#ffffff" oninput="updateQRLive()">
                 </div>
             </div>
 
             <!-- شكل نقاط الـ QR (أزرار ظاهرة مباشرة كـ QR.io) -->
             <div class="form-group">
-                <label>شكل نقاط الـ QR (Dots Style)</label>
+                <label><i class="fa-solid fa-shapes"></i> شكل نقاط الـ QR (Dots Style)</label>
                 <input type="hidden" id="qrDotType" value="square">
                 <div class="options-grid">
                     <div class="option-box active" onclick="selectOption('qrDotType', 'square', this)" title="مربعات أساسية"><div class="opt-preview-square"></div></div>
@@ -716,7 +698,7 @@
             <!-- إطار الزوايا (Marker border) -->
             <div class="grid-2">
                 <div class="form-group">
-                    <label>شكل إطار الزوايا (Marker border)</label>
+                    <label><i class="fa-solid fa-border-all"></i> شكل إطار الزوايا (Marker border)</label>
                     <input type="hidden" id="qrCornerType" value="square">
                     <div class="options-grid">
                         <div class="option-box active" onclick="selectOption('qrCornerType', 'square', this)" title="مربع"><div class="opt-preview-square"></div></div>
@@ -725,7 +707,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>لون إطار الزوايا</label>
+                    <label><i class="fa-solid fa-palette"></i> لون إطار الزوايا</label>
                     <input type="color" id="qrCornerColor" value="#000000" oninput="updateQRLive()">
                 </div>
             </div>
@@ -733,7 +715,7 @@
             <!-- مركز الزوايا (Marker center) -->
             <div class="grid-2">
                 <div class="form-group">
-                    <label>شكل مركز الزوايا (Marker center)</label>
+                    <label><i class="fa-solid fa-bullseye"></i> شكل مركز الزوايا (Marker center)</label>
                     <input type="hidden" id="qrCornerDotType" value="square">
                     <div class="options-grid">
                         <div class="option-box active" onclick="selectOption('qrCornerDotType', 'square', this)" title="مربع"><div class="opt-preview-square"></div></div>
@@ -741,7 +723,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>لون مركز الزوايا</label>
+                    <label><i class="fa-solid fa-palette"></i> لون مركز الزوايا</label>
                     <input type="color" id="qrCornerDotColor" value="#000000" oninput="updateQRLive()">
                 </div>
             </div>
@@ -749,16 +731,16 @@
             <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
 
             <div class="form-group">
-                <label>صورة اللوجو وسط الـ QR (اختياري)</label>
+                <label><i class="fa-solid fa-file-image"></i> صورة اللوجو وسط الـ QR (اختياري)</label>
                 <div class="file-input-wrapper">
                     <input type="text" id="qrCustomLogo" placeholder="" onchange="updateQRLive()">
-                    <label class="btn-upload" for="qrLogoFileInput">من المعرض</label>
+                    <label class="btn-upload" for="qrLogoFileInput"><i class="fa-solid fa-folder-open"></i> من المعرض</label>
                     <input type="file" id="qrLogoFileInput" accept="image/*" onchange="handleQRLogoUpload(this)">
                 </div>
             </div>
 
             <div class="form-group">
-                <label>إظهار اللوجو وسط الـ QR؟</label>
+                <label><i class="fa-solid fa-circle-question"></i> إظهار اللوجو وسط الـ QR؟</label>
                 <select id="qrEmbedLogo" onchange="updateQRLive()">
                     <option value="yes" selected>نعم</option>
                     <option value="no">لا</option>
@@ -771,23 +753,13 @@
 
 <!-- شريط الأزرار الثابت في أسفل الشاشة -->
 <div class="sticky-footer" id="stickyFooter">
-    <button class="btn btn-save" onclick="saveCustomer()">
-        <div id="saveIcon" style="width:40px;height:40px;margin:auto"></div>
-        حفظ العميل
-    </button>
-    <button class="btn btn-qr" onclick="generateQR()">
-        <div id="qrIcon" style="width:40px;height:40px;margin:auto"></div>
-        توليد QR
-    </button>
-    <button class="btn btn-delete" onclick="deleteCustomer()">
-        <div id="deleteIcon" style="width:40px;height:40px;margin:auto"></div>
-        حذف العميل
-    </button>
+    <button class="btn btn-save" onclick="saveCustomer()"><i class="fa-solid fa-floppy-disk"></i> حفظ العميل</button>
+    <button class="btn btn-qr" onclick="generateQR()"><i class="fa-solid fa-arrows-rotate"></i> توليد / تحديث QR</button>
+    <button class="btn btn-delete" onclick="deleteCustomer()"><i class="fa-solid fa-trash-can"></i> حذف العميل</button>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-<script src="js/icons.js"></script>
 
 <script>
     const ADMIN_USERNAME = "abdallah.haroun";
@@ -801,7 +773,6 @@
         event.currentTarget.classList.add('active');
     }
 
-    /* دالة لتحديد الأزرار المرئية للـ QR */
     function selectOption(hiddenInputId, value, element) {
         document.getElementById(hiddenInputId).value = value;
         const parentGrid = element.parentElement;
@@ -867,28 +838,6 @@
             document.getElementById("stickyFooter").style.display = "flex";
             loadCustomerList();
             generateNextCustomerCode();
-        }
-        
-        // ربط أيقونات Lottie بالملف الموحد (lottieIcons أو الكائنات المعرفة في icons.js)
-        if (typeof lottieIcons !== 'undefined') {
-            if (document.getElementById('clientDataIcon') && lottieIcons.contacts) {
-                lottie.loadAnimation({ container: document.getElementById('clientDataIcon'), renderer: 'svg', loop: true, autoplay: true, animationData: lottieIcons.contacts });
-            }
-            if (document.getElementById('socialLinksIcon') && lottieIcons.share) {
-                lottie.loadAnimation({ container: document.getElementById('socialLinksIcon'), renderer: 'svg', loop: true, autoplay: true, animationData: lottieIcons.share });
-            }
-            if (document.getElementById('qrDesignIcon') && lottieIcons.refresh) {
-                lottie.loadAnimation({ container: document.getElementById('qrDesignIcon'), renderer: 'svg', loop: true, autoplay: true, animationData: lottieIcons.refresh });
-            }
-            if (document.getElementById('saveIcon') && lottieIcons.download) {
-                lottie.loadAnimation({ container: document.getElementById('saveIcon'), renderer: 'svg', loop: true, autoplay: true, animationData: lottieIcons.download });
-            }
-            if (document.getElementById('qrIcon') && lottieIcons.refresh) {
-                lottie.loadAnimation({ container: document.getElementById('qrIcon'), renderer: 'svg', loop: true, autoplay: true, animationData: lottieIcons.refresh });
-            }
-            if (document.getElementById('deleteIcon') && lottieIcons.trash) {
-                lottie.loadAnimation({ container: document.getElementById('deleteIcon'), renderer: 'svg', loop: true, autoplay: true, animationData: lottieIcons.trash });
-            }
         }
     };
 
