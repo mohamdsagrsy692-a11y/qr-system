@@ -1150,7 +1150,8 @@
         const qrContainer = document.getElementById("qrContainer");
         qrContainer.innerHTML = "";
 
-        const targetURL = window.location.origin + window.location.pathname.replace("index.html", "qr.html") + "?id=" + encodeURIComponent(code);
+        // تم التعديل هنا ليقرأ admin.html
+        const targetURL = window.location.origin + window.location.pathname.replace("admin.html", "qr.html") + "?id=" + encodeURIComponent(code);
 
         const dotColor = SafeGetValue("qrDotColor") || "#000000";
         const bgColor = SafeGetValue("qrBgColor") || "#ffffff";
@@ -1221,7 +1222,8 @@
         const selectedSize = parseInt(SafeGetValue("downloadSize")) || 1000;
 
         if (qrCodeInstance) {
-            const targetURL = window.location.origin + window.location.pathname.replace("index.html", "qr.html") + "?id=" + encodeURIComponent(code);
+            // تم التعديل هنا أيضاً ليقرأ admin.html
+            const targetURL = window.location.origin + window.location.pathname.replace("admin.html", "qr.html") + "?id=" + encodeURIComponent(code);
             const dotColor = SafeGetValue("qrDotColor") || "#000000";
             const bgColor = SafeGetValue("qrBgColor") || "#ffffff";
             const dotType = SafeGetValue("qrDotType") || "square";
