@@ -1,4 +1,12 @@
-self.addEventListener('fetch', (event) => {
-    // هذا الكود يجعل التطبيق يعمل حتى لو المتصفح في وضع الأوفلاين
-    event.respondWith(fetch(event.request));
+self.addEventListener('install', (e) => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (e) => {
+  e.waitUntil(clients.claim());
+});
+
+self.addEventListener('fetch', (e) => {
+  // تمرير الطلبات بشكل طبيعي
+  e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
 });
