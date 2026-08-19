@@ -5,15 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول - لوحة التحكم</title>
     
-    <!-- إعدادات تطبيق الـ PWA -->
+    <!-- PWA Setup -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1e293b">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <link rel="icon" type="image/png" href="assets/icon-192.png">
-    <link rel="apple-touch-icon" href="assets/icon-192.png">
+    <meta name="theme-color" content="#111111">
+    <link rel="apple-touch-icon" href="assets/icon.png">
+    <link rel="icon" type="image/png" href="assets/icon.png">
 
     <!-- مكتبة أيقونات FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -769,6 +765,13 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
 <script>
+    // تفعيل الـ Service Worker لتشغيل الموقع كتطبيق PWA
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
+        });
+    }
+
     const ADMIN_USERNAME = "abdallah.haroun";
     const ADMIN_PASSWORD = "CODE010951";
 
@@ -1147,7 +1150,7 @@
         const qrContainer = document.getElementById("qrContainer");
         qrContainer.innerHTML = "";
 
-        const targetURL = window.location.origin + window.location.pathname.replace("admin.html", "qr.html") + "?id=" + encodeURIComponent(code);
+        const targetURL = window.location.origin + window.location.pathname.replace("index.html", "qr.html") + "?id=" + encodeURIComponent(code);
 
         const dotColor = SafeGetValue("qrDotColor") || "#000000";
         const bgColor = SafeGetValue("qrBgColor") || "#ffffff";
@@ -1218,7 +1221,7 @@
         const selectedSize = parseInt(SafeGetValue("downloadSize")) || 1000;
 
         if (qrCodeInstance) {
-            const targetURL = window.location.origin + window.location.pathname.replace("admin.html", "qr.html") + "?id=" + encodeURIComponent(code);
+            const targetURL = window.location.origin + window.location.pathname.replace("index.html", "qr.html") + "?id=" + encodeURIComponent(code);
             const dotColor = SafeGetValue("qrDotColor") || "#000000";
             const bgColor = SafeGetValue("qrBgColor") || "#ffffff";
             const dotType = SafeGetValue("qrDotType") || "square";
@@ -1230,7 +1233,7 @@
             const cornerDotColor = SafeGetValue("qrCornerDotColor") || dotColor;
 
             const embedLogo = SafeGetValue("qrEmbedLogo");
-            const finalLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
+            const finalLogo = SafeGetValue("qrCustomLogo") || SafeLogoInput();
 
             const exportConfig = {
                 width: selectedSize,
@@ -1244,8 +1247,9 @@
                 imageOptions: { crossOrigin: "anonymous", margin: selectedSize * 0.015, imageSize: 0.26 }
             };
 
-            if (embedLogo === "yes" && finalLogo) {
-                exportConfig.image = finalLogo;
+            const actualLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
+            if (embedLogo === "yes" && actualLogo) {
+                exportConfig.image = actualLogo;
             }
 
             const exportQR = new QRCodeStyling(exportConfig);
